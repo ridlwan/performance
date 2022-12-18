@@ -1,6 +1,10 @@
 <?php
 
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+require __DIR__.'/auth.php';
+Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/documents', [DocumentController::class, 'index']);
+    Route::get('/documents/create', [DocumentController::class, 'create']);
+    Route::get('/documents/edit', [DocumentController::class, 'edit']);
 });
