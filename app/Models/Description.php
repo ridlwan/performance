@@ -14,7 +14,8 @@ class Description extends Model
         'quantity',
         'description',
         'remark',
-        'created_by'
+        'created_by',
+        'updated_by'
     ];
 
     public function document()

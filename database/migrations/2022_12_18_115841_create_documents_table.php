@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('receiver_unit')->nullable();
             $table->date('receiver_date')->nullable();
             $table->string('created_by');
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

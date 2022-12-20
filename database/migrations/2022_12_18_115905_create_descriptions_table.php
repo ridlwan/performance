@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('descriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('document_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
-            $table->integer('quantity');
-            $table->integer('description');
-            $table->integer('remark')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->string('description');
+            $table->string('remark')->nullable();
             $table->string('created_by');
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

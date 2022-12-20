@@ -20,7 +20,5 @@ use App\Http\Controllers\DashboardController;
 require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
-    Route::get('/documents', [DocumentController::class, 'index']);
-    Route::get('/documents/create', [DocumentController::class, 'create']);
-    Route::get('/documents/edit', [DocumentController::class, 'edit']);
+    Route::resource('documents', DocumentController::class);
 });

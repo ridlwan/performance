@@ -18,7 +18,8 @@ class Document extends Model
         'receiver_name',
         'receiver_unit',
         'receiver_date',
-        'created_by'
+        'created_by',
+        'updated_by'
     ];
 
     public function descriptions()
