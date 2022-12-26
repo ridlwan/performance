@@ -89,11 +89,10 @@
 
 <script setup>
 import { ref } from "vue";
-import { Inertia } from '@inertiajs/inertia'
+import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-vue3";
 import Layout from "../../Components/Layout.vue";
 import Pagination from "../../Components/Pagination.vue";
-
 
 const props = defineProps({
     documents: Object,
@@ -106,7 +105,8 @@ let order = ref(props.filters.order);
 let by = ref(props.filters.by);
 
 const list = () => {
-    Inertia.get('/documents',
+    Inertia.get(
+        "/documents",
         { search: search.value, pagination: pagination.value, order: order.value, by: by.value },
         {
             preserveState: true,

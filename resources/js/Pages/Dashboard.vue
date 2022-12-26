@@ -15,7 +15,10 @@
                             <div class="col-md-3">
                                 <div class="layers bd bgc-white p-20">
                                     <div class="layer w-100 mB-10">
-                                        <h6 class="lh-1">Total Visits</h6>
+                                        <div class="peers ai-sb fxw-nw">
+                                            <div class="peer peer-greed"><h6>Total Visits</h6></div>
+                                            <div class="peer"><button type="submit" class="btn btn-sm btn-primary btn-color mL-5">Save</button></div>
+                                        </div>
                                     </div>
                                     <div class="layer w-100">
                                         <div class="peers ai-sb fxw-nw">
