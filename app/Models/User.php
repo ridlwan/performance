@@ -13,6 +13,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+
+    const STATUS_ARRAY = [
+        self::STATUS_INACTIVE => 'Inactive',
+        self::STATUS_ACTIVE => 'Active',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,6 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
     ];
 
     /**
@@ -42,4 +51,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'status_text'
+    ];
+
+    public function getStatusTextAttribute() {
+        return self::STATUS_ARRAY[$this->status];
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

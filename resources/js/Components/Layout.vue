@@ -1,18 +1,21 @@
 <template>
     <div>
+        <div class="min-height-300 bg-primary position-absolute w-100"></div>
         <Sidebar />
 
-        <div class="page-container">
+        <main class="main-content position-relative border-radius-lg">
             <Header>
                 <template #heading>
                     <slot name="heading"></slot>
                 </template>
             </Header>
 
-            <slot />
+            <div class="container-fluid py-4">
+                <slot />
 
-            <Footer />
-        </div>
+                <Footer />
+            </div>
+        </main>
     </div>
 </template>
 

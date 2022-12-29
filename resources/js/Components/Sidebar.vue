@@ -1,85 +1,59 @@
 <template>
-    <div class="sidebar">
-        <div class="sidebar-inner">
-            <div class="sidebar-logo">
-                <div class="peers ai-c fxw-nw">
-                    <div class="peer peer-greed">
-                        <Link class="sidebar-link td-n" href="/">
-                            <div class="peers ai-c fxw-nw">
-                                <div class="peer mT-20">
-                                    <div class="logo"><img src="/assets/logo.png" alt="logo" width="170" /></div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                    <div class="peer">
-                        <div class="mobile-toggle sidebar-toggle">
-                            <a href="javascript:void(0);" class="td-n" @click="toggle.toggleClick"><i class="fa-solid fa-chevron-left"></i></a>
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 bg-default" id="sidenav-main">
+        <div class="sidenav-header">
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html " target="_blank">
+                <img src="/assets/img/logo.png" class="navbar-brand-img h-100" alt="main_logo" />
+                <span class="ms-1 font-weight-bold">Team Performance </span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0" />
+        <div id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="./pages/dashboard.html">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <ul class="sidebar-menu scrollable pos-r">
-                <li
-                    class="nav-item"
-                    :class="{
-                        'nav-active': $page.component === 'Dashboard',
-                    }"
-                >
-                    <Link class="sidebar-link" href="/"
-                        ><span class="icon-holder"
-                            ><i
-                                class="fa-solid fa-house c-blue-500"
-                                :class="{
-                                    'span-active': $page.component === 'Dashboard',
-                                }"
-                            ></i></span
-                        ><span
-                            class="title"
-                            :class="{
-                                'span-active': $page.component === 'Dashboard',
-                            }"
-                            >Dashboard</span
-                        ></Link
-                    >
+                        <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
                 </li>
-                <li
-                    class="nav-item mT-5"
-                    :class="{
-                        'nav-active': $page.component === 'Document/Index' || $page.component === 'Document/Create' || $page.component === 'Document/Edit' || $page.component === 'Document/Show',
-                    }"
-                >
-                    <Link class="sidebar-link" href="/documents"
-                        ><span class="icon-holder"
-                            ><i
-                                class="fa-solid fa-rectangle-list c-blue-500"
-                                :class="{
-                                    'span-active': $page.component === 'Document/Index' || $page.component === 'Document/Create' || $page.component === 'Document/Edit' || $page.component === 'Document/Show',
-                                }"
-                            ></i></span
-                        ><span
-                            class="title"
-                            :class="{
-                                'span-active': $page.component === 'Document/Index' || $page.component === 'Document/Create' || $page.component === 'Document/Edit' || $page.component === 'Document/Show',
-                            }"
-                            >Document List</span
-                        ></Link
-                    >
+                <li class="nav-item">
+                    <a class="nav-link" href="./pages/tables.html">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Tables</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./pages/billing.html">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Billing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./pages/virtual-reality.html">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-app text-info text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Virtual Reality</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./pages/rtl.html">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">RTL</span>
+                    </a>
                 </li>
             </ul>
         </div>
-    </div>
+    </aside>
 </template>
-
-<style>
-.nav-active {
-    background: #006198 !important;
-}
-
-.span-active {
-    color: white !important;
-}
-</style>
 
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
