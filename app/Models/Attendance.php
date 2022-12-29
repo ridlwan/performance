@@ -23,13 +23,15 @@ class Attendance extends Model
         'user_id',
         'start',
         'end',
+        'relogin',
         'duration',
         'status'
     ];
 
     protected $dates = [
         'start',
-        'end'
+        'end',
+        'relogin'
     ];
 
     protected $appends = [

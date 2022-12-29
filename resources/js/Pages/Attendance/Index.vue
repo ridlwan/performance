@@ -39,7 +39,17 @@
                             </div>
                         </div>
                         <div class="row" v-if="addActivityForm">
-                            <div v-if="activities.length > 0" class="row" style="padding: 0; margin: 0">
+                            <div v-if="activities.length < 1 || relogin" class="row" style="padding: 0; margin: 0">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
+                                </div>
+                            </div>
+                            <div v-else class="row" style="padding: 0; margin: 0">
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
@@ -54,16 +64,7 @@
                                     <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
                                 </div>
                             </div>
-                            <div v-else class="row" style="padding: 0; margin: 0">
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
-                                </div>
-                            </div>
+
                             <div class="text-center">
                                 <a href="javascript:;" @click="closeActivityForm"
                                     ><span class="text-secondary">Hold on a second <i class="fa-solid fa-person-digging ms-1"></i></span
@@ -239,7 +240,14 @@ const addActivity = () => {
 };
 
 const checkOut = () => {
-    if (props.activities.length > 0) {
+    if (props.activities.length < 1 || props.relogin) {
+        Swal.fire({
+            title: "What are you doing? <br> <i class='fa-solid fa-person-through-window'></i>",
+            text: "Please write down your activity before checking out",
+            icon: "error",
+            confirmButtonText: "Got it <i class='fa-solid fa-pen-to-square'></i>",
+        });
+    } else {
         Swal.fire({
             title: "Are you sure? <br> <i class='fa-solid fa-door-open'></i>",
             text: "Do you want to check out now?",
@@ -258,13 +266,6 @@ const checkOut = () => {
                     confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
                 });
             }
-        });
-    } else {
-        Swal.fire({
-            title: "What are you doing? <br> <i class='fa-solid fa-person-through-window'></i>",
-            text: "Please write down your activity before checking out",
-            icon: "error",
-            confirmButtonText: "Got it <i class='fa-solid fa-pen-to-square'></i>",
         });
     }
 };

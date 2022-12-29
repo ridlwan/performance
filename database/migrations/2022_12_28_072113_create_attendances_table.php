@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
-            $table->dateTime('start')->nullable();
+            $table->dateTime('start');
             $table->dateTime('end')->nullable();
+            $table->dateTime('relogin')->nullable();
             $table->integer('duration')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
