@@ -22,6 +22,7 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::get('/attendance/history', [AttendanceController::class, 'history']);
     Route::post('/attendance', [AttendanceController::class, 'addActivity']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
     Route::post('/attendance/struggle/{id}', [AttendanceController::class, 'struggle']);

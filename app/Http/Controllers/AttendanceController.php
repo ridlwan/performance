@@ -37,6 +37,15 @@ class AttendanceController extends Controller
             'relogin' => $relogin
         ]);
     }
+    
+    public function history()
+    {
+        $attendances = Attendance::with('activities')->where('user_id', Auth::user()->id)->orderByDesc('id')->paginate(2);
+
+        return Inertia::render('Attendance/History', [
+            'attendances' => $attendances
+        ]);
+    }
 
     public function checkIn()
     {

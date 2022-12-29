@@ -1,16 +1,16 @@
 <template>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-center">
         <nav>
             <ul class="pagination">
                 <li v-for="(link, index) in links" :key="index" class="page-item" :class="{ disabled: !link.url, active: link.active }">
                     <Link :href="link.url" class="page-link">
                         <span v-if="index == 0">
-                            Previous
+                            <i class="fa fa-angle-left"></i>
                         </span>
                         <span v-else-if="index == links.length - 1">
-                            Next
+                            <i class="fa fa-angle-right"></i>
                         </span>
-                        <span v-else>
+                        <span v-else :class="link.active ? 'text-white' : ''">
                             {{ link.label }}
                         </span>
                     </Link>

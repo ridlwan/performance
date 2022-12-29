@@ -17,6 +17,7 @@
         "@vitejs/plugin-vue": "^4.0.0",
         "@vuepic/vue-datepicker": "^3.6.3",
         "jquery": "^3.6.3",
+        "moment": "^2.29.4",
         "pinia": "^2.0.28",
         "sweetalert2": "^11.6.16",
         "vue": "^3.2.29"
