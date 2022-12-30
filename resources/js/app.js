@@ -6,9 +6,9 @@ import { createPinia } from "pinia";
 import '../assets/css/nucleo-icons.css';
 import '../assets/css/nucleo-svg.css';
 import '../assets/css/argon-dashboard.css';
-import moment from "moment";
 import "../assets/js/core/popper.min.js";
 import "../assets/js/core/bootstrap.min.js";
+import moment from "moment";
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
