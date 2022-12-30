@@ -5,103 +5,106 @@
         </template>
 
         <div class="card">
-            <div class="table-responsive" style="max-height: 500px; overflow: auto">
-                <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Date</th>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Start</th>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">End</th>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Duration</th>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Status</th>
-                            <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Action</th>
-                            <th class="text-secondary opacity-7"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="attendance in attendances.data" :key="attendance.id">
-                            <td class="align-middle text-center">
-                                <span class="text-sm text-secondary">{{ $filters.formatDate(attendance.created_at) }}</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.start) }}</span>
-                            </td>
-                            <td v-if="attendance.end" class="align-middle text-center">
-                                <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.end) }}</span>
-                            </td>
-                            <td v-else class="align-middle text-center">
-                                <span class="text-sm text-warning">In Progress</span>
-                            </td>
-                            <td v-if="attendance.duration" class="align-middle text-center">
-                                <span v-if="attendance.duration > 60" class="text-sm text-secondary"
-                                    >{{ Math.floor(attendance.duration / 60) }} hours
-                                    <span v-if="attendance.duration - Math.floor(attendance.duration / 60) * 60 > 0"> {{ attendance.duration - Math.floor(attendance.duration / 60) * 60 }} minutes </span>
-                                </span>
-                                <span v-else class="text-sm text-secondary">{{ attendance.duration }} minutes</span>
-                            </td>
-                            <td v-else class="align-middle text-center">
-                                <span class="text-sm text-warning">In Progress</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <span class="text-sm text-secondary">{{ attendance.status_text }}</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" @click="showActivities(attendance)" data-bs-toggle="modal" data-bs-target="#activityModal" class="text-primary font-weight-bold" title="See details"><i class="fa-solid fa-list-check"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div class="card-body pb-2">
+                <div class="table-responsive" style="max-height: 500px; overflow: auto">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-uppercase text-xs text-dark">Date</th>
+                                <th class="text-center text-uppercase text-xs text-dark">Start</th>
+                                <th class="text-center text-uppercase text-xs text-dark">End</th>
+                                <th class="text-center text-uppercase text-xs text-dark">Duration</th>
+                                <th class="text-center text-uppercase text-xs text-dark">Status</th>
+                                <th class="text-center text-uppercase text-xs text-dark">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="attendance in attendances.data" :key="attendance.id">
+                                <td class="align-middle text-center">
+                                    <span class="text-sm text-secondary">{{ $filters.formatDate(attendance.created_at) }}</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.start) }}</span>
+                                </td>
+                                <td v-if="attendance.end" class="align-middle text-center">
+                                    <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.end) }}</span>
+                                </td>
+                                <td v-else class="align-middle text-center">
+                                    <span class="text-sm text-warning">In Progress</span>
+                                </td>
+                                <td v-if="attendance.duration" class="align-middle text-center">
+                                    <span v-if="attendance.duration > 60" class="text-sm text-secondary"
+                                        >{{ Math.floor(attendance.duration / 60) }} hours
+                                        <span v-if="attendance.duration - Math.floor(attendance.duration / 60) * 60 > 0"> {{ attendance.duration - Math.floor(attendance.duration / 60) * 60 }} minutes </span>
+                                    </span>
+                                    <span v-else class="text-sm text-secondary">{{ attendance.duration }} minutes</span>
+                                </td>
+                                <td v-else class="align-middle text-center">
+                                    <span class="text-sm text-warning">In Progress</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-sm text-secondary">{{ attendance.status_text }}</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a href="javascript:;" @click="showActivities(attendance)" data-bs-toggle="modal" data-bs-target="#activityModal" class="text-primary font-weight-bold" title="See details"><i class="fa-solid fa-list-check"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <Pagination :links="attendances.links" />
+                <Pagination :links="attendances.links" />
 
-            <div class="modal fade" id="activityModal" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="activityModalTitle">Activity List</h6>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="list-group">
-                                <li v-for="activity in activities" :key="activity.id" class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                    <div class="d-flex align-items-center">
-                                        <span v-if="activity.end" class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-check"></i></span>
-                                        <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
-                                        <div class="d-flex flex-column">
-                                            <p class="mb-1 text-dark">{{ activity.description }}</p>
-                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggled</span>
+                <div class="modal fade" id="activityModal" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="activityModalTitle">Activity List</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li v-for="activity in activities" :key="activity.id" class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                        <div class="d-flex align-items-center">
+                                            <span v-if="activity.end" class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-check"></i></span>
+                                            <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
+                                            <div class="d-flex flex-column">
+                                                <p class="mb-1 text-dark">{{ activity.description }}</p>
+                                                <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggled</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex align-items-center text-sm font-weight-bold">
-                                        <div class="d-flex flex-column">
-                                            <p class="mb-1 text-dark text-gradient">{{ $filters.formatTime(activity.start) }}</p>
-                                            <span v-if="activity.duration">
-                                                <span v-if="activity.duration > 60" class="text-xs text-secondary" style="white-space: nowrap"
-                                                    >{{ Math.floor(activity.duration / 60) }} hours
-                                                    <span v-if="activity.duration - Math.floor(activity.duration / 60) * 60 > 0">
-                                                        <br />
-                                                        {{ activity.duration - Math.floor(activity.duration / 60) * 60 }} minutes
+                                        <div class="d-flex align-items-center text-sm font-weight-bold">
+                                            <div class="d-flex flex-column">
+                                                <p class="mb-1 text-dark text-gradient">{{ $filters.formatTime(activity.start) }}</p>
+                                                <span v-if="activity.duration">
+                                                    <span v-if="activity.duration > 60" class="text-xs text-secondary" style="white-space: nowrap"
+                                                        >{{ Math.floor(activity.duration / 60) }} hours
+                                                        <span v-if="activity.duration - Math.floor(activity.duration / 60) * 60 > 0">
+                                                            <br />
+                                                            {{ activity.duration - Math.floor(activity.duration / 60) * 60 }} minutes
+                                                        </span>
                                                     </span>
-                                                </span>
 
-                                                <span v-else class="text-xs text-secondary" style="white-space: nowrap">{{ activity.duration }} minutes</span>
-                                            </span>
-                                            <span v-else class="text-xs text-warning" style="white-space: nowrap">In Progress</span>
+                                                    <span v-else class="text-xs text-secondary" style="white-space: nowrap">{{ activity.duration }} minutes</span>
+                                                </span>
+                                                <span v-else class="text-xs text-warning" style="white-space: nowrap">In Progress</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="card"></div>
     </Layout>
 </template>
 

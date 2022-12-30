@@ -32,13 +32,39 @@ class AttendanceController extends Controller
             'relogin' => $relogin
         ]);
     }
-    
+
     public function history()
     {
-        $attendances = Attendance::with('activities')->where('user_id', Auth::user()->id)->orderByDesc('id')->paginate(2);
+        $attendances = Attendance::with('activities')
+            ->where('user_id', Auth::user()->id)
+            ->orderByDesc('id')->paginate(10);
 
         return Inertia::render('Attendance/History', [
             'attendances' => $attendances
+        ]);
+    }
+
+    public function performance()
+    {
+        $thisYear = Carbon::now()->format('Y');
+        $thisMonth = Carbon::now()->format('m');
+
+        $attendances = Attendance::where('user_id', Auth::user()->id)
+            ->whereNotNull('end')
+            ->whereYear('created_at', $thisYear)
+            ->whereMonth('created_at', $thisMonth)->get();
+
+        $hours = [];
+        $dates = [];
+
+        foreach ($attendances as $attendance) {
+            array_push($hours, number_format((float) ($attendance->duration / 60), 1));
+            array_push($dates, $attendance->created_at->format('d M'));
+        }
+
+        return Inertia::render('Attendance/Performance', [
+            'hours' => $hours,
+            'dates' => $dates
         ]);
     }
 
@@ -66,7 +92,7 @@ class AttendanceController extends Controller
 
         return redirect()->back();
     }
-    
+
     public function relogin()
     {
         $relogin = false;
@@ -79,7 +105,7 @@ class AttendanceController extends Controller
 
         return $relogin;
     }
-    
+
     public function struggle($id)
     {
         if ($activity = Activity::find($id)) {
@@ -107,23 +133,25 @@ class AttendanceController extends Controller
                 'description' => 'required',
                 'start' => 'required',
             ]);
-    
+
             $validator->after(function ($validator) use ($request) {
                 if ($request->start) {
                     if (Carbon::now()->setTimeFromTimeString($request->start)->gt(Carbon::now())) {
                         $validator->errors()->add(
-                            'start', 'start time greater than now'
+                            'start',
+                            'start time greater than now'
                         );
                     }
-        
+
                     if (Carbon::now()->setTimeFromTimeString($request->start)->lte(Auth::user()->attendances->last()->activities->last()->start)) {
                         $validator->errors()->add(
-                            'start', 'start time less than last start activity'
+                            'start',
+                            'start time less than last start activity'
                         );
                     }
                 }
             });
-    
+
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator);
             }
@@ -133,13 +161,13 @@ class AttendanceController extends Controller
 
         $data = $request->all();
         $data['attendance_id'] = Auth::user()->attendances->last()->id;
-        
+
         if ($firstActivity) {
             if ($relogin) {
                 $data['start'] = Auth::user()->attendances->last()->relogin;
             } else {
                 $data['start'] = Auth::user()->attendances->last()->start;
-            }            
+            }
         } else {
             $data['start'] = Carbon::now()->setTimeFromTimeString($request->start);
 
@@ -147,7 +175,7 @@ class AttendanceController extends Controller
             $lastActivity->end = Carbon::now()->setTimeFromTimeString($request->start);
 
             $duration = $lastActivity->start->diffInMinutes(Carbon::now()->setTimeFromTimeString($request->start));
-            
+
             if ($duration > 0) {
                 $lastActivity->duration = $duration;
             } else {
@@ -156,18 +184,19 @@ class AttendanceController extends Controller
 
             $lastActivity->save();
         }
-        
+
         Activity::create($data);
 
         if ($relogin) {
             $lastAttendance = Auth::user()->attendances->last();
             $lastAttendance->end = null;
             $lastAttendance->relogin = null;
+            $lastAttendance->duration = null;
             $lastAttendance->save();
-        }  
+        }
 
         DB::commit();
-        
+
         return redirect()->back();
     }
 
@@ -177,12 +206,12 @@ class AttendanceController extends Controller
 
         $lastAttendance = Auth::user()->attendances->last();
         $lastAttendance->end = Carbon::now();
-        
+
         $lastActivity = $lastAttendance->activities->last();
         $lastActivity->end = Carbon::now();
 
         $activityDuration = $lastActivity->start->diffInMinutes(Carbon::now());
-            
+
         if ($activityDuration > 0) {
             $lastActivity->duration = $activityDuration;
         } else {
@@ -192,18 +221,18 @@ class AttendanceController extends Controller
         $lastActivity->save();
 
         $attendanceDuration = Auth::user()->attendances->last()->activities->sum('duration');
-        
+
         if ($attendanceDuration > 0) {
             $lastAttendance->duration = $attendanceDuration;
         } else {
             $lastAttendance->duration = 1;
         }
-        
+
         $lastAttendance->save();
 
         Auth::user()->status = User::STATUS_INACTIVE;
         Auth::user()->save();
-        
+
         DB::commit();
 
         return redirect()->back();

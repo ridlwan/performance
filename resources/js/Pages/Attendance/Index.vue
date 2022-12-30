@@ -23,7 +23,7 @@
                         <div id="activities" style="overflow: auto; height: 300px">
                             <div v-for="(activity, activity_index) in activities" :key="activity.id">
                                 <div class="d-flex">
-                                    <h6 class="mb-0 me-3" style="white-space: nowrap">{{ activity.start_time }}</h6>
+                                    <span class="mb-0 me-3 font-weight-bolder opacity-7" style="white-space: nowrap">{{ activity.start_time }}</span>
                                     <div>
                                         <h6 class="mb-0">
                                             <small class="font-weight-normal">{{ activity.description }}</small>

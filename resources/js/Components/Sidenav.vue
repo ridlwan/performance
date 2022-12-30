@@ -9,7 +9,7 @@
         <Link href="/attendance/history" :class="$page.component === 'Attendance/History' ? 'btn-primary' : 'btn-white'" class="btn border-radius-lg p-2" title="History">
             <i class="fas fa-history p-2"></i>
         </Link>
-        <Link class="btn btn-white border-radius-lg p-2 ms-2 ms-md-0" title="Report">
+        <Link href="/attendance/performance" :class="$page.component === 'Attendance/Performance' ? 'btn-primary' : 'btn-white'" class="btn border-radius-lg p-2" title="Performance">
             <i class="fas fa-chart-line p-2"></i>
         </Link>
     </div>

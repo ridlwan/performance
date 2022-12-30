@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-2">
         <nav>
             <ul class="pagination">
                 <li v-for="(link, index) in links" :key="index" class="page-item" :class="{ disabled: !link.url, active: link.active }">
