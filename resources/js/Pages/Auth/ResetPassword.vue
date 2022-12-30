@@ -7,31 +7,31 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                             <div class="card card-plain">
                                 <div class="card-header pb-0 text-start">
-                                    <h4 class="font-weight-bolder">Sign In</h4>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
+                                    <h4 class="font-weight-bolder">Reset Password</h4>
+                                    <p class="mb-0">Enter your new password</p>
                                 </div>
                                 <div class="card-body">
-                                    <form @submit.prevent="form.post('/login')">
+                                    <form @submit.prevent="form.post('/reset-password')">
                                         <div class="mb-3">
                                             <input type="email" class="form-control form-control-lg" placeholder="Email" v-model="form.email" :class="{ 'is-invalid': form.errors.email }" />
                                             <div v-if="form.errors.email" class="invalid-feedback">{{ form.errors.email }}</div>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control form-control-lg" placeholder="Password" v-model="form.password" :class="{ 'is-invalid': form.errors.password }" />
+                                            <input type="password" class="form-control form-control-lg" placeholder="New Password" v-model="form.password" :class="{ 'is-invalid': form.errors.password }" />
                                             <div v-if="form.errors.password" class="invalid-feedback">{{ form.errors.password }}</div>
                                         </div>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="rememberMe" v-model="form.remember" />
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <div class="mb-3">
+                                            <input type="password" class="form-control form-control-lg" placeholder="Confirm Password" v-model="form.password_confirmation" :class="{ 'is-invalid': form.errors.password_confirmation }" />
+                                            <div v-if="form.errors.password_confirmation" class="invalid-feedback">{{ form.errors.password_confirmation }}</div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" :disabled="form.processing" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                                            <button type="submit" :disabled="form.processing" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Reset Password</button>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        <Link href="/forgot-password" class="text-primary text-gradient font-weight-bold">Forget password?</Link>
+                                        <Link href="/login" class="text-primary text-gradient font-weight-bold">Back to Log In</Link>
                                     </p>
                                 </div>
                             </div>
@@ -50,17 +50,17 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
 
-onMounted(() => {
-    document.body.classList.remove("g-sidenav-show");
-    document.body.classList.remove("bg-gray-100");
+const props = defineProps({
+    email: String,
+    token: String,
 });
 
 const form = useForm({
-    email: null,
+    email: props.email,
     password: null,
-    remember: false,
+    password_confirmation: null,
+    token: props.token,
 });
 </script>

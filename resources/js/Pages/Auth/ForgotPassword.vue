@@ -1,55 +1,55 @@
 <template>
-    <guest-layout>
-        <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xxl-4 col-lg-5">
-                        <div class="card">
-                            <div class="card-header pt-4 pb-4 text-center bg-primary">
-                                <Link href="/">
-                                    <span><img src="/images/hyper/logo.png" alt="logo" height="22" /></span>
-                                </Link>
-                            </div>
-
-                            <div class="card-body p-4">
-                                <div class="text-center w-75 m-auto">
-                                    <h4 class="text-dark-50 text-center mt-0 fw-bold">Reset Password</h4>
-                                    <p class="text-muted mb-4">Enter your email address and we'll send you an email with instructions to reset your password.</p>
+    <main class="main-content mt-0">
+        <section>
+            <div class="page-header min-vh-100">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+                            <div class="card card-plain">
+                                <div class="card-header pb-0 text-start">
+                                    <h4 class="font-weight-bolder">Reset Password</h4>
+                                    <p class="mb-0">Enter your email address and we'll send you an email with instructions to reset your password</p>
                                 </div>
-
-                                <div v-if="$page.props.flash.status" class="alert alert-success" role="alert">{{ $page.props.flash.status }}</div>
-
-                                <form v-else @submit.prevent="form.post('/forgot-password')">
-                                    <div class="mb-3">
-                                        <label class="form-label">Email address</label>
-                                        <input class="form-control" type="email" placeholder="Enter your email" :class="{ 'is-invalid': form.errors.email }" v-model="form.email" />
-                                        <div v-if="form.errors.email" class="invalid-feedback">{{ form.errors.email }}</div>
-                                    </div>
-
-                                    <div class="mb-0 text-center">
-                                        <button class="btn btn-primary" type="submit" :disabled="form.processing">Reset Password</button>
-                                    </div>
-                                </form>
+                                <div class="card-body">
+                                    <div v-if="$page.props.flash.status" class="alert alert-primary font-weight-bold text-sm text-white mt-4 mb-5">{{ $page.props.flash.status }}</div>
+                                    <form v-else @submit.prevent="form.post('/forgot-password')">
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control form-control-lg" placeholder="Email" v-model="form.email" :class="{ 'is-invalid': form.errors.email }" />
+                                            <div v-if="form.errors.email" class="invalid-feedback">{{ form.errors.email }}</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" :disabled="form.processing" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Reset Password</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                        <Link href="/login" class="text-primary text-gradient font-weight-bold">Back to Log In</Link>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="row mt-3">
-                            <div class="col-12 text-center">
-                                <p class="text-muted">
-                                    Back to <Link :href="route('login')" class="text-muted ms-1"><b>Log In</b></Link>
-                                </p>
+                        <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                            <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg'); background-size: cover">
+                                <span class="mask bg-gradient-primary opacity-6"></span>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new currency"</h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </guest-layout>
+        </section>
+    </main>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
+
+onMounted(() => {
+    document.body.classList.remove("g-sidenav-show");
+    document.body.classList.remove("bg-gray-100");
+});
 
 const form = useForm({
     email: null,
