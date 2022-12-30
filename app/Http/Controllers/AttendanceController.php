@@ -50,7 +50,6 @@ class AttendanceController extends Controller
         $thisMonth = Carbon::now()->format('m');
 
         $attendances = Attendance::where('user_id', Auth::user()->id)
-            // ->whereNotNull('end')
             ->whereYear('created_at', $thisYear)
             ->whereMonth('created_at', $thisMonth)->get();
 
