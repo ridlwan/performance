@@ -50,7 +50,7 @@ class AttendanceController extends Controller
         $thisMonth = Carbon::now()->format('m');
 
         $attendances = Attendance::where('user_id', Auth::user()->id)
-            ->whereNotNull('end')
+            // ->whereNotNull('end')
             ->whereYear('created_at', $thisYear)
             ->whereMonth('created_at', $thisMonth)->get();
 
@@ -85,7 +85,7 @@ class AttendanceController extends Controller
             ]);
         }
 
-        Auth::user()->status = User::STATUS_ACTIVE;
+        Auth::user()->status = User::STATUS_WORKING;
         Auth::user()->save();
 
         DB::commit();
@@ -230,7 +230,7 @@ class AttendanceController extends Controller
 
         $lastAttendance->save();
 
-        Auth::user()->status = User::STATUS_INACTIVE;
+        Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
         DB::commit();
@@ -241,10 +241,12 @@ class AttendanceController extends Controller
     public function outOfOffice()
     {
         Attendance::create([
-            'users_id' => Auth::user()->id,
-            'start' => Carbon::now(),
+            'user_id' => Auth::user()->id,
             'status' => Attendance::STATUS_OUT_OF_OFFICE
         ]);
+
+        Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
+        Auth::user()->save();
 
         return redirect()->back();
     }
@@ -252,10 +254,12 @@ class AttendanceController extends Controller
     public function outSick()
     {
         Attendance::create([
-            'users_id' => Auth::user()->id,
-            'start' => Carbon::now(),
+            'user_id' => Auth::user()->id,
             'status' => Attendance::STATUS_OUT_SICK
         ]);
+
+        Auth::user()->status = User::STATUS_OUT_SICK;
+        Auth::user()->save();
 
         return redirect()->back();
     }

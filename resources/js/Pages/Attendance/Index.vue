@@ -4,7 +4,7 @@
             <h6 class="font-weight-bolder text-white mb-0">Attendance</h6>
         </template>
 
-        <div class="row" v-if="status == 'Active'">
+        <div class="row" v-if="status == 'Working'">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-body">
@@ -82,29 +82,37 @@
             <div class="col-lg-5 col-md-5 mt-4 mt-sm-0">
                 <div class="card move-on-hover">
                     <div class="card-body">
-                        <div class="w-20 mx-auto">
+                        <div class="w-20 mx-auto mb-3">
                             <img src="/assets/img/idea.png" alt="" class="img-fluid" />
                         </div>
-                        <h6 class="card-description mt-4" v-html="quote"></h6>
-                        <div class="row text-center">
-                            <button @click="checkIn" class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3">
-                                Check In
-                                <i class="fas fa-laptop-code ms-1"></i>
-                            </button>
+                        <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
+                        <div v-if="status == 'Out of Office' || status == 'Out Sick'" class="row text-center mt-6 mb-2">
+                            <span class="card-description opacity-7">Wish you all the best</span>
                         </div>
-                        <hr class="horizontal dark" />
-                        <div class="row">
-                            <div class="col-md-6">
-                                <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0">
-                                    Out of Office
-                                    <i class="fas fa-snowboarding ms-1"></i>
-                                </a>
+                        <div v-else>
+                            <div class="row text-center">
+                                <button @click="checkIn" class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3">
+                                    Check In
+                                    <i class="fas fa-laptop-code ms-1"></i>
+                                </button>
                             </div>
-                            <div class="col-md-6 text-end">
-                                <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0">
-                                    Out Sick
-                                    <i class="fas fa-head-side-cough ms-1"></i>
-                                </a>
+                            <div v-if="!relogin">
+                                <hr class="horizontal dark" />
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0">
+                                            Out of Office
+                                            <i class="fas fa-snowboarding ms-1"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0">
+                                            Out Sick
+                                            <i class="fas fa-head-side-cough ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -160,7 +168,7 @@ onMounted(() => {
     document.getElementById("navbar-main").classList.add("mx-3");
     document.getElementById("navbar-main").classList.add("bg-primary");
 
-    if (status == "Active" && props.activities.length > 0) {
+    if (status == "Working" && props.activities.length > 0) {
         scrollDown();
     }
 });
@@ -283,13 +291,13 @@ const scrollDown = () => {
 
 const struggling = (id) => {
     Swal.fire({
-        title: "Whoops <br> <i class='fa-solid fa-user-ninja'></i>",
+        title: "Whoops... <br> <i class='fa-solid fa-user-ninja'></i>",
         text: "Are you really struggling here?",
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "red",
         cancelButtonColor: "orange",
-        confirmButtonText: "Definitely! <i class='fa-solid fa-face-dizzy'></i></i>",
+        confirmButtonText: "Definitely! <i class='fa-solid fa-face-dizzy'></i>",
         cancelButtonText: "Nope, it just needs more time <i class='fa-solid fa-person-digging'></i>",
     }).then((result) => {
         if (result.isConfirmed) {
@@ -305,10 +313,70 @@ const struggling = (id) => {
 };
 
 const outOfOffice = () => {
-    Inertia.post("/attendance/out-of-office");
+    Swal.fire({
+        title: "Hey, Yo... <br> <i class='fa-solid fa-person-snowboarding'></i>",
+        text: "Are you unable to work today?",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonColor: "orange",
+        confirmButtonText: "Yeap",
+        cancelButtonText: "Nope, I'm going to work",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Don't forget <br> <i class='fa-solid fa-users'></i>",
+                text: "Have you told your co-workers?",
+                icon: "info",
+                showCancelButton: true,
+                cancelButtonColor: "orange",
+                confirmButtonText: "I have",
+                cancelButtonText: "Not yet",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Inertia.post("/attendance/out-of-office");
+                    Swal.fire({
+                        title: "Okay <br> <i class='fa-solid fa-person-walking-luggage'></i>",
+                        text: "Whatever your business, we hope everything is fine and see ya tomorrow",
+                        icon: "success",
+                        confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
+                    });
+                }
+            });
+        }
+    });
 };
 
 const outSick = () => {
-    Inertia.post("/attendance/out-sick");
+    Swal.fire({
+        title: "Whoops... <br> <i class='fa-regular fa-face-surprise'></i>",
+        text: "Are you sick and unable to work today?",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonColor: "orange",
+        confirmButtonText: "Yes, I'm",
+        cancelButtonText: "I'm fine and going to work",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Don't forget <br> <i class='fa-solid fa-users'></i>",
+                text: "Have you told your co-workers?",
+                icon: "info",
+                showCancelButton: true,
+                cancelButtonColor: "orange",
+                confirmButtonText: "I have",
+                cancelButtonText: "Not yet",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Inertia.post("/attendance/out-sick");
+                    Swal.fire({
+                        title: "Okay <br> <i class='fa-solid fa-bed'></i>",
+                        text: "Get well soon and see ya tomorrow",
+                        icon: "success",
+                        confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
+                    });
+                }
+            });
+        }
+    });
 };
 </script>

@@ -13,12 +13,16 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_NOT_AVAILABLE = 0;
+    const STATUS_WORKING = 1;
+    const STATUS_OUT_OF_OFFICE = 2;
+    const STATUS_OUT_SICK = 3;
 
     const STATUS_ARRAY = [
-        self::STATUS_INACTIVE => 'Inactive',
-        self::STATUS_ACTIVE => 'Active',
+        self::STATUS_NOT_AVAILABLE => 'Not Available',
+        self::STATUS_WORKING => 'Working',
+        self::STATUS_OUT_OF_OFFICE => 'Out of Office',
+        self::STATUS_OUT_SICK => 'Out Sick',
     ];
 
     /**

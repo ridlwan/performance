@@ -30,7 +30,8 @@
                                     <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.end) }}</span>
                                 </td>
                                 <td v-else class="align-middle text-center">
-                                    <span class="text-sm text-warning">In Progress</span>
+                                    <span v-if="attendance.status_text == 'Working'" class="text-sm text-warning">In Progress</span>
+                                    <span v-else>-</span>
                                 </td>
                                 <td v-if="attendance.duration" class="align-middle text-center">
                                     <span v-if="attendance.duration > 60" class="text-sm text-secondary"
@@ -40,7 +41,8 @@
                                     <span v-else class="text-sm text-secondary">{{ attendance.duration }} minutes</span>
                                 </td>
                                 <td v-else class="align-middle text-center">
-                                    <span class="text-sm text-warning">In Progress</span>
+                                    <span v-if="attendance.status_text == 'Working'" class="text-sm text-warning">In Progress</span>
+                                    <span v-else>-</span>
                                 </td>
                                 <td class="align-middle text-center">
                                     <span class="text-sm text-secondary">{{ attendance.status_text }}</span>
@@ -48,6 +50,9 @@
                                 <td class="align-middle text-center">
                                     <a href="javascript:;" @click="showActivities(attendance)" data-bs-toggle="modal" data-bs-target="#activityModal" class="text-primary font-weight-bold" title="See details"><i class="fa-solid fa-list-check"></i></a>
                                 </td>
+                            </tr>
+                            <tr v-if="attendances.data.length < 1">
+                                <td colspan="6" class="align-middle text-center text-secondary">History not found</td>
                             </tr>
                         </tbody>
                     </table>
