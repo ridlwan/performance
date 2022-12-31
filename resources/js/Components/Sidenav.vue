@@ -1,7 +1,8 @@
 <template>
     <div class="col-lg-1 col-md-1 pt-5 pt-lg-0 ms-lg-5 text-center">
-        <Link href="javascript:;" class="avatar avatar-md border-0 mb-3" title="My Profile">
-            <img class="border-radius-lg" alt="Image placeholder" src="/assets/img/team-1.jpg" />
+        <Link href="/profile" class="avatar avatar-md border-0 mb-3" title="My Profile">
+            <img v-if="avatar" :src="'/storage/' + avatar" class="h-100 border-radius-lg" />
+            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg" />
         </Link>
         <Link href="/attendance" :class="$page.component === 'Attendance/Index' ? 'btn-primary' : 'btn-white'" class="btn border-radius-lg p-2 mt-0 mt-md-2 mx-2 mx-md-0" title="Home">
             <i class="fas fa-home p-2"></i>
@@ -16,8 +17,8 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/inertia-vue3";
-import { useToggleStore } from "../stores/ToggleStore";
+import { computed } from "vue";
+import { usePage, Link } from "@inertiajs/inertia-vue3";
 
-let toggle = useToggleStore();
+const avatar = computed(() => usePage().props.value.auth.user.avatar);
 </script>

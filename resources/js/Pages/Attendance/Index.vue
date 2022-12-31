@@ -7,18 +7,13 @@
         <div class="row" v-if="status == 'Working'">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-10 mt-2">
-                                <p class="text-uppercase">Your activity</p>
-                            </div>
-                            <div class="col-md-2 text-end">
-                                <a href="javascript:;" @click="checkOut" class="btn btn-icon bg-gradient-danger d-lg-block mt-0 mb-0">
-                                    Check Out
-                                    <i class="fas fa-briefcase ms-1"></i>
-                                </a>
-                            </div>
+                    <div class="card-header pb-0">
+                        <div class="d-flex align-items-center">
+                            <p class="text-uppercase text-sm text-dark">Your activity</p>
+                            <button class="btn bg-gradient-danger ms-auto" @click="checkOut">Check Out <i class="fas fa-briefcase ms-1"></i></button>
                         </div>
+                    </div>
+                    <div class="card-body pt-0">
                         <hr class="horizontal dark" />
                         <div id="activities" style="overflow: auto; height: 300px">
                             <div v-for="(activity, activity_index) in activities" :key="activity.id">
@@ -82,8 +77,8 @@
             <div class="col-lg-5 col-md-5 mt-4 mt-sm-0">
                 <div class="card move-on-hover">
                     <div class="card-body">
-                        <div class="w-20 mx-auto mb-3">
-                            <img src="/assets/img/idea.png" alt="" class="img-fluid" />
+                        <div class="w-50 mx-auto mb-5">
+                            <img src="/assets/img/logo.png" alt="" class="img-fluid" />
                         </div>
                         <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
                         <div v-if="status == 'Out of Office' || status == 'Out Sick'" class="row text-center mt-6 mb-2">

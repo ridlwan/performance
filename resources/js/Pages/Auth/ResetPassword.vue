@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        <Link href="/login" class="text-primary text-gradient font-weight-bold">Back to Log In</Link>
+                                        <Link href="/login" class="text-primary text-gradient font-weight-bold">Back to Sign In</Link>
                                     </p>
                                 </div>
                             </div>

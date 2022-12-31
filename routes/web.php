@@ -30,4 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/out-sick', [AttendanceController::class, 'outSick']);
     Route::get('/attendance/history', [AttendanceController::class, 'history']);
     Route::get('/attendance/performance', [AttendanceController::class, 'performance']);
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::post('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar']);
+    Route::post('/profile/background', [ProfileController::class, 'updateBackground']);
 });
