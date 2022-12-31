@@ -24,6 +24,14 @@ class User extends Authenticatable
         self::STATUS_OUT_OF_OFFICE => 'Out of Office',
         self::STATUS_OUT_SICK => 'Out Sick',
     ];
+    
+    const REPORTED_NO = 0;
+    const REPORTED_YES = 1;
+
+    const REPORTED_ARRAY = [
+        self::REPORTED_NO => 'No',
+        self::REPORTED_YES => 'Yes',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +45,8 @@ class User extends Authenticatable
         'avatar',
         'background',
         'status',
+        'reported',
+        'resigned_at',
     ];
 
     /**
@@ -59,11 +69,20 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'status_text'
+        'status_text',
+        'reported_text'
+    ];
+
+    protected $dates = [
+        'resigned_at'
     ];
 
     public function getStatusTextAttribute() {
         return self::STATUS_ARRAY[$this->status];
+    }
+    
+    public function getReportedTextAttribute() {
+        return self::REPORTED_ARRAY[$this->reported];
     }
 
     public function attendances()

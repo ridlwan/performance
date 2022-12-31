@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('background')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('reported')->default(0);
+            $table->dateTime('resigned_at')->nullable();
             $table->timestamps();
         });
     }
