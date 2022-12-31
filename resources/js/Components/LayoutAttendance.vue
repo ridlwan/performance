@@ -6,7 +6,7 @@
             </template>
         </Header>
 
-        <div class="border-radius-xl mt-4 mx-4 position-relative" style="background-image: url('/assets/img/pexels-max-vakhtbovych-7750123.jpg'); background-size: cover">
+        <div class="border-radius-xl mt-4 mx-4 position-relative" :style="'background-image: url(' + backgroundImage + '); background-size: cover'">
             <main class="main-content mt-1 border-radius-lg">
                 <div class="section min-vh-85 position-relative">
                     <div class="container">
@@ -30,4 +30,15 @@
 import Header from "./Header.vue";
 import Sidenav from "./Sidenav.vue";
 import Footer from "./Footer.vue";
+import { usePage } from "@inertiajs/inertia-vue3";
+import { ref, onMounted, computed } from "vue";
+
+let backgroundImage = ref("/assets/img/pexels-max-vakhtbovych-7750123.jpg");
+const background = computed(() => usePage().props.value.auth.user.background);
+
+onMounted(() => {
+    if (background.value) {
+        backgroundImage.value = "/storage/" + background.value;
+    }
+});
 </script>

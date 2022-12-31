@@ -31,8 +31,8 @@
                                     <label class="form-control-label">Avatar</label>
                                     <div class="input-group mb-3">
                                         <div class="avatar avatar-l position-relative" style="border: 1px solid #d2d6da">
-                                            <img v-if="form.avatar" ref="avatarView" :src="'/storage/' + user.avatar" class="h-100 border-radius-lg shadow-sm image-inside-form" />
-                                            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg shadow-sm image-inside-form" />
+                                            <img v-if="form.avatar" ref="avatarView" :src="'/storage/' + user.avatar" class="h-100 border-radius-lg image-inside-form" />
+                                            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg image-inside-form" />
                                         </div>
                                         <input type="file" class="form-control" @change="attachAvatar" ref="avatarForm" style="padding-top: 12px; padding-left: 12px" :class="{ 'is-invalid': form.errors.avatar }" />
                                         <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateAvatar">Update</button>
@@ -42,12 +42,13 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Background</label>
+                                    <label class="form-control-label">Background</label>
                                     <div class="input-group mb-3">
                                         <div class="avatar avatar-l position-relative" style="border: 1px solid #d2d6da">
-                                            <img src="/assets/img/logo-sq.png" class="h-100 border-radius-lg shadow-sm image-inside-form" />
+                                            <img v-if="form.background" ref="backgroundView" :src="'/storage/' + user.background" class="h-100 border-radius-lg image-inside-form" />
+                                            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg image-inside-form" />
                                         </div>
-                                        <input type="file" class="form-control" style="padding-top: 12px; padding-left: 12px" :class="{ 'is-invalid': form.errors.background }" />
+                                        <input type="file" class="form-control" @change="attachBackground" ref="backgroundForm" style="padding-top: 12px; padding-left: 12px" :class="{ 'is-invalid': form.errors.background }" />
                                         <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateBackground">Update</button>
                                         <span v-if="form.errors.background" class="invalid-feedback">{{ form.errors.background }}</span>
                                     </div>
@@ -102,6 +103,7 @@ onMounted(() => {
 
     form.name = props.user.name;
     form.avatar = props.user.avatar;
+    form.background = props.user.background;
 });
 
 const updateName = () => {
@@ -110,20 +112,6 @@ const updateName = () => {
             Swal.fire({
                 icon: "success",
                 title: "Name changed <br> <i class='fa-solid fa-address-card'></i>",
-                text: "Your profile was successfully updated",
-                showConfirmButton: false,
-                timer: 3000,
-            });
-        },
-    });
-};
-
-const updateAvatar = () => {
-    form.post("/profile/avatar", {
-        onSuccess: () => {
-            Swal.fire({
-                icon: "success",
-                title: "Avatar changed <br> <i class='fa-solid fa-address-card'></i>",
                 text: "Your profile was successfully updated",
                 showConfirmButton: false,
                 timer: 3000,
@@ -149,5 +137,51 @@ const attachAvatar = () => {
     reader.readAsDataURL(form.avatar);
 };
 
-const updateBackground = () => {};
+const updateAvatar = () => {
+    form.post("/profile/avatar", {
+        onSuccess: () => {
+            Swal.fire({
+                icon: "success",
+                title: "Avatar changed <br> <i class='fa-solid fa-address-card'></i>",
+                text: "Your profile was successfully updated",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        },
+    });
+};
+
+const backgroundForm = ref(null);
+const backgroundView = ref(null);
+
+const attachBackground = () => {
+    form.background = backgroundForm.value.files[0];
+    let reader = new FileReader();
+    reader.addEventListener(
+        "load",
+        function () {
+            backgroundView.value.src = reader.result;
+        }.bind(this),
+        false
+    );
+
+    reader.readAsDataURL(form.background);
+};
+
+const updateBackground = () => {
+    form.post("/profile/background", {
+        onSuccess: () => {
+            Swal.fire({
+                title: "Background changed <br> <i class='fa-regular fa-image'></i>",
+                text: "Your page will refresh to show the latest background",
+                icon: "success",
+                confirmButtonText: "Okay",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        },
+    });
+};
 </script>
