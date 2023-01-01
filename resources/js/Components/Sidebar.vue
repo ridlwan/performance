@@ -18,14 +18,14 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </Link>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <Link class="nav-link" href="/">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Report</span>
                     </Link>
-                </li>
+                </li> -->
                 <hr class="horizontal dark mt-0 mb-0" />
                 <li class="nav-item">
                     <Link class="nav-link" href="/attendance">
