@@ -81,7 +81,7 @@
                             <img src="/assets/img/logo.png" alt="" class="img-fluid" />
                         </div>
                         <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
-                        <div v-if="status == 'Out of Office' || status == 'Out Sick'" class="row text-center mt-6 mb-2">
+                        <div v-if="status == 'Out of Office' || status == 'Out Sick' || outsideWorkingTime" class="row text-center mt-6 mb-2">
                             <span class="card-description opacity-7">Wish you all the best</span>
                         </div>
                         <div v-else>
@@ -150,6 +150,7 @@ const form = useForm({
 
 let addActivityForm = ref(false);
 let startTime = ref(null);
+let outsideWorkingTime = ref(false);
 
 const props = defineProps({
     quote: String,
@@ -165,6 +166,11 @@ onMounted(() => {
 
     if (status == "Working" && props.activities.length > 0) {
         scrollDown();
+    }
+
+    let now = new Date();
+    if (now.getHours() >= 23 || now.getHours() <= 1) {
+        outsideWorkingTime.value = true;
     }
 });
 
