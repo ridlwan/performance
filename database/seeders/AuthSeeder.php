@@ -111,6 +111,7 @@ class AuthSeeder extends Seeder
             'email' => 'fatur.ridlwan@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $fatur->assignRole('supervisor');
@@ -120,6 +121,7 @@ class AuthSeeder extends Seeder
             'email' => 'erlinda.safitri@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $erlinda->assignRole('supervisor');
@@ -144,6 +146,7 @@ class AuthSeeder extends Seeder
             'email' => 'galuh.danutirto@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $galuh->assignRole('staff');
@@ -153,6 +156,7 @@ class AuthSeeder extends Seeder
             'email' => 'rizky.ibrahim@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $rizky->assignRole('staff');
@@ -162,6 +166,7 @@ class AuthSeeder extends Seeder
             'email' => 'okitora.winnetou@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $okitora->assignRole('staff');
@@ -171,6 +176,7 @@ class AuthSeeder extends Seeder
             'email' => 'farhan.hadi@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $farhan->assignRole('staff');
@@ -180,6 +186,7 @@ class AuthSeeder extends Seeder
             'email' => 'surya.permana@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $surya->assignRole('staff');
@@ -189,6 +196,7 @@ class AuthSeeder extends Seeder
             'email' => 'vanadia.equila@opencloud.id',
             'password' => bcrypt('password'),
             'reported' => User::REPORTED_YES,
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $vanadia->assignRole('staff');
@@ -197,6 +205,7 @@ class AuthSeeder extends Seeder
             'name' => 'Putu Wijaya',
             'email' => 'putu.wijaya@opencloud.id',
             'password' => bcrypt('password'),
+            'teammate' => User::TEAMMATE_YES,
         ]);
 
         $putu->assignRole('staff');

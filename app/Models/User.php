@@ -32,6 +32,14 @@ class User extends Authenticatable
         self::REPORTED_NO => 'No',
         self::REPORTED_YES => 'Yes',
     ];
+    
+    const TEAMMATE_NO = 0;
+    const TEAMMATE_YES = 1;
+
+    const TEAMMATE_ARRAY = [
+        self::TEAMMATE_NO => 'No',
+        self::TEAMMATE_YES => 'Yes',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -46,6 +54,7 @@ class User extends Authenticatable
         'background',
         'status',
         'reported',
+        'teammate',
         'resigned_at',
     ];
 
@@ -70,7 +79,8 @@ class User extends Authenticatable
 
     protected $appends = [
         'status_text',
-        'reported_text'
+        'reported_text',
+        'teammate_text'
     ];
 
     protected $dates = [
@@ -83,6 +93,10 @@ class User extends Authenticatable
     
     public function getReportedTextAttribute() {
         return self::REPORTED_ARRAY[$this->reported];
+    }
+
+    public function getTeammateTextAttribute() {
+        return self::TEAMMATE_ARRAY[$this->teammate];
     }
 
     public function attendances()

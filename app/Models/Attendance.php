@@ -42,6 +42,11 @@ class Attendance extends Model
         return self::STATUS_ARRAY[$this->status];
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     public function activities()
     {
         return $this->hasMany(Activity::class);

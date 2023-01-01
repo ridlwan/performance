@@ -75,7 +75,7 @@
                                             <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
                                             <div class="d-flex flex-column">
                                                 <p class="mb-1 text-dark">{{ activity.description }}</p>
-                                                <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggled</span>
+                                                <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center text-sm font-weight-bold">
