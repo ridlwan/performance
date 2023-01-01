@@ -49,7 +49,7 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => Auth::user()->avatar,
                     'background' => Auth::user()->background,
                     'status' => Auth::user()->status_text,
-                    'auth_permissions' => Auth::user()->getAllPermissions()->pluck('name'),
+                    'permissions' => Auth::user()->getAllPermissions()->pluck('name'),
                 ]
             ] : null,
         ]);

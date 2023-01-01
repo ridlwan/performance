@@ -23,4 +23,12 @@
 import Sidebar from "./Sidebar.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
+import { onMounted } from "vue";
+
+onMounted(() => {
+    document.body.classList.remove("virtual-reality");
+    document.getElementById("navbar-main").classList.remove("mt-3");
+    document.getElementById("navbar-main").classList.remove("mx-3");
+    document.getElementById("navbar-main").classList.remove("bg-primary");
+});
 </script>

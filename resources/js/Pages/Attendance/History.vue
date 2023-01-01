@@ -126,13 +126,6 @@ const props = defineProps({
 
 let activities = ref([]);
 
-onMounted(() => {
-    document.body.classList.add("virtual-reality");
-    document.getElementById("navbar-main").classList.add("mt-3");
-    document.getElementById("navbar-main").classList.add("mx-3");
-    document.getElementById("navbar-main").classList.add("bg-primary");
-});
-
 const showActivities = (attendance) => {
     activities.value = attendance.activities;
 };

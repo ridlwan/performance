@@ -37,6 +37,11 @@ let backgroundImage = ref("/assets/img/pexels-max-vakhtbovych-7750123.jpg");
 const background = computed(() => usePage().props.value.auth.user.background);
 
 onMounted(() => {
+    document.body.classList.add("virtual-reality");
+    document.getElementById("navbar-main").classList.add("mt-3");
+    document.getElementById("navbar-main").classList.add("mx-3");
+    document.getElementById("navbar-main").classList.add("bg-primary");
+
     if (background.value) {
         backgroundImage.value = "/storage/" + background.value;
     }

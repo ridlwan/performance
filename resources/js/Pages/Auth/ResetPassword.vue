@@ -50,7 +50,13 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
+
+onMounted(() => {
+    document.body.classList.remove("g-sidenav-show");
+    document.body.classList.remove("bg-gray-100");
+});
 
 const props = defineProps({
     email: String,

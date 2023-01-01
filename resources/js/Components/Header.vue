@@ -7,11 +7,14 @@
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center"></div>
                 <ul class="navbar-nav justify-content-end">
-                    <li class="nav-item d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
+                    <li class="nav-item d-flex align-items-center" :class="{ 'px-3': permissions.includes('view-dashboard') }">
+                        <Link href="/profile" class="nav-link text-white font-weight-bold px-0">
                             <i class="fa fa-user me-sm-1"></i>
                             <span class="d-sm-inline d-none">{{ username }}</span>
-                        </a>
+                        </Link>
+                    </li>
+                    <li v-if="permissions.includes('view-dashboard')" class="nav-item d-flex align-items-center">
+                        <Link href="/" class="nav-link text-white p-0"><i class="fa-solid fa-desktop"></i></Link>
                     </li>
                     <li class="nav-item px-3 d-flex align-items-center">
                         <Link href="/logout" method="post" class="nav-link text-white p-0"><i class="fa-solid fa-power-off"></i></Link>
@@ -28,6 +31,7 @@ import { usePage, Link } from "@inertiajs/inertia-vue3";
 import { useToggleStore } from "../stores/ToggleStore";
 
 const username = computed(() => usePage().props.value.auth.user.username);
+const permissions = computed(() => usePage().props.value.auth.user.permissions);
 
 let toggle = useToggleStore();
 </script>
