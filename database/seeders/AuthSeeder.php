@@ -36,9 +36,11 @@ class AuthSeeder extends Seeder
         $permissions = [
             'doing-attendance',
             'manage-attendance',
+            'view-dashboard',
             'view-report',
             'manage-report',
             'manage-account',
+            'manage-profile',
         ];
 
         foreach ($permissions as $permission) {
@@ -55,9 +57,11 @@ class AuthSeeder extends Seeder
             $supervisorPermissions = [
                 'doing-attendance',
                 'manage-attendance',
+                'view-dashboard',
                 'view-report',
                 'manage-report',
                 'manage-account',
+                'manage-profile'
             ];
 
             $supervisorPermissionId = Permission::whereIn('name', $supervisorPermissions)->pluck('id');
@@ -68,6 +72,7 @@ class AuthSeeder extends Seeder
         if ($staffRole = Role::where('name', 'staff')->first()) {
             $staffPermissions = [
                 'doing-attendance',
+                'manage-profile'
             ];
 
             $staffPermissionId = Permission::whereIn('name', $staffPermissions)->pluck('id');
@@ -77,6 +82,7 @@ class AuthSeeder extends Seeder
 
         if ($executiveRole = Role::where('name', 'executive')->first()) {
             $executivePermissions = [
+                'view-dashboard',
                 'view-report',
             ];
 

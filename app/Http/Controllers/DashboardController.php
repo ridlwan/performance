@@ -10,6 +10,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (!Auth::user()->can('view-dashboard')) {
+            return redirect('/attendance');
+        }
+
         return Inertia::render('Dashboard/Index', [
             'title' => 'Dashboard'
         ]);
