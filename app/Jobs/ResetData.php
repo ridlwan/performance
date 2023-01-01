@@ -35,8 +35,6 @@ class ResetData implements ShouldQueue
      */
     public function handle()
     {
-        DB::beginTransaction();
-        
         foreach (User::get() as $user) {
             $user->status = User::STATUS_NOT_AVAILABLE;
             $user->save();
@@ -44,6 +42,8 @@ class ResetData implements ShouldQueue
 
         $activities = Activity::whereNull('end')->get();
         foreach ($activities as $activity) {
+            DB::beginTransaction();
+
             if ($activity->start->diffInMinutes(Carbon::now()) > 60) {
                 $activity->end = $activity->start->addMinutes(60);
                 $activity->duration = 60;
@@ -64,6 +64,8 @@ class ResetData implements ShouldQueue
             $attendance->end = $activity->end;
             $attendance->duration = $attendance->activities->sum('duration');
             $attendance->save();
+
+            DB::commit();
         }
 
         $reloginAttendances = Attendance::whereNotNull('relogin')->get();
@@ -78,7 +80,5 @@ class ResetData implements ShouldQueue
             $unFinishedAttendance->duration = 0;
             $unFinishedAttendance->save();
         }
-        
-        DB::commit();
     }
 }
