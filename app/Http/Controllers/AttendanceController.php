@@ -19,7 +19,7 @@ class AttendanceController extends Controller
     {
         $quote = Inspiring::quote();
 
-        $relogin = $this->relogin();
+        $relogin = $this->isRelogin();
         $activities = [];
 
         if (Auth::user()->attendances->count() > 0) {
@@ -71,7 +71,7 @@ class AttendanceController extends Controller
     {
         DB::beginTransaction();
 
-        $relogin = $this->relogin();
+        $relogin = $this->isRelogin();
 
         if ($relogin) {
             $lastAttendance = Auth::user()->attendances->last();
@@ -92,7 +92,7 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function relogin()
+    public function isRelogin()
     {
         $relogin = false;
 
@@ -117,86 +117,101 @@ class AttendanceController extends Controller
 
     public function addActivity(Request $request)
     {
-        DB::beginTransaction();
-
-        $relogin = $this->relogin();
-
-        if (Auth::user()->attendances->last()->activities->count() < 1 || $relogin) {
-            $request->validate([
-                'description' => 'required'
-            ]);
-
-            $firstActivity = true;
-        } else {
-            $validator = Validator::make($request->all(), [
-                'description' => 'required',
-                'start' => 'required',
-            ]);
-
-            $validator->after(function ($validator) use ($request) {
-                if ($request->start) {
-                    if (Carbon::now()->setTimeFromTimeString($request->start)->gt(Carbon::now())) {
-                        $validator->errors()->add(
-                            'start',
-                            'start time greater than now'
-                        );
+        if ($this->isAvailable()) {
+            DB::beginTransaction();
+    
+            $relogin = $this->isRelogin();
+    
+            if (Auth::user()->attendances->last()->activities->count() < 1 || $relogin) {
+                $request->validate([
+                    'description' => 'required'
+                ]);
+    
+                $firstActivity = true;
+            } else {
+                $validator = Validator::make($request->all(), [
+                    'description' => 'required',
+                    'start' => 'required',
+                ]);
+    
+                $validator->after(function ($validator) use ($request) {
+                    if ($request->start) {
+                        if (Carbon::now()->setTimeFromTimeString($request->start)->gt(Carbon::now())) {
+                            $validator->errors()->add(
+                                'start',
+                                'start time greater than now'
+                            );
+                        }
+    
+                        if (Carbon::now()->setTimeFromTimeString($request->start)->lte(Auth::user()->attendances->last()->activities->last()->start)) {
+                            $validator->errors()->add(
+                                'start',
+                                'start time less than last start activity'
+                            );
+                        }
                     }
-
-                    if (Carbon::now()->setTimeFromTimeString($request->start)->lte(Auth::user()->attendances->last()->activities->last()->start)) {
-                        $validator->errors()->add(
-                            'start',
-                            'start time less than last start activity'
-                        );
-                    }
+                });
+    
+                if ($validator->fails()) {
+                    return redirect()->back()->withErrors($validator);
                 }
-            });
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator);
+    
+                $firstActivity = false;
             }
-
-            $firstActivity = false;
-        }
-
-        $data = $request->all();
-        $data['attendance_id'] = Auth::user()->attendances->last()->id;
-
-        if ($firstActivity) {
+    
+            $data = $request->all();
+            $data['attendance_id'] = Auth::user()->attendances->last()->id;
+    
+            if ($firstActivity) {
+                if ($relogin) {
+                    $data['start'] = Auth::user()->attendances->last()->relogin;
+                } else {
+                    $data['start'] = Auth::user()->attendances->last()->start;
+                }
+            } else {
+                $data['start'] = Carbon::now()->setTimeFromTimeString($request->start);
+    
+                $lastActivity = Auth::user()->attendances->last()->activities->last();
+                $lastActivity->end = Carbon::now()->setTimeFromTimeString($request->start);
+    
+                $duration = $lastActivity->start->diffInMinutes(Carbon::now()->setTimeFromTimeString($request->start));
+    
+                if ($duration > 0) {
+                    $lastActivity->duration = $duration;
+                } else {
+                    $lastActivity->duration = 1;
+                }
+    
+                $lastActivity->save();
+            }
+    
+            Activity::create($data);
+    
             if ($relogin) {
-                $data['start'] = Auth::user()->attendances->last()->relogin;
-            } else {
-                $data['start'] = Auth::user()->attendances->last()->start;
+                $lastAttendance = Auth::user()->attendances->last();
+                $lastAttendance->end = null;
+                $lastAttendance->relogin = null;
+                $lastAttendance->duration = null;
+                $lastAttendance->save();
             }
-        } else {
-            $data['start'] = Carbon::now()->setTimeFromTimeString($request->start);
-
-            $lastActivity = Auth::user()->attendances->last()->activities->last();
-            $lastActivity->end = Carbon::now()->setTimeFromTimeString($request->start);
-
-            $duration = $lastActivity->start->diffInMinutes(Carbon::now()->setTimeFromTimeString($request->start));
-
-            if ($duration > 0) {
-                $lastActivity->duration = $duration;
-            } else {
-                $lastActivity->duration = 1;
-            }
-
-            $lastActivity->save();
+    
+            DB::commit();
         }
-
-        Activity::create($data);
-
-        if ($relogin) {
-            $lastAttendance = Auth::user()->attendances->last();
-            $lastAttendance->end = null;
-            $lastAttendance->relogin = null;
-            $lastAttendance->duration = null;
-            $lastAttendance->save();
-        }
-
-        DB::commit();
 
         return redirect()->back();
+    }
+
+    public function isAvailable()
+    {
+        $available = false;
+
+        $relogin = $this->isRelogin();
+
+        if (Auth::user()->status == User::STATUS_WORKING || (Auth::user()->status == User::STATUS_WORKING && $relogin)) {
+            $available = true;
+        }
+
+        return $available;
     }
 
     public function checkOut()

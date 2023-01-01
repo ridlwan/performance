@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Activity;
 use App\Models\Attendance;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,6 +35,8 @@ class ResetData implements ShouldQueue
      */
     public function handle()
     {
+        DB::beginTransaction();
+        
         foreach (User::get() as $user) {
             $user->status = User::STATUS_NOT_AVAILABLE;
             $user->save();
@@ -46,9 +49,15 @@ class ResetData implements ShouldQueue
                 $activity->duration = 60;
                 $activity->save();
             } else {
-                $activity->end = Carbon::now();
-                $activity->duration = $activity->start->diffInMinutes(Carbon::now());
-                $activity->save();
+                if ($activity->start->diffInMinutes(Carbon::now()) < 1) {
+                    $activity->end = Carbon::now();
+                    $activity->duration = 1;
+                    $activity->save();
+                } else {
+                    $activity->end = Carbon::now();
+                    $activity->duration = $activity->start->diffInMinutes(Carbon::now());
+                    $activity->save();
+                }
             }
 
             $attendance = $activity->attendance;
@@ -62,5 +71,14 @@ class ResetData implements ShouldQueue
             $reloginAttendance->relogin = null;
             $reloginAttendance->save();
         }
+        
+        $unFinishedAttendances = Attendance::whereNull('end')->get();
+        foreach ($unFinishedAttendances as $unFinishedAttendance) {
+            $unFinishedAttendance->end = $unFinishedAttendance->start;
+            $unFinishedAttendance->duration = 0;
+            $unFinishedAttendance->save();
+        }
+        
+        DB::commit();
     }
 }
