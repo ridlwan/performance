@@ -34,7 +34,9 @@ class DashboardController extends Controller
 
         $activities = Activity::with('attendance.user')
             ->whereDate('created_at', Carbon::now())
-            ->where('teammate', User::TEAMMATE_YES)
+            ->whereHas('attendance.user', function ($query) {
+                $query->where('teammate', User::TEAMMATE_YES);
+            })
             ->orderByDesc('id')->get();
 
         return Inertia::render('Dashboard/Index', [

@@ -189,6 +189,7 @@ const checkIn = () => {
             cancelButtonColor: "orange",
             confirmButtonText: "Let's Go! <i class='fa-solid fa-person-skating'></i>",
             cancelButtonText: "Nope, Just kidding <i class='fa-solid fa-bed'></i>",
+            allowOutsideClick: false,
         }).then((result) => {
             definePosition();
         });
@@ -200,16 +201,20 @@ const checkIn = () => {
 const definePosition = () => {
     Swal.fire({
         title: "Define you position? <br> <i class='fa-solid fa-crosshairs'></i>",
-        text: "Are you working remotely or onsite?",
+        text: "Are you working onsite or remotely?",
         icon: "question",
+        showDenyButton: true,
         showCancelButton: true,
-        cancelButtonColor: "#2ebd59",
-        confirmButtonText: "Remotely <i class='fa-solid fa-person-snowboarding'></i>",
-        cancelButtonText: "Onsite <i class='fa-solid fa-person-shelter'></i>",
+        denyButtonColor: "#2ebd59",
+        cancelButtonColor: "orange",
+        confirmButtonText: "Onsite <i class='fa-solid fa-person-shelter'></i>",
+        denyButtonText: "Remotely <i class='fa-solid fa-person-snowboarding'></i>",
+        cancelButtonText: "Wait <i class='fa-regular fa-clock'></i>",
+        allowOutsideClick: false,
     }).then((result) => {
         if (result.isConfirmed) {
             Inertia.post("/attendance/check-in", {
-                position: "remotely",
+                position: "onsite",
             });
 
             if (props.relogin) {
@@ -217,9 +222,9 @@ const definePosition = () => {
             } else {
                 alertLogin();
             }
-        } else {
+        } else if (result.isDenied) {
             Inertia.post("/attendance/check-in", {
-                position: "onsite",
+                position: "remotely",
             });
 
             if (props.relogin) {
