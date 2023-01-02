@@ -5,25 +5,25 @@
         </template>
 
         <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-20 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Working</p>
-                                    <h5 class="font-weight-bolder text-success">{{ working.length }}</h5>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Remotely</p>
+                                    <h5 class="font-weight-bolder text-success">{{ workingRemotely.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
-                                <a v-if="working.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" class="icon icon-shape bg-gradient-primary text-center rounded-circle" @click="showUser('working')">
+                                <a v-if="workingRemotely.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" class="icon icon-shape bg-gradient-primary text-center rounded-circle" @click="showUser('workingRemotely')">
                                     <h3>
-                                        <i class="fa-solid fa-person-digging mt-2 text-white"></i>
+                                        <i class="fa-solid fa-person-snowboarding mt-2 text-white"></i>
                                     </h3>
                                 </a>
                                 <span v-else class="icon icon-shape bg-gradient-primary text-center rounded-circle">
                                     <h3>
-                                        <i class="fa-solid fa-person-digging mt-2 text-white"></i>
+                                        <i class="fa-solid fa-person-snowboarding mt-2 text-white"></i>
                                     </h3>
                                 </span>
                             </div>
@@ -31,13 +31,39 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-20 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Out of Office</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Onsite</p>
+                                    <h5 class="font-weight-bolder text-success">{{ workingOnsite.length }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <a v-if="workingOnsite.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" class="icon icon-shape bg-gradient-primary text-center rounded-circle" @click="showUser('workingOnsite')">
+                                    <h3>
+                                        <i class="fa-solid fa-person-shelter mt-2 text-white"></i>
+                                    </h3>
+                                </a>
+                                <span v-else class="icon icon-shape bg-gradient-primary text-center rounded-circle">
+                                    <h3>
+                                        <i class="fa-solid fa-person-shelter mt-2 text-white"></i>
+                                    </h3>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-20 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Out Office</p>
                                     <h5 class="font-weight-bolder text-warning">{{ outOfOffice.length }}</h5>
                                 </div>
                             </div>
@@ -57,7 +83,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-20 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -83,13 +109,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6">
+            <div class="col-20 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Not Available</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Unavailable</p>
                                     <h5 class="font-weight-bolder text-secondary">{{ notAvailable.length }}</h5>
                                 </div>
                             </div>
@@ -200,12 +226,20 @@
     </Layout>
 </template>
 
+<style>
+.col-20 {
+    flex: 0 0 auto;
+    width: 20%;
+}
+</style>
+
 <script setup>
 import { ref } from "vue";
 import Layout from "../../Components/Layout.vue";
 
 const props = defineProps({
-    working: Array,
+    workingRemotely: Array,
+    workingOnsite: Array,
     outOfOffice: Array,
     outSick: Array,
     notAvailable: Array,
@@ -216,9 +250,14 @@ let users = ref([]);
 let userListTitle = ref(null);
 
 const showUser = (status) => {
-    if (status == "working") {
-        users.value = props.working;
-        userListTitle.value = "Working";
+    if (status == "workingRemotely") {
+        users.value = props.workingRemotely;
+        userListTitle.value = "Working Remotely";
+    }
+
+    if (status == "workingOnsite") {
+        users.value = props.workingOnsite;
+        userListTitle.value = "Working Onsite";
     }
 
     if (status == "outOfOffice") {

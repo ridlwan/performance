@@ -4,7 +4,7 @@
             <h6 class="font-weight-bolder text-white mb-0">Attendance</h6>
         </template>
 
-        <div class="row" v-if="status == 'Working'">
+        <div class="row" v-if="status == 'Working Remotely' || status == 'Working Onsite'">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header pb-0">
@@ -98,13 +98,13 @@
                                     <div class="col-md-6">
                                         <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0">
                                             Out of Office
-                                            <i class="fas fa-snowboarding ms-1"></i>
+                                            <i class="fas fa-person-walking-luggage ms-1"></i>
                                         </a>
                                     </div>
                                     <div class="col-md-6 text-end">
                                         <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0">
                                             Out Sick
-                                            <i class="fas fa-head-side-cough ms-1"></i>
+                                            <i class="fas fa-bed ms-1"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-    if (status == "Working" && props.activities.length > 0) {
+    if ((status == "Working Remotely" || status == "Working Onsite") && props.activities.length > 0) {
         scrollDown();
     }
 
@@ -183,32 +183,70 @@ const checkIn = () => {
     if (props.relogin) {
         Swal.fire({
             title: "Fight longer? <br> <i class='fa-solid fa-robot'></i>",
-            text: "Do you want to re-login?",
+            text: "Do you want to re-check-in?",
             icon: "warning",
             showCancelButton: true,
             cancelButtonColor: "orange",
             confirmButtonText: "Let's Go! <i class='fa-solid fa-person-skating'></i>",
             cancelButtonText: "Nope, Just kidding <i class='fa-solid fa-bed'></i>",
         }).then((result) => {
-            if (result.isConfirmed) {
-                Inertia.post("/attendance/check-in");
-                Swal.fire({
-                    title: "Welcome Back <br> <i class='fa-solid fa-user-secret'></i>",
-                    text: "Continue unfinished mission",
-                    icon: "success",
-                    confirmButtonText: "Sure",
-                });
-            }
+            definePosition();
         });
     } else {
-        Inertia.post("/attendance/check-in");
-        Swal.fire({
-            title: "You're in! <br> <i class='fa-solid fa-user-secret'></i>",
-            text: "Start the journey and enjoy your work",
-            icon: "success",
-            confirmButtonText: "Cool",
-        });
+        definePosition();
     }
+};
+
+const definePosition = () => {
+    Swal.fire({
+        title: "Define you position? <br> <i class='fa-solid fa-crosshairs'></i>",
+        text: "Are you working remotely or onsite?",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonColor: "#2ebd59",
+        confirmButtonText: "Remotely <i class='fa-solid fa-person-snowboarding'></i>",
+        cancelButtonText: "Onsite <i class='fa-solid fa-person-shelter'></i>",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Inertia.post("/attendance/check-in", {
+                position: "remotely",
+            });
+
+            if (props.relogin) {
+                alertRelogin();
+            } else {
+                alertLogin();
+            }
+        } else {
+            Inertia.post("/attendance/check-in", {
+                position: "onsite",
+            });
+
+            if (props.relogin) {
+                alertRelogin();
+            } else {
+                alertLogin();
+            }
+        }
+    });
+};
+
+const alertLogin = () => {
+    Swal.fire({
+        title: "You're in! <br> <i class='fa-solid fa-user-secret'></i>",
+        text: "Start the journey and enjoy your work",
+        icon: "success",
+        confirmButtonText: "Cool",
+    });
+};
+
+const alertRelogin = () => {
+    Swal.fire({
+        title: "Welcome Back <br> <i class='fa-solid fa-user-secret'></i>",
+        text: "Continue unfinished mission",
+        icon: "success",
+        confirmButtonText: "Sure",
+    });
 };
 
 const openActivityForm = () => {
@@ -310,7 +348,7 @@ const struggling = (id) => {
 
 const outOfOffice = () => {
     Swal.fire({
-        title: "Hey, Yo... <br> <i class='fa-solid fa-person-snowboarding'></i>",
+        title: "Hey, Yo... <br> <i class='fa-solid fa-person-walking-luggage'></i>",
         text: "Are you unable to work today?",
         icon: "question",
         showCancelButton: true,

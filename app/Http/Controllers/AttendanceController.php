@@ -67,7 +67,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function checkIn()
+    public function checkIn(Request $request)
     {
         DB::beginTransaction();
 
@@ -84,7 +84,12 @@ class AttendanceController extends Controller
             ]);
         }
 
-        Auth::user()->status = User::STATUS_WORKING;
+        if ($request->position == 'remotely') {
+            Auth::user()->status = User::STATUS_WORKING_REMOTELY;
+        } else {
+            Auth::user()->status = User::STATUS_WORKING_ONSITE;
+        }
+        
         Auth::user()->save();
 
         DB::commit();
@@ -207,7 +212,7 @@ class AttendanceController extends Controller
 
         $relogin = $this->isRelogin();
 
-        if (Auth::user()->status == User::STATUS_WORKING || (Auth::user()->status == User::STATUS_WORKING && $relogin)) {
+        if ((Auth::user()->status == User::STATUS_WORKING_REMOTELY || Auth::user()->status == User::STATUS_WORKING_ONSITE) || ((Auth::user()->status == User::STATUS_WORKING_REMOTELY || Auth::user()->status == User::STATUS_WORKING_ONSITE) && $relogin)) {
             $available = true;
         }
 

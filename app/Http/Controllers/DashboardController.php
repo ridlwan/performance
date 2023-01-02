@@ -17,7 +17,10 @@ class DashboardController extends Controller
             return redirect('/attendance');
         }
 
-        $working = User::where('status', User::STATUS_WORKING)
+        $workingRemotely = User::where('status', User::STATUS_WORKING_REMOTELY)
+            ->where('teammate', User::TEAMMATE_YES)->get();
+
+        $workingOnsite = User::where('status', User::STATUS_WORKING_ONSITE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
         $outOfOffice = User::where('status', User::STATUS_OUT_OF_OFFICE)
@@ -34,7 +37,8 @@ class DashboardController extends Controller
             ->orderByDesc('id')->get();
 
         return Inertia::render('Dashboard/Index', [
-            'working' => $working,
+            'workingRemotely' => $workingRemotely,
+            'workingOnsite' => $workingOnsite,
             'outOfOffice' => $outOfOffice,
             'outSick' => $outSick,
             'notAvailable' => $notAvailable,
