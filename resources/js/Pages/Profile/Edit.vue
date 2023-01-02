@@ -127,29 +127,33 @@ const updateName = () => {
 };
 
 const updatePassword = () => {
-    Swal.fire({
-        title: "Are you sure? <br> <i class='fa-solid fa-key'></i>",
-        text: "Do you want to update your password?",
-        icon: "warning",
-        showCancelButton: true,
-        cancelButtonColor: "orange",
-        confirmButtonText: "Yes, please!",
-        cancelButtonText: "No",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            form.post("/profile/password", {
-                onSuccess: () => {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Password changed <br> <i class='fa-solid fa-key'></i>",
-                        text: "Your profile was successfully updated",
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                },
-            });
-        }
-    });
+    if (form.password) {
+        Swal.fire({
+            title: "Are you sure? <br> <i class='fa-solid fa-key'></i>",
+            text: "Do you want to update your password?",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "orange",
+            confirmButtonText: "Yes, please!",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.post("/profile/password", {
+                    onSuccess: () => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Password changed <br> <i class='fa-solid fa-key'></i>",
+                            text: "Your profile was successfully updated",
+                            showConfirmButton: false,
+                            timer: 3000,
+                        });
+                    },
+                });
+            }
+        });
+    } else {
+        form.errors.password = "The password field is required.";
+    }
 };
 
 const avatarForm = ref(null);
