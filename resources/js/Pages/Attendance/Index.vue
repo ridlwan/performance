@@ -171,14 +171,6 @@ onMounted(() => {
 
 const status = computed(() => usePage().props.value.auth.user.status);
 
-const startTimeData = computed(() => {
-    if (startTime.value) {
-        form.start = startTime.value.hours + ":" + startTime.value.minutes;
-    } else {
-        form.start = null;
-    }
-});
-
 const checkIn = () => {
     if (props.relogin) {
         Swal.fire({
@@ -269,6 +261,7 @@ const closeActivityForm = () => {
 };
 
 const addActivity = () => {
+    form.start = startTime.value.hours + ":" + startTime.value.minutes;
     form.post("/attendance", {
         onSuccess: () => {
             addActivityForm.value = false;
