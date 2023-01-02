@@ -12,7 +12,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Full Name</label>
+                                    <label class="form-control-label">Name</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
                                         <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateName">Update</button>
@@ -24,6 +24,16 @@
                                 <div class="form-group">
                                     <label class="form-control-label">Email Address</label>
                                     <input class="form-control" type="email" v-model="user.email" disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Password</label>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" v-model="form.password" :class="{ 'is-invalid': form.errors.password }" />
+                                        <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updatePassword">Update</button>
+                                        <span v-if="form.errors.password" class="invalid-feedback">{{ form.errors.password }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -87,6 +97,7 @@ import Swal from "sweetalert2";
 
 const form = useForm({
     name: null,
+    password: null,
     avatar: null,
     background: null,
 });
@@ -112,6 +123,32 @@ const updateName = () => {
                 timer: 3000,
             });
         },
+    });
+};
+
+const updatePassword = () => {
+    Swal.fire({
+        title: "Are you sure? <br> <i class='fa-solid fa-key'></i>",
+        text: "Do you want to update your password?",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "orange",
+        confirmButtonText: "Yes, please!",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.post("/profile/password", {
+                onSuccess: () => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Password changed <br> <i class='fa-solid fa-key'></i>",
+                        text: "Your profile was successfully updated",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                },
+            });
+        }
     });
 };
 

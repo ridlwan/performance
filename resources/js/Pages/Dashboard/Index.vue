@@ -127,12 +127,16 @@
                                     <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
 
                                     <span class="avatar avatar-md border-0 me-3" :title="activity.attendance.user.name">
-                                        <img :src="activity.attendance.user.avatar ? '/storage/' + activity.attendance.user.avatar : '/assets/img/logo-sq.png'" class="h-100 border-radius-lg shadow-lg" />
+                                        <img :src="activity.attendance.user.avatar ? '/storage/' + activity.attendance.user.avatar : '/assets/img/logo-sq.png'" class="h-100 border-radius-lg shadow-lg" style="width: 48px !important" />
                                     </span>
 
                                     <div class="d-flex flex-column">
-                                        <p class="mb-1 text-dark">{{ activity.description }}</p>
-                                        <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                        <div>
+                                            <span class="text-dark text-sm font-weight-bold opacity-7">{{ activity.attendance.user.name }}</span>
+
+                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                        </div>
+                                        <p class="mb-1 mt-2 text-dark text-sm">{{ activity.description }}</p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center text-sm font-weight-bold">
@@ -180,7 +184,7 @@
                                         <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="h-100 border-radius-lg shadow-lg" />
                                     </span>
                                     <div class="d-flex flex-column">
-                                        <p class="mb-1 text-dark">{{ user.name }}</p>
+                                        <p class="mt-3 text-dark text-sm font-weight-bold opacity-7">{{ user.name }}</p>
                                         <span v-if="user.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                     </div>
                                 </div>
@@ -188,7 +192,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

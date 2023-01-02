@@ -99,7 +99,7 @@
                                 </ul>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>

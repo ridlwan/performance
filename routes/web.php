@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/performance', [AttendanceController::class, 'performance'])->middleware(['can:doing-attendance']);;
     Route::get('/profile', [ProfileController::class, 'edit'])->middleware(['can:manage-profile']);;
     Route::post('/profile', [ProfileController::class, 'update'])->middleware(['can:manage-profile']);;
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->middleware(['can:manage-profile']);;
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);;
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);;
 });

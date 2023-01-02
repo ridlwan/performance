@@ -28,6 +28,19 @@ class ProfileController extends Controller
 
         return redirect()->back();
     }
+    
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|max:255',
+        ]);
+
+        $user = Auth::user();
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect()->back();
+    }
 
     public function updateAvatar(Request $request)
     {
