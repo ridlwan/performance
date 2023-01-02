@@ -200,7 +200,7 @@ const checkIn = () => {
 
 const definePosition = () => {
     Swal.fire({
-        title: "Define you position? <br> <i class='fa-solid fa-crosshairs'></i>",
+        title: "Define your position? <br> <i class='fa-solid fa-crosshairs'></i>",
         text: "Are you working onsite or remotely?",
         icon: "question",
         showDenyButton: true,
