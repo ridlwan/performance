@@ -107,8 +107,8 @@ class AttendanceController extends Controller
         
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
-        event(new StatusEvent('New status'));
+        // event(new ActivityEvent('New notification'));
+        // event(new StatusEvent('New status'));
 
         DB::commit();
 
@@ -134,7 +134,7 @@ class AttendanceController extends Controller
             $activity->struggle = Activity::STRUGGLE_YES;
             $activity->save();
 
-            event(new ActivityEvent('New notification'));
+            // event(new ActivityEvent('New notification'));
         }
 
         return redirect()->back();
@@ -220,7 +220,7 @@ class AttendanceController extends Controller
                 $lastAttendance->save();
             }
 
-            event(new ActivityEvent('New notification'));
+            // event(new ActivityEvent('New notification'));
     
             DB::commit();
         }
@@ -238,7 +238,7 @@ class AttendanceController extends Controller
             $activity->description = $request->description_updated;
             $activity->save();
 
-            event(new ActivityEvent('New notification'));
+            // event(new ActivityEvent('New notification'));
         }
 
         return redirect()->back();
@@ -290,8 +290,8 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
-        event(new StatusEvent('New status'));
+        // event(new ActivityEvent('New notification'));
+        // event(new StatusEvent('New status'));
 
         DB::commit();
 
@@ -308,7 +308,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
+        // event(new ActivityEvent('New notification'));
 
         return redirect()->back();
     }
@@ -323,7 +323,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_SICK;
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
+        // event(new ActivityEvent('New notification'));
 
         return redirect()->back();
     }
