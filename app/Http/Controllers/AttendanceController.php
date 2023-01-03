@@ -290,8 +290,8 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
-        // event(new ActivityEvent('New notification'));
-        // event(new StatusEvent('New status'));
+        event(new ActivityEvent('New notification'));
+        event(new StatusEvent('New status'));
 
         DB::commit();
 
