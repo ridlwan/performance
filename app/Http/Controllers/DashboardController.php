@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Activity;
+use App\Events\StatusEvent;
 use Illuminate\Http\Request;
+use App\Events\ActivityEvent;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -47,5 +49,12 @@ class DashboardController extends Controller
             'notAvailable' => $notAvailable,
             'activities' => $activities
         ]);
+    }
+    
+    public function pusher()
+    {
+        event(new ActivityEvent('New notification'));
+        event(new StatusEvent('New status'));
+        return 'ok';
     }
 }

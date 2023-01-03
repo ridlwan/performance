@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardController;
 require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/pusher', [DashboardController::class, 'pusher']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/working-user', [AttendanceController::class, 'workingUser'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->middleware(['can:doing-attendance']);
