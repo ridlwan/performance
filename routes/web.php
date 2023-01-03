@@ -22,6 +22,7 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['can:doing-attendance']);
+    Route::get('/attendance/working-user', [AttendanceController::class, 'workingUser'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->middleware(['can:doing-attendance']);
     Route::post('/attendance', [AttendanceController::class, 'addActivity'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/update/{id}', [AttendanceController::class, 'updateActivity'])->middleware(['can:doing-attendance']);

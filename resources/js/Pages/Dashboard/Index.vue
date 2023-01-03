@@ -251,7 +251,7 @@ const props = defineProps({
 let users = ref([]);
 let userListTitle = ref(null);
 
-window.Echo.channel("notification-channel").listen(".notification-event", (e) => {
+window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
     console.log(e.message);
     Inertia.get("/");
 });

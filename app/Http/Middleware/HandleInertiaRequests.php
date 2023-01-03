@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

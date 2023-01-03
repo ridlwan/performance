@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationEvent implements ShouldBroadcast
+class ActivityEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -23,11 +23,11 @@ class NotificationEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['notification-channel'];
+        return ['activity-channel'];
     }
 
     public function broadcastAs()
     {
-        return 'notification-event';
+        return 'activity-event';
     }
 }

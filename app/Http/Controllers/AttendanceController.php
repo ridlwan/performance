@@ -7,8 +7,9 @@ use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Activity;
 use App\Models\Attendance;
+use App\Events\StatusEvent;
 use Illuminate\Http\Request;
-use App\Events\NotificationEvent;
+use App\Events\ActivityEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,19 @@ class AttendanceController extends Controller
             'activities' => $activities,
             'relogin' => $relogin
         ]);
+    }
+    
+    public function workingUser()
+    {
+        $workingUsers = User::where('teammate', User::TEAMMATE_YES)
+                ->where(function ($query) {
+                    $query->where('status', User::STATUS_WORKING_REMOTELY)
+                    ->orWhere('status', User::STATUS_WORKING_ONSITE);
+                })
+                ->orderByDesc('updated_at')
+                ->get();
+
+        return $workingUsers;
     }
 
     public function history()
@@ -93,7 +107,8 @@ class AttendanceController extends Controller
         
         Auth::user()->save();
 
-        event(new NotificationEvent('New notification'));
+        event(new ActivityEvent('New notification'));
+        event(new StatusEvent('New status'));
 
         DB::commit();
 
@@ -119,7 +134,7 @@ class AttendanceController extends Controller
             $activity->struggle = Activity::STRUGGLE_YES;
             $activity->save();
 
-            event(new NotificationEvent('New notification'));
+            event(new ActivityEvent('New notification'));
         }
 
         return redirect()->back();
@@ -205,7 +220,7 @@ class AttendanceController extends Controller
                 $lastAttendance->save();
             }
 
-            event(new NotificationEvent('New notification'));
+            event(new ActivityEvent('New notification'));
     
             DB::commit();
         }
@@ -223,7 +238,7 @@ class AttendanceController extends Controller
             $activity->description = $request->description_updated;
             $activity->save();
 
-            event(new NotificationEvent('New notification'));
+            event(new ActivityEvent('New notification'));
         }
 
         return redirect()->back();
@@ -275,7 +290,8 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
-        event(new NotificationEvent('New notification'));
+        event(new ActivityEvent('New notification'));
+        event(new StatusEvent('New status'));
 
         DB::commit();
 
@@ -292,7 +308,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
         Auth::user()->save();
 
-        event(new NotificationEvent('New notification'));
+        event(new ActivityEvent('New notification'));
 
         return redirect()->back();
     }
@@ -307,7 +323,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_SICK;
         Auth::user()->save();
 
-        event(new NotificationEvent('New notification'));
+        event(new ActivityEvent('New notification'));
 
         return redirect()->back();
     }
