@@ -205,6 +205,20 @@ class AttendanceController extends Controller
 
         return redirect()->back();
     }
+    
+    public function updateActivity(Request $request, $id)
+    {
+        if ($activity = Activity::find($id)) {
+            $request->validate([
+                'description_updated' => 'required'
+            ]);
+
+            $activity->description = $request->description_updated;
+            $activity->save();
+        }
+
+        return redirect()->back();
+    }
 
     public function isAvailable()
     {

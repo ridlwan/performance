@@ -21,7 +21,9 @@
                                     <span class="mb-0 me-3 font-weight-bolder opacity-7" style="white-space: nowrap">{{ activity.start_time }}</span>
                                     <div>
                                         <h6 class="mb-0">
-                                            <small class="font-weight-normal">{{ activity.description }}</small>
+                                            <small class="font-weight-normal"
+                                                >{{ activity.description }} <a href="javascript:;" @click="openEditActivityForm(activity)"><i class="fas fa-pencil-alt text-primary me-3" aria-hidden="true"></i></a
+                                            ></small>
                                         </h6>
                                         <button v-if="activity_index == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0" data-bs-toggle="tooltip" title="I'm struggling here">
                                             <span class="btn-inner--icon"><i class="fa-solid fa-user-ninja"></i></span>
@@ -59,7 +61,23 @@
                                     <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
                                 </div>
                             </div>
-
+                            <div class="text-center">
+                                <a href="javascript:;" @click="closeActivityForm"
+                                    ><span class="text-secondary">Hold on a second <i class="fa-solid fa-person-digging ms-1"></i></span
+                                ></a>
+                            </div>
+                        </div>
+                        <div class="row" v-else-if="editActivityForm">
+                            <div class="row" style="padding: 0; margin: 0">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description_updated" :class="{ 'is-invalid': form.errors.description_updated }" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="javascript:;" class="btn btn-warning d-lg-block" @click="updateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</a>
+                                </div>
+                            </div>
                             <div class="text-center">
                                 <a href="javascript:;" @click="closeActivityForm"
                                     ><span class="text-secondary">Hold on a second <i class="fa-solid fa-person-digging ms-1"></i></span
@@ -67,7 +85,7 @@
                             </div>
                         </div>
                         <div v-else class="text-center">
-                            <button type="submit" class="btn btn-success" @click="openActivityForm"><i class="fa-solid fa-plus"></i>&nbsp; Add Activity</button>
+                            <button type="submit" class="btn btn-success" @click="openAddActivityForm"><i class="fa-solid fa-plus"></i>&nbsp; Add Activity</button>
                         </div>
                     </div>
                 </div>
@@ -145,10 +163,13 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const form = useForm({
     description: null,
+    description_updated: null,
     start: null,
 });
 
 let addActivityForm = ref(false);
+let editActivityForm = ref(false);
+let editActivityID = ref(null);
 let startTime = ref(null);
 let outsideWorkingTime = ref(false);
 
@@ -183,7 +204,9 @@ const checkIn = () => {
             cancelButtonText: "Nope, Just kidding <i class='fa-solid fa-bed'></i>",
             allowOutsideClick: false,
         }).then((result) => {
-            definePosition();
+            if (result.isConfirmed) {
+                definePosition();
+            }
         });
     } else {
         definePosition();
@@ -246,7 +269,7 @@ const alertRelogin = () => {
     });
 };
 
-const openActivityForm = () => {
+const openAddActivityForm = () => {
     addActivityForm.value = true;
     form.errors = [];
     startTime.value = {
@@ -254,10 +277,6 @@ const openActivityForm = () => {
         minutes: new Date().getMinutes(),
     };
     form.start = startTime.value.hours + ":" + startTime.value.minutes;
-};
-
-const closeActivityForm = () => {
-    addActivityForm.value = false;
 };
 
 const addActivity = () => {
@@ -277,6 +296,37 @@ const addActivity = () => {
             });
         },
     });
+};
+
+const openEditActivityForm = (activity) => {
+    addActivityForm.value = false;
+    editActivityForm.value = true;
+    form.description_updated = activity.description;
+    editActivityID.value = activity.id;
+    form.errors = [];
+};
+
+const updateActivity = () => {
+    form.post("/attendance/update/" + editActivityID.value, {
+        onSuccess: () => {
+            editActivityForm.value = false;
+            form.description_updated = null;
+            editActivityID.value = null;
+            scrollDown();
+            Swal.fire({
+                icon: "success",
+                title: "Activity updated <br> <i class='fa-solid fa-pen-to-square'></i>",
+                text: "Keep strong and continue your journey",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        },
+    });
+};
+
+const closeActivityForm = () => {
+    addActivityForm.value = false;
+    editActivityForm.value = false;
 };
 
 const checkOut = () => {
