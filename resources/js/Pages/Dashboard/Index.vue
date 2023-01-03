@@ -145,7 +145,7 @@
                             <h6 class="mb-2">Current Activity</h6>
                         </div>
                     </div>
-                    <div class="card-body p-3">
+                    <div class="card-body p-3" style="min-height: 480px">
                         <ul v-if="activities.length > 0" class="list-group">
                             <li v-for="activity in activities" :key="activity.id" class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                 <div class="d-flex align-items-center">
