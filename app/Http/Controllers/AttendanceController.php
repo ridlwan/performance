@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Activity;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use App\Events\NotificationEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +93,8 @@ class AttendanceController extends Controller
         
         Auth::user()->save();
 
+        event(new NotificationEvent('New notification'));
+
         DB::commit();
 
         return redirect()->back();
@@ -115,6 +118,8 @@ class AttendanceController extends Controller
         if ($activity = Activity::find($id)) {
             $activity->struggle = Activity::STRUGGLE_YES;
             $activity->save();
+
+            event(new NotificationEvent('New notification'));
         }
 
         return redirect()->back();
@@ -199,6 +204,8 @@ class AttendanceController extends Controller
                 $lastAttendance->duration = null;
                 $lastAttendance->save();
             }
+
+            event(new NotificationEvent('New notification'));
     
             DB::commit();
         }
@@ -215,6 +222,8 @@ class AttendanceController extends Controller
 
             $activity->description = $request->description_updated;
             $activity->save();
+
+            event(new NotificationEvent('New notification'));
         }
 
         return redirect()->back();
@@ -266,6 +275,8 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
+        event(new NotificationEvent('New notification'));
+
         DB::commit();
 
         return redirect()->back();
@@ -281,6 +292,8 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
         Auth::user()->save();
 
+        event(new NotificationEvent('New notification'));
+
         return redirect()->back();
     }
 
@@ -293,6 +306,8 @@ class AttendanceController extends Controller
 
         Auth::user()->status = User::STATUS_OUT_SICK;
         Auth::user()->save();
+
+        event(new NotificationEvent('New notification'));
 
         return redirect()->back();
     }

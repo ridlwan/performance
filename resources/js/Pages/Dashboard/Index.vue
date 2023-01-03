@@ -234,8 +234,10 @@
 </style>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 import Layout from "../../Components/Layout.vue";
+import Echo from "laravel-echo";
 
 const props = defineProps({
     workingRemotely: Array,
@@ -248,6 +250,11 @@ const props = defineProps({
 
 let users = ref([]);
 let userListTitle = ref(null);
+
+window.Echo.channel("notification-channel").listen(".notification-event", (e) => {
+    console.log(e.message);
+    Inertia.get("/");
+});
 
 const showUser = (status) => {
     if (status == "workingRemotely") {

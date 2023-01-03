@@ -1,3 +1,4 @@
+import './bootstrap';
 import { createApp, h } from 'vue'
 import '@fortawesome/fontawesome-free/js/all.min.js';
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
