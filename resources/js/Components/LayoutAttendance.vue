@@ -14,7 +14,7 @@
                             <div class="col-lg-12 col-md-12">
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name">
+                                        <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name" v-tooltip="user.name">
                                             <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3 border-white" style="width: 60px; height: 60px" />
                                         </a>
                                     </div>

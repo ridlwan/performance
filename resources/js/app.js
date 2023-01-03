@@ -9,14 +9,17 @@ import '../assets/css/nucleo-svg.css';
 import '../assets/css/argon-dashboard.css';
 import "../assets/js/core/popper.min.js";
 import "../assets/js/core/bootstrap.min.js";
+import 'floating-vue/dist/style.css'
 import moment from "moment";
+import FloatingVue from 'floating-vue'
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(createPinia());
+            .use(createPinia())
+            .use(FloatingVue);
 
             app.config.globalProperties.$filters = {
                 formatDate(value) {
