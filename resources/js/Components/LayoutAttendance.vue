@@ -10,7 +10,7 @@
             <main class="main-content mt-1 border-radius-lg">
                 <div class="section min-vh-85 position-relative">
                     <div class="container">
-                        <div class="row pt-5 pb-3">
+                        <div class="row pt-4 pb-3">
                             <div class="col-lg-12 col-md-12">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" :class="workingUsers.length > 0 ? 'pt-3' : 'pt-6'">
+                        <div class="row" :class="workingUsers.length > 0 ? 'pt-2' : 'pt-6'">
                             <Sidenav />
 
                             <div class="col-lg-10 col-md-10">
