@@ -64,6 +64,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+                                    <div class="nav-wrapper position-relative center justify-content-center">
+                                        <ul class="nav nav-pills nav-fill p-1">
+                                            <li class="nav-item">
+                                                <a v-if="form.darkmode == 'Yes'" class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" href="javascript:;" @click="updateDarkMode('No')">
+                                                    <i class="fa-solid fa-sun"></i>
+                                                    <span class="ms-2">Light Mode</span>
+                                                </a>
+                                                <a v-else class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" href="javascript:;">
+                                                    <i class="fa-solid fa-sun"></i>
+                                                    <span class="ms-2">Light Mode</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a v-if="form.darkmode == 'No'" class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;" @click="updateDarkMode('Yes')">
+                                                    <i class="fa-solid fa-moon"></i>
+                                                    <span class="ms-2">Dark Mode</span>
+                                                </a>
+                                                <a v-else class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;">
+                                                    <i class="fa-solid fa-moon"></i>
+                                                    <span class="ms-2">Dark Mode</span>
+                                                </a>
+                                            </li>
+                                            <div class="moving-tab position-absolute nav-link" style="padding: 0px; transition: all 0.5s ease 0s; width: 49%" :style="form.darkmode == 'Yes' ? 'transform: translate3d(100%, 0px, 0px)' : 'transform: unset'"><a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;">&nbsp;</a></div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +129,7 @@ const form = useForm({
     password: null,
     avatar: null,
     background: null,
+    darkmode: null,
 });
 
 const props = defineProps({
@@ -110,6 +140,7 @@ onMounted(() => {
     form.name = props.user.name;
     form.avatar = props.user.avatar;
     form.background = props.user.background;
+    form.darkmode = props.user.dark_mode_text;
 });
 
 const updateName = () => {
@@ -209,7 +240,30 @@ const updateBackground = () => {
         onSuccess: () => {
             Swal.fire({
                 title: "Background changed <br> <i class='fa-regular fa-image'></i>",
-                text: "Your page will refresh to show the latest background",
+                text: "Your page needs to be refreshed to show the latest background",
+                icon: "success",
+                confirmButtonText: "Okay",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        },
+    });
+};
+
+const updateDarkMode = (choice) => {
+    if (choice == "Yes") {
+        form.darkmode = "Yes";
+    } else {
+        form.darkmode = "No";
+    }
+
+    form.post("/profile/darkmode", {
+        onSuccess: () => {
+            Swal.fire({
+                title: "View mode changed <br> <i class='fa-solid fa-circle-half-stroke'></i>",
+                text: "Your page needs to be refreshed to show the latest view mode",
                 icon: "success",
                 confirmButtonText: "Okay",
             }).then((result) => {

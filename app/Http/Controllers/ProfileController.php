@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,6 +80,23 @@ class ProfileController extends Controller
 
         $path = $request->file('background')->store('background', 'public');
         $user->background = $path;
+        $user->save();
+
+        return redirect()->back();
+    }
+    
+    public function updateDarkMode(Request $request)
+    {
+        $request->validate([
+            'darkmode' => 'required',
+        ]);
+
+        $user = Auth::user();
+        if ($request->darkmode == 'Yes') {
+            $user->dark_mode = User::DARKMODE_YES;
+        } else {
+            $user->dark_mode = User::DARKMODE_NO;
+        }
         $user->save();
 
         return redirect()->back();

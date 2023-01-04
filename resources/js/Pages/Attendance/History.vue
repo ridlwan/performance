@@ -62,7 +62,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h6 class="modal-title" id="activityModalTitle">Activity List</h6>
+                                <h6 class="modal-title opacity-7" id="activityModalTitle" style="color: black !important">Activity List</h6>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -74,13 +74,13 @@
                                             <span v-if="activity.end" class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-check"></i></span>
                                             <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
                                             <div class="d-flex flex-column">
-                                                <p class="mb-1 text-dark">{{ activity.description }}</p>
+                                                <p class="mb-1 opacity-7" style="color: black !important">{{ activity.description }}</p>
                                                 <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center text-sm font-weight-bold">
                                             <div class="d-flex flex-column">
-                                                <p class="mb-1 text-dark text-gradient">{{ $filters.formatTime(activity.start) }}</p>
+                                                <p class="mb-1 text-dark opacity-8" style="color: black !important">{{ $filters.formatTime(activity.start) }}</p>
                                                 <span v-if="activity.duration">
                                                     <span v-if="activity.duration > 60" class="text-xs text-secondary" style="white-space: nowrap"
                                                         >{{ Math.floor(activity.duration / 60) }} hours

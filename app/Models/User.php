@@ -42,6 +42,14 @@ class User extends Authenticatable
         self::TEAMMATE_NO => 'No',
         self::TEAMMATE_YES => 'Yes',
     ];
+    
+    const DARKMODE_NO = 0;
+    const DARKMODE_YES = 1;
+
+    const DARKMODE_ARRAY = [
+        self::DARKMODE_NO => 'No',
+        self::DARKMODE_YES => 'Yes',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -54,6 +62,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'background',
+        'dark_mode',
         'status',
         'reported',
         'teammate',
@@ -82,7 +91,8 @@ class User extends Authenticatable
     protected $appends = [
         'status_text',
         'reported_text',
-        'teammate_text'
+        'teammate_text',
+        'dark_mode_text'
     ];
 
     protected $dates = [
@@ -99,6 +109,10 @@ class User extends Authenticatable
 
     public function getTeammateTextAttribute() {
         return self::TEAMMATE_ARRAY[$this->teammate];
+    }
+    
+    public function getDarkModeTextAttribute() {
+        return self::DARKMODE_ARRAY[$this->dark_mode];
     }
 
     public function attendances()

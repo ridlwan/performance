@@ -15,7 +15,7 @@
                                 <div class="row">
                                     <div class="col-12 text-center">
                                         <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name" v-tooltip="user.name">
-                                            <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3 border-white" style="width: 60px; height: 60px" />
+                                            <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3" style="width: 60px; height: 60px; border-color: #5e72e4 !important" :style="darkmode == 'Yes' ? 'background-color: #5e72e4;' : 'background-color: white;'" />
                                         </a>
                                     </div>
                                 </div>
@@ -37,6 +37,12 @@
     </div>
 </template>
 
+<style>
+.apexcharts-active {
+    color: black !important;
+}
+</style>
+
 <script setup>
 import Header from "./Header.vue";
 import Sidenav from "./Sidenav.vue";
@@ -50,6 +56,7 @@ let backgroundImage = ref("/assets/img/pexels-max-vakhtbovych-7750123.jpg");
 
 const workingUsers = ref([]);
 const background = computed(() => usePage().props.value.auth.user.background);
+const darkmode = computed(() => usePage().props.value.auth.user.darkmode);
 
 onMounted(() => {
     document.body.classList.add("virtual-reality");
@@ -59,6 +66,12 @@ onMounted(() => {
 
     if (background.value) {
         backgroundImage.value = "/storage/" + background.value;
+    }
+
+    if (darkmode.value == "Yes") {
+        document.body.classList.add("dark-version");
+    } else {
+        document.body.classList.remove("dark-version");
     }
 
     getWorkingUsers();

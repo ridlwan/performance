@@ -19,16 +19,31 @@
     </div>
 </template>
 
+<style>
+.apexcharts-active {
+    color: black !important;
+}
+</style>
+
 <script setup>
 import Sidebar from "./Sidebar.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
+import { usePage } from "@inertiajs/inertia-vue3";
+
+const darkmode = computed(() => usePage().props.value.auth.user.darkmode);
 
 onMounted(() => {
     document.body.classList.remove("virtual-reality");
     document.getElementById("navbar-main").classList.remove("mt-3");
     document.getElementById("navbar-main").classList.remove("mx-3");
     document.getElementById("navbar-main").classList.remove("bg-primary");
+
+    if (darkmode.value == "Yes") {
+        document.body.classList.add("dark-version");
+    } else {
+        document.body.classList.remove("dark-version");
+    }
 });
 </script>

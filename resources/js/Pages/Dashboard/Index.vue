@@ -158,7 +158,7 @@
 
                                     <div class="d-flex flex-column">
                                         <div>
-                                            <span class="text-dark text-sm font-weight-bold opacity-7">{{ activity.attendance.user.name }}</span>
+                                            <span class="text-sm font-weight-bold opacity-8">{{ activity.attendance.user.name }}</span>
 
                                             <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                         </div>
@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="d-flex align-items-center text-sm font-weight-bold">
                                     <div class="d-flex flex-column">
-                                        <p class="mb-1 text-dark text-gradient">{{ $filters.formatTime(activity.start) }}</p>
+                                        <p class="mb-1 text-dark">{{ $filters.formatTime(activity.start) }}</p>
                                         <span v-if="activity.duration">
                                             <span v-if="activity.duration > 60" class="text-xs text-secondary" style="white-space: nowrap"
                                                 >{{ Math.floor(activity.duration / 60) }} hours
@@ -197,7 +197,7 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title" id="userModalTitle">{{ userListTitle }} Personel</h6>
+                        <h6 class="modal-title opacity-6" id="userModalTitle" style="color: black !important">{{ userListTitle }} Personel</h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -210,7 +210,7 @@
                                         <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="h-100 border-radius-lg shadow-lg" />
                                     </span>
                                     <div class="d-flex flex-column">
-                                        <p class="mt-3 text-dark text-sm font-weight-bold opacity-7">{{ user.name }}</p>
+                                        <p class="mt-3 text-sm font-weight-bold opacity-5" style="color: black !important">{{ user.name }}</p>
                                         <span v-if="user.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                     </div>
                                 </div>
