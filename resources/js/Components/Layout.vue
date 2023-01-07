@@ -31,6 +31,9 @@ import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 import { onMounted, computed } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const darkmode = computed(() => usePage().props.value.auth.user.darkmode);
 
@@ -39,6 +42,8 @@ onMounted(() => {
     document.getElementById("navbar-main").classList.remove("mt-3");
     document.getElementById("navbar-main").classList.remove("mx-3");
     document.getElementById("navbar-main").classList.remove("bg-primary");
+
+    toast.success("My toast content");
 
     if (darkmode.value == "Yes") {
         document.body.classList.add("dark-version");

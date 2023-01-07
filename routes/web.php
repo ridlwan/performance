@@ -21,7 +21,9 @@ use App\Http\Controllers\DashboardController;
 require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
-    Route::get('/pusher', [DashboardController::class, 'pusher']);
+    Route::get('/activity', [DashboardController::class, 'activity']);
+    Route::get('/daily', [DashboardController::class, 'daily'])->middleware(['can:view-report']);
+    Route::get('/monthly', [DashboardController::class, 'monthly'])->middleware(['can:view-report']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/working-user', [AttendanceController::class, 'workingUser'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->middleware(['can:doing-attendance']);
@@ -39,4 +41,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
+    Route::get('/pusher', [DashboardController::class, 'pusher']);
 });

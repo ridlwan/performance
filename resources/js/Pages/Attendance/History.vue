@@ -15,7 +15,7 @@
                                 <th class="text-center text-uppercase text-xs text-dark">End</th>
                                 <th class="text-center text-uppercase text-xs text-dark">Duration</th>
                                 <th class="text-center text-uppercase text-xs text-dark">Status</th>
-                                <th class="text-center text-uppercase text-xs text-dark">Action</th>
+                                <th class="text-center text-uppercase text-xs text-dark">View Activity</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,11 +26,8 @@
                                 <td class="align-middle text-center">
                                     <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.start) }}</span>
                                 </td>
-                                <td v-if="attendance.end" class="align-middle text-center">
+                                <td class="align-middle text-center">
                                     <span class="text-sm text-secondary">{{ $filters.formatTime(attendance.end) }}</span>
-                                </td>
-                                <td v-else class="align-middle text-center">
-                                    <span>-</span>
                                 </td>
                                 <td v-if="attendance.duration" class="align-middle text-center">
                                     <span v-if="attendance.duration > 60" class="text-sm text-secondary"

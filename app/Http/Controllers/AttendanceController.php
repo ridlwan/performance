@@ -73,7 +73,7 @@ class AttendanceController extends Controller
 
         foreach ($attendances as $attendance) {
             array_push($hours, number_format((float) ($attendance->duration / 60), 1));
-            array_push($dates, $attendance->created_at->format('d M'));
+            array_push($dates, $attendance->created_at->format('D d M'));
         }
 
         return Inertia::render('Attendance/Performance', [

@@ -140,9 +140,20 @@
         <div class="row mt-4">
             <div class="col-lg-12 mb-lg-0 mb-4">
                 <div class="card">
-                    <div class="card-header pb-0 p-3">
-                        <div class="d-flex justify-content-between">
+                    <div class="card-header pb-0">
+                        <!-- <div class="d-flex justify-content-between">
                             <h6 class="mb-2">Current Activity</h6>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h6 class="mb-2">Current Activity</h6>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control">
+                                    <option value="" selected disabled hidden>All Personel</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-3" style="min-height: 480px">

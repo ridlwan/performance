@@ -7,7 +7,7 @@
                 <span class="ms-1 font-weight-bold">Team Performance </span>
             </a>
         </div>
-        <hr class="horizontal dark mt-0" />
+        <hr class="horizontal dark" />
         <div id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -18,19 +18,49 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </Link>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item mt-3">
+                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Report</h6>
+                </li>
+                <li class="nav-item">
+                    <Link class="nav-link" href="/daily" :class="$page.component === 'Daily/Index' ? 'active' : 'btn-white'">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Daily</span>
+                    </Link>
+                </li>
+                <li class="nav-item">
                     <Link class="nav-link" href="/">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+                            <i class="ni ni-album-2 text-success text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Monthly</span>
+                    </Link>
+                </li>
+                <li class="nav-item mt-3">
+                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master</h6>
+                </li>
+                <li class="nav-item">
+                    <Link class="nav-link" href="/">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-single-copy-04 text-info text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Report</span>
                     </Link>
-                </li> -->
-                <hr class="horizontal dark mt-0 mb-0" />
+                </li>
+                <li class="nav-item">
+                    <Link class="nav-link" href="/">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-single-02 text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Account</span>
+                    </Link>
+                </li>
+                <hr class="horizontal dark" />
                 <li class="nav-item">
                     <Link class="nav-link" href="/attendance">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
+                            <i class="ni ni-watch-time text-danger text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Attendance</span>
                     </Link>
@@ -39,6 +69,14 @@
         </div>
     </aside>
 </template>
+
+<style>
+.btn-white:hover,
+.btn.bg-gradient-white:hover {
+    background-color: unset !important;
+    border-color: unset !important;
+}
+</style>
 
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";

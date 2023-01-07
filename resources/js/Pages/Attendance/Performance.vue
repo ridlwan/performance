@@ -16,7 +16,7 @@
 import Pagination from "../../Components/Pagination.vue";
 import $ from "jquery";
 import { Inertia } from "@inertiajs/inertia";
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { usePage, Link } from "@inertiajs/inertia-vue3";
 import Layout from "../../Components/LayoutAttendance.vue";
 import Swal from "sweetalert2";
@@ -28,16 +28,13 @@ const props = defineProps({
 });
 
 let series = ref([]);
-
 let chartOptions = ref({});
 
-onMounted(() => {
-    setTimeout(() => {
-        updateChart();
-    }, 0);
+onBeforeMount(() => {
+    renderChart();
 });
 
-const updateChart = () => {
+const renderChart = () => {
     series.value = [
         {
             name: "Hours",
@@ -49,9 +46,6 @@ const updateChart = () => {
         chart: {
             height: 350,
             type: "area",
-            zoom: {
-                enabled: false,
-            },
         },
         dataLabels: {
             enabled: false,
@@ -62,12 +56,6 @@ const updateChart = () => {
         title: {
             text: "Current Performance",
             align: "left",
-        },
-        grid: {
-            row: {
-                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                opacity: 0.5,
-            },
         },
         xaxis: {
             labels: {
