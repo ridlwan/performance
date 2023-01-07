@@ -156,7 +156,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <h6 v-else class="text-center opacity-7">{{ status }}</h6>
+                        <h6 v-else class="text-center opacity-5" style="color: black !important">{{ status }}</h6>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
