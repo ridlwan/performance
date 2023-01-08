@@ -48,7 +48,7 @@
                     </div>
                     <div class="card-body mt-3 px-0 pt-0 pb-2" style="min-height: 480px">
                         <div v-if="showChart" class="p-3 pt-0">
-                            <apexchart type="line" height="350" :options="chartOptions" :series="series" @dataPointSelection="showDetail"></apexchart>
+                            <apexchart type="line" height="600" :options="chartOptions" :series="series" @dataPointSelection="showDetail"></apexchart>
                         </div>
                         <div class="table-responsive p-3 pt-0">
                             <table class="table align-items-center mb-0">
@@ -232,7 +232,7 @@ onBeforeUpdate(() => {
 const renderChart = () => {
     chartOptions.value = {
         chart: {
-            height: 350,
+            height: 600,
             type: "line",
         },
         dataLabels: {
@@ -250,7 +250,7 @@ const renderChart = () => {
             shared: false,
         },
         markers: {
-            size: 5,
+            size: 3,
         },
         xaxis: {
             labels: {
@@ -276,7 +276,9 @@ const showActivities = (attendance) => {
 
 const reset = () => {
     search.value = null;
-    startDate.value = moment(String(new Date())).format("YYYY-MM-DD");
+    let subStartDate = new Date();
+    subStartDate.setDate(subStartDate.getDate() - 6);
+    startDate.value = moment(String(subStartDate)).format("YYYY-MM-DD");
     endDate.value = moment(String(new Date())).format("YYYY-MM-DD");
     user.value = "All";
     paginate.value = 10;
