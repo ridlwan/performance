@@ -4,7 +4,7 @@
             <h6 class="font-weight-bolder text-white mb-0">Attendance</h6>
         </template>
 
-        <div class="row" v-if="status == 'Working Remotely' || status == 'Working Onsite'">
+        <div class="row" v-if="status == 'Working Remote' || status == 'Working Onsite'">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header pb-0">
@@ -180,7 +180,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-    if ((status == "Working Remotely" || status == "Working Onsite") && props.activities.length > 0) {
+    if ((status == "Working Remote" || status == "Working Onsite") && props.activities.length > 0) {
         scrollDown();
     }
 
@@ -216,14 +216,14 @@ const checkIn = () => {
 const definePosition = () => {
     Swal.fire({
         title: "Define your position? <br> <i class='fa-solid fa-crosshairs'></i>",
-        text: "Are you working onsite or remotely?",
+        text: "Are you working onsite or remote?",
         icon: "question",
         showDenyButton: true,
         showCancelButton: true,
         denyButtonColor: "#2ebd59",
         cancelButtonColor: "orange",
         confirmButtonText: "Onsite <i class='fa-solid fa-person-shelter'></i>",
-        denyButtonText: "Remotely <i class='fa-solid fa-person-snowboarding'></i>",
+        denyButtonText: "Remote <i class='fa-solid fa-person-snowboarding'></i>",
         cancelButtonText: "Wait <i class='fa-regular fa-clock'></i>",
         allowOutsideClick: false,
     }).then((result) => {
@@ -239,7 +239,7 @@ const definePosition = () => {
             }
         } else if (result.isDenied) {
             Inertia.post("/attendance/check-in", {
-                position: "remotely",
+                position: "remote",
             });
 
             if (props.relogin) {

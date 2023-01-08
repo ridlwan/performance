@@ -39,7 +39,7 @@ class AttendanceController extends Controller
     {
         $workingUsers = User::where('teammate', User::TEAMMATE_YES)
                 ->where(function ($query) {
-                    $query->where('status', User::STATUS_WORKING_REMOTELY)
+                    $query->where('status', User::STATUS_WORKING_REMOTE)
                     ->orWhere('status', User::STATUS_WORKING_ONSITE);
                 })
                 ->orderByDesc('updated_at')
@@ -99,16 +99,15 @@ class AttendanceController extends Controller
             ]);
         }
 
-        if ($request->position == 'remotely') {
-            Auth::user()->status = User::STATUS_WORKING_REMOTELY;
+        if ($request->position == 'remote') {
+            Auth::user()->status = User::STATUS_WORKING_REMOTE;
         } else {
             Auth::user()->status = User::STATUS_WORKING_ONSITE;
         }
         
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
-        event(new StatusEvent('New status'));
+        event(new StatusEvent(Auth::user()->name, 'just checked in'));
 
         DB::commit();
 
@@ -134,7 +133,7 @@ class AttendanceController extends Controller
             $activity->struggle = Activity::STRUGGLE_YES;
             $activity->save();
 
-            event(new ActivityEvent('New notification'));
+            event(new ActivityEvent(Auth::user()->name, 'is struggling in current activity'));
         }
 
         return redirect()->back();
@@ -220,7 +219,7 @@ class AttendanceController extends Controller
                 $lastAttendance->save();
             }
 
-            event(new ActivityEvent('New notification'));
+            event(new ActivityEvent(Auth::user()->name, 'just added a new activity'));
     
             DB::commit();
         }
@@ -238,7 +237,7 @@ class AttendanceController extends Controller
             $activity->description = $request->description_updated;
             $activity->save();
 
-            event(new ActivityEvent('New notification'));
+            event(new ActivityEvent(Auth::user()->name, 'just updated the activity'));
         }
 
         return redirect()->back();
@@ -250,7 +249,7 @@ class AttendanceController extends Controller
 
         $relogin = $this->isRelogin();
 
-        if ((Auth::user()->status == User::STATUS_WORKING_REMOTELY || Auth::user()->status == User::STATUS_WORKING_ONSITE) || ((Auth::user()->status == User::STATUS_WORKING_REMOTELY || Auth::user()->status == User::STATUS_WORKING_ONSITE) && $relogin)) {
+        if ((Auth::user()->status == User::STATUS_WORKING_REMOTE || Auth::user()->status == User::STATUS_WORKING_ONSITE) || ((Auth::user()->status == User::STATUS_WORKING_REMOTE || Auth::user()->status == User::STATUS_WORKING_ONSITE) && $relogin)) {
             $available = true;
         }
 
@@ -290,8 +289,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
-        event(new StatusEvent('New status'));
+        event(new StatusEvent(Auth::user()->name, 'just checked out'));
 
         DB::commit();
 
@@ -308,22 +306,22 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
         Auth::user()->save();
 
-        event(new ActivityEvent('New notification'));
-
+        event(new StatusEvent(Auth::user()->name, 'is marked out off office'));
+        
         return redirect()->back();
     }
-
+    
     public function outSick()
     {
         Attendance::create([
             'user_id' => Auth::user()->id,
             'status' => Attendance::STATUS_OUT_SICK
         ]);
-
+        
         Auth::user()->status = User::STATUS_OUT_SICK;
         Auth::user()->save();
-
-        event(new ActivityEvent('New notification'));
+        
+        event(new StatusEvent(Auth::user()->name, 'is marked out sick'));
 
         return redirect()->back();
     }

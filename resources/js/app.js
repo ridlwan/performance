@@ -18,18 +18,22 @@ import "vue-toastification/dist/index.css";
 
 const options = {
     position: "top-right",
-    timeout: 5000,
+    timeout: 180000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,
     draggable: true,
     draggablePercent: 0.6,
     showCloseButtonOnHover: false,
-    hideProgressBar: true,
     closeButton: "button",
-    icon: "fas fa-rocket",
-    rtl: false,
-    newestOnTop: true
+    newestOnTop: true,
+    filterBeforeCreate: (toast, toasts) => {
+        if (toasts.filter(t => t.content === toast.content).length !== 0) {
+          return false;
+        }
+
+        return toast;
+      }
 };
 
 createInertiaApp({

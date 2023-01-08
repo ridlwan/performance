@@ -14,7 +14,7 @@
                             <div class="col-lg-12 col-md-12">
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name" v-tooltip="user.name">
+                                        <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name" v-tooltip="user.name + ' (' + user.status_text + ')'">
                                             <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3" style="width: 60px; height: 60px; border-color: #5e72e4 !important" :style="darkmode == 'Yes' ? 'background-color: #5e72e4;' : 'background-color: white;'" />
                                         </a>
                                     </div>
@@ -51,10 +51,14 @@ import { usePage } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, computed } from "vue";
 import "axios";
 import Echo from "laravel-echo";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 let backgroundImage = ref("/assets/img/pexels-max-vakhtbovych-7750123.jpg");
 
 const workingUsers = ref([]);
+const username = computed(() => usePage().props.value.auth.user.username);
 const background = computed(() => usePage().props.value.auth.user.background);
 const darkmode = computed(() => usePage().props.value.auth.user.darkmode);
 
@@ -78,8 +82,55 @@ onMounted(() => {
 });
 
 window.Echo.channel("status-channel").listen(".status-event", (e) => {
-    console.log(e.message);
-    getWorkingUsers();
+    if (username.value != e.user) {
+        if (e.message == "just checked in") {
+            toast(e.user + " " + e.message, {
+                icon: "fa-solid fa-person-walking-arrow-right",
+            });
+
+            getWorkingUsers();
+        }
+
+        if (e.message == "just checked out") {
+            toast.error(e.user + " " + e.message, {
+                icon: "fa-solid fa-person-walking-dashed-line-arrow-right",
+            });
+
+            getWorkingUsers();
+        }
+
+        if (e.message == "is marked out off office") {
+            toast.error(e.user + " " + e.message, {
+                icon: "fas fa-person-walking-luggage ms-1",
+            });
+        }
+
+        if (e.message == "is marked out sick") {
+            toast.error(e.user + " " + e.message, {
+                icon: "fas fa-bed ms-1",
+            });
+        }
+    }
+});
+
+window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
+    if (username.value != e.user) {
+        if (e.message == "just added a new activity") {
+            toast.success(e.user + " " + e.message, {
+                icon: "fa-solid fa-pen-to-square",
+            });
+        }
+        if (e.message == "just updated the activity") {
+            toast.info(e.user + " " + e.message, {
+                icon: "fa-solid fa-eraser",
+            });
+        }
+        if (e.message == "is struggling in current activity") {
+            toast.warning(e.user + " " + e.message, {
+                icon: "fa-solid fa-user-ninja",
+            });
+        }
+    }
 });
 
 const getWorkingUsers = () => {

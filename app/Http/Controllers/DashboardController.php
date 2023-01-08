@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->can('view-dashboard')) {
             return redirect('/attendance');
         }
 
-        $workingRemotely = User::where('status', User::STATUS_WORKING_REMOTELY)
+        $workingRemote = User::where('status', User::STATUS_WORKING_REMOTE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
         $workingOnsite = User::where('status', User::STATUS_WORKING_ONSITE)
@@ -43,14 +43,28 @@ class DashboardController extends Controller
             })
             ->orderByDesc('id')->get();
 
-        return Inertia::render('Dashboard/Index', [
-            'workingRemotely' => $workingRemotely,
-            'workingOnsite' => $workingOnsite,
-            'outOfOffice' => $outOfOffice,
-            'outSick' => $outSick,
-            'notAvailable' => $notAvailable,
-            'activities' => $activities
-        ]);
+        $teammate = User::where('teammate', User::TEAMMATE_YES)->get();
+
+        if ($request->data) {
+            return response()->json([
+                'workingRemote' => $workingRemote,
+                'workingOnsite' => $workingOnsite,
+                'outOfOffice' => $outOfOffice,
+                'outSick' => $outSick,
+                'notAvailable' => $notAvailable,
+                'activities' => $activities
+            ]);
+        } else {
+            return Inertia::render('Dashboard/Index', [
+                'workingRemote' => $workingRemote,
+                'workingOnsite' => $workingOnsite,
+                'outOfOffice' => $outOfOffice,
+                'outSick' => $outSick,
+                'notAvailable' => $notAvailable,
+                'activities' => $activities,
+                'teammate' => $teammate
+            ]);
+        }
     }
     
     public function activity(Request $request)
@@ -194,8 +208,17 @@ class DashboardController extends Controller
 
     public function pusher()
     {
-        event(new ActivityEvent('New notification'));
-        event(new StatusEvent('New status'));
+        event(new ActivityEvent(Auth::user()->name, 'just added a new activity'));
+        event(new ActivityEvent('mika', 'just added a new activity'));
+        event(new ActivityEvent('erana', 'just added a new activity'));
+        event(new ActivityEvent('mika', 'just added a new activity'));
+        event(new ActivityEvent('mika', 'is struggling in current activity'));
+        event(new ActivityEvent('mika', 'just updated the activity'));
+        event(new StatusEvent(Auth::user()->name, 'just checked in'));
+        event(new StatusEvent('mila', 'just checked in'));
+        event(new StatusEvent('moni', 'just checked out'));
+        event(new StatusEvent('Kino', 'is marked out sick'));
+        event(new StatusEvent('Mola', 'is marked out off office'));
         return 'ok';
     }
 }

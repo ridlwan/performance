@@ -14,10 +14,12 @@ class StatusEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $user;
     public $message;
 
-    public function __construct($message)
+    public function __construct($user, $message)
     {
+        $this->user = $user;
         $this->message = $message;
     }
 
