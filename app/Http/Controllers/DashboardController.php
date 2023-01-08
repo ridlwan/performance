@@ -94,13 +94,13 @@ class DashboardController extends Controller
         if ($request->get('startDate')) {
             $startDate = $request->get('startDate');
         } else {
-            $startDate = Carbon::now()->subDay();
+            $startDate = Carbon::now();
         }
 
         if ($request->get('endDate')) {
             $endDate = $request->get('endDate');
         } else {
-            $endDate = Carbon::now()->subDay();
+            $endDate = Carbon::now();
         }
 
         if ($request->get('paginate')) {
