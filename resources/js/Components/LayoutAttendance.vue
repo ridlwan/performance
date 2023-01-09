@@ -106,9 +106,9 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
                 icon: "fas fa-bed ms-1",
             });
         }
-
-        getWorkingUsers();
     }
+
+    getWorkingUsers();
 });
 
 window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
