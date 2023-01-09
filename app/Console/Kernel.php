@@ -16,10 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->job(new ResetData())->dailyAt('17:00');
         $schedule->job(new ResetData())->dailyAt('23:00');
-        $schedule->job(new ResetData())->dailyAt('23:30');
-        $schedule->job(new ResetData())->dailyAt('00:00');
-        $schedule->job(new ResetData())->dailyAt('00:30');
     }
 
     /**
