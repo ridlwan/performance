@@ -87,16 +87,12 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
             toast(e.user + " " + e.message, {
                 icon: "fa-solid fa-person-walking-arrow-right",
             });
-
-            getWorkingUsers();
         }
 
         if (e.message == "just checked out") {
             toast.error(e.user + " " + e.message, {
                 icon: "fa-solid fa-person-walking-dashed-line-arrow-right",
             });
-
-            getWorkingUsers();
         }
 
         if (e.message == "is marked out off office") {
@@ -110,6 +106,8 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
                 icon: "fas fa-bed ms-1",
             });
         }
+
+        getWorkingUsers();
     }
 });
 
