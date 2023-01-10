@@ -325,7 +325,7 @@ class DashboardController extends Controller
     {
         DB::beginTransaction();
 
-        $attendances = Attendance::get();
+        $attendances = Attendance::whereDate('created_at', Carbon::now())->get();
         foreach ($attendances as $attendance) {
             if ($attendance->activities->last()->duration == 60) {
                 $activity = $attendance->activities->last();
