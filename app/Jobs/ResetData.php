@@ -44,21 +44,21 @@ class ResetData implements ShouldQueue
         foreach ($activities as $activity) {
             DB::beginTransaction();
 
-            if ($activity->start->diffInMinutes(Carbon::now()) > 60) {
-                $activity->end = $activity->start->addMinutes(60);
-                $activity->duration = 60;
-                $activity->save();
-            } else {
-                if ($activity->start->diffInMinutes(Carbon::now()) < 1) {
-                    $activity->end = Carbon::now();
-                    $activity->duration = 1;
-                    $activity->save();
-                } else {
+            // if ($activity->start->diffInMinutes(Carbon::now()) > 60) {
+            //     $activity->end = $activity->start->addMinutes(60);
+            //     $activity->duration = 60;
+            //     $activity->save();
+            // } else {
+            //     if ($activity->start->diffInMinutes(Carbon::now()) < 1) {
+            //         $activity->end = Carbon::now();
+            //         $activity->duration = 1;
+            //         $activity->save();
+            //     } else {
                     $activity->end = Carbon::now();
                     $activity->duration = $activity->start->diffInMinutes(Carbon::now());
                     $activity->save();
-                }
-            }
+            //     }
+            // }
 
             $attendance = $activity->attendance;
             $attendance->end = $activity->end;

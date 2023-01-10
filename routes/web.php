@@ -42,4 +42,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
     Route::get('/pusher', [DashboardController::class, 'pusher']);
+    Route::get('/correction', [DashboardController::class, 'correction']);
 });
