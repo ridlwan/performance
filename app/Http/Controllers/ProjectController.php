@@ -73,7 +73,7 @@ class ProjectController extends Controller
 
         Project::create($request->all());
 
-        return redirect('/projects')->with('created', 'Data created successfully');;
+        return redirect('/projects')->with('created', 'Project created successfully');;
     }
 
     /**
@@ -119,7 +119,7 @@ class ProjectController extends Controller
 
         $project->update($request->all());
 
-        return redirect('/projects')->with('updated', 'Data updated successfully');
+        return redirect('/projects')->with('updated', 'Project updated successfully');
     }
 
     /**
@@ -132,6 +132,6 @@ class ProjectController extends Controller
     {
         $project->delete();
 
-        return redirect('/projects')->with('deleted', 'Data deleted successfully');
+        return redirect('/projects')->with('deleted', 'Project deleted successfully');
     }
 }

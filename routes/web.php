@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\DocumentController;
@@ -43,9 +44,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
+    Route::resource('reports', ReportController::class)->middleware(['can:manage-report']);
+    Route::get('/reports/{report}/publish', [ReportController::class, 'publish'])->middleware(['can:manage-report']);
+    Route::get('/reports/{report}/unpublish', [ReportController::class, 'unpublish'])->middleware(['can:manage-report']);
+    Route::resource('reports', ReportController::class)->middleware(['can:manage-report']);
     Route::resource('projects', ProjectController::class)->middleware(['can:manage-report']);
     Route::resource('users', UserController::class)->middleware(['can:manage-account']);
-
 
     Route::get('/pusher', [DashboardController::class, 'pusher']);
     Route::get('/correction', [DashboardController::class, 'correction']);

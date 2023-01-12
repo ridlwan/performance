@@ -23,14 +23,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Name</label>
+                                        <label class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
                                         <div v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Position</label>
+                                        <label class="form-control-label">Position</label>
                                         <input class="form-control" type="text" v-model="form.position" :class="{ 'is-invalid': form.errors.position }" />
                                         <div v-if="form.errors.position" class="invalid-feedback">{{ form.errors.position }}</div>
                                     </div>
@@ -39,14 +39,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Email</label>
+                                        <label class="form-control-label">Email</label>
                                         <input class="form-control" type="text" v-model="form.email" :class="{ 'is-invalid': form.errors.email }" />
                                         <div v-if="form.errors.email" class="invalid-feedback">{{ form.errors.email }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Password</label>
+                                        <label class="form-control-label">Password</label>
                                         <input class="form-control" type="text" v-model="form.password" :class="{ 'is-invalid': form.errors.password }" />
                                         <div v-if="form.errors.password" class="invalid-feedback">{{ form.errors.password }}</div>
                                     </div>
@@ -55,7 +55,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Role</label>
+                                        <label class="form-control-label">Role</label>
                                         <select class="form-control" v-model="form.role" :class="{ 'is-invalid': form.errors.role }">
                                             <option v-for="role in roles" :key="role.id" :value="role.name">
                                                 {{ role.name }}
@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Teammate</label>
+                                        <label class="form-control-label">Teammate</label>
                                         <select class="form-control" v-model="form.teammate" :class="{ 'is-invalid': form.errors.teammate }">
                                             <option v-for="(team, index) in teammate" :key="team" :value="index">
                                                 {{ team }}
@@ -79,7 +79,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Reported</label>
+                                        <label class="form-control-label">Reported</label>
                                         <select class="form-control" v-model="form.reported" :class="{ 'is-invalid': form.errors.reported }">
                                             <option v-for="(report, index) in reported" :key="report" :value="index">
                                                 {{ report }}

@@ -1,20 +1,20 @@
 <template>
     <Layout>
         <template #heading>
-            <h6 class="font-weight-bolder text-white mb-0">Master Project</h6>
+            <h6 class="font-weight-bolder text-white mb-0">Master Report</h6>
         </template>
 
         <div class="row" style="min-height: 670px">
             <div class="col-md-12">
                 <div class="card">
-                    <form @submit.prevent="form.put(`/projects/${project.id}`)">
+                    <form @submit.prevent="form.put(`/reports/${report.id}`)">
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Edit Project</p></h6>
+                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Edit Report</p></h6>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <Link href="/projects" class="btn bg-gradient-secondary">Back</Link>
+                                    <Link href="/reports" class="btn bg-gradient-secondary">Back</Link>
                                     <button type="submit" class="btn bg-gradient-info ms-3">Update</button>
                                 </div>
                             </div>
@@ -23,14 +23,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label">Name</label>
+                                        <label for="example-text-input" class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
                                         <div v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label">Status</label>
+                                        <label for="example-text-input" class="form-control-label">Status</label>
                                         <select class="form-control" v-model="form.status" :class="{ 'is-invalid': form.errors.status }">
                                             <option v-for="(status, index) in statuses" :key="status" :value="index">
                                                 {{ status }}
@@ -53,12 +53,12 @@ import Layout from "../../Components/Layout.vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
-    project: Object,
+    report: Object,
     statuses: Array,
 });
 
 const form = useForm({
-    name: props.project.name,
-    status: props.project.status,
+    name: props.report.name,
+    status: props.report.status,
 });
 </script>

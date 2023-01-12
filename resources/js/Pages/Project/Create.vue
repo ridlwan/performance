@@ -23,14 +23,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Name</label>
+                                        <label class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
                                         <div v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Status</label>
+                                        <label class="form-control-label">Status</label>
                                         <select class="form-control" v-model="form.status" :class="{ 'is-invalid': form.errors.status }">
                                             <option v-for="(status, index) in statuses" :key="status" :value="index">
                                                 {{ status }}

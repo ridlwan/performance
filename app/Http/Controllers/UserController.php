@@ -102,7 +102,7 @@ class UserController extends Controller
 
         DB::commit();
 
-        return redirect('/users')->with('created', 'Data created successfully');;
+        return redirect('/users')->with('created', 'Account created successfully');;
     }
 
     /**
@@ -176,7 +176,7 @@ class UserController extends Controller
 
         DB::commit();
 
-        return redirect('/users')->with('updated', 'Data updated successfully');
+        return redirect('/users')->with('updated', 'Account updated successfully');
     }
 
     /**
@@ -189,6 +189,6 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect('/users')->with('deleted', 'Data deleted successfully');
+        return redirect('/users')->with('deleted', 'Account deleted successfully');
     }
 }
