@@ -18,6 +18,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
+        session()->flash('message', 'success');
+
         return Inertia::render('Auth/Login');
     }
 
