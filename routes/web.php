@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\AttendanceController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
+    Route::resource('projects', ProjectController::class)->middleware(['can:manage-report']);
+
+
     Route::get('/pusher', [DashboardController::class, 'pusher']);
     Route::get('/correction', [DashboardController::class, 'correction']);
 });

@@ -1,11 +1,129 @@
 <template>
     <Layout>
         <template #heading>
-            <h6 class="font-weight-bolder text-white mb-0">Daily Report</h6>
+            <h6 class="font-weight-bolder text-white mb-0">Monthly Report</h6>
         </template>
 
         <div class="row">
-            <div class="col-lg-12 mb-lg-0">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="jiraChart" :series="jiraSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="developmentChart" :series="developmentSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="overallChart" :series="overallSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="donut" height="400" :options="supportChart" :series="supportSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="pie" height="400" :options="resourceChart" :series="resourceSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-3 px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3 pt-0 pb-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-xs text-dark">No</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Name</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Role</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(attendance, attendance_index) in attendances.data" :key="attendance_index">
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance_index + 1 }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="attendances.data.length < 1">
+                                        <td colspan="7" class="align-middle text-center text-secondary">Data not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="performanceHoursChart" :series="performanceHoursSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="performancePercentageChart" :series="performancePercentageSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="row">
@@ -17,14 +135,14 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fa-regular fa-calendar"></i></span>
-                                    <input type="date" class="form-control" v-model="startDate" @change="filter" />
+                                    <span class="input-group-text" style="background: #e9ecef"><i class="fa-regular fa-calendar"></i></span>
+                                    <input type="date" class="form-control" v-model="startDate" disabled />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fa-regular fa-calendar"></i></span>
-                                    <input type="date" class="form-control" v-model="endDate" @change="filter" />
+                                    <span class="input-group-text" style="background: #e9ecef"><i class="fa-regular fa-calendar"></i></span>
+                                    <input type="date" class="form-control" v-model="endDate" disabled />
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -48,7 +166,7 @@
                     </div>
                     <div class="card-body mt-3 px-0 pt-0 pb-2" style="min-height: 480px">
                         <div v-if="showChart" class="p-3 pt-0">
-                            <apexchart type="line" height="600" :options="chartOptions" :series="series" @dataPointSelection="showDetail"></apexchart>
+                            <apexchart type="line" height="600" :options="dailyChart" :series="dailySeries" @dataPointSelection="showDetail"></apexchart>
                         </div>
                         <div class="table-responsive p-3 pt-0 pb-0">
                             <table class="table align-items-center mb-0">
@@ -202,7 +320,7 @@ const props = defineProps({
     users: Array,
     filters: Object,
     showChart: Boolean,
-    series: Array,
+    dailySeries: Array,
     dates: Array,
 });
 
@@ -215,7 +333,71 @@ let startDate = ref(moment(String(props.filters.startDate)).format("YYYY-MM-DD")
 let endDate = ref(moment(String(props.filters.endDate)).format("YYYY-MM-DD"));
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
-let chartOptions = ref({});
+let jiraChart = ref({});
+let jiraSeries = ref([
+    {
+        name: "January",
+        data: [44, 55, 57, 56, 61, 58, 63],
+    },
+    {
+        name: "Februari",
+        data: [76, 85, 101, 98, 87, 105, 91],
+    },
+    {
+        name: "Maret",
+        data: [35, 41, 36, 26, 45, 48, 52],
+    },
+]);
+let developmentChart = ref({});
+let developmentSeries = ref([
+    {
+        name: "January",
+        data: [44, 55, 57, 56, 61, 58, 63],
+    },
+    {
+        name: "Februari",
+        data: [76, 85, 101, 98, 87, 105, 91],
+    },
+    {
+        name: "Maret",
+        data: [35, 41, 36, 26, 45, 48, 52],
+    },
+]);
+let overallChart = ref({});
+let overallSeries = ref([
+    {
+        name: "January",
+        data: [44, 55, 57, 56, 61, 58, 63],
+    },
+    {
+        name: "Februari",
+        data: [76, 85, 101, 98, 87, 105, 91],
+    },
+    {
+        name: "Maret",
+        data: [35, 41, 36, 26, 45, 48, 52],
+    },
+]);
+let supportChart = ref({});
+let supportSeries = ref([4, 3, 5]);
+let resourceChart = ref({});
+let resourceSeries = ref([44, 55, 13, 43, 22, 47]);
+let performanceHoursChart = ref({});
+let performanceHoursSeries = ref([
+    {
+        name: "Hours",
+        data: [44, 55, 57, 56, 61, 58, 63],
+    },
+]);
+let performancePercentageChart = ref({});
+let performancePercentageSeries = ref([
+    {
+        name: "Percentage",
+        data: [44, 55, 57, 56, 61, 58, 63],
+    },
+]);
+
+let dailyChart = ref({});
 
 onBeforeMount(() => {
     if (props.showChart) {
@@ -230,7 +412,279 @@ onBeforeUpdate(() => {
 });
 
 const renderChart = () => {
-    chartOptions.value = {
+    jiraChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Jira Planning",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    developmentChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Development",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    overallChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Overall",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    supportChart.value = {
+        chart: {
+            height: 400,
+            type: "donut",
+            toolbar: {
+                show: true,
+            },
+        },
+        title: {
+            text: "Support",
+            align: "left",
+        },
+        labels: ["Closed", "Completed", "Waiting for support"],
+        legend: {
+            position: "bottom",
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val, opt) {
+                return opt.w.config.series[opt.seriesIndex];
+            },
+        },
+    };
+    resourceChart.value = {
+        chart: {
+            height: 400,
+            type: "pie",
+            toolbar: {
+                show: true,
+            },
+        },
+        title: {
+            text: "Resource In Charge",
+            align: "left",
+        },
+        labels: ["PLB", "GSMART", "XOPS", "AMS", "PMO", "PLBx"],
+        legend: {
+            position: "bottom",
+        },
+    };
+    performanceHoursChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Personel Performance (Hours)",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: ["Galuh", "Vana", "Rizky", "Oki", "Erlin", "Farhan", "Surya"],
+        },
+        yaxis: {
+            labels: {
+                show: false,
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+    };
+    performancePercentageChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Personel Performance (Percentage)",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: ["Galuh", "Vana", "Rizky", "Oki", "Erlin", "Farhan", "Surya"],
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    dailyChart.value = {
         chart: {
             height: 600,
             type: "line",
@@ -292,7 +746,7 @@ const showDetail = (event, chartContext, config) => {
     axios
         .get("/activity", {
             params: {
-                user: props.series[config.seriesIndex].name,
+                user: props.dailySeries[config.seriesIndex].name,
                 date: props.dates[config.dataPointIndex],
             },
         })
@@ -302,7 +756,7 @@ const showDetail = (event, chartContext, config) => {
             } else {
                 activities.value = response.data;
             }
-            username.value = props.series[config.seriesIndex].name;
+            username.value = props.dailySeries[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
             document.getElementById("openModalActivities").click();
         });
@@ -317,7 +771,7 @@ const resetActivity = () => {
 
 const filter = () => {
     Inertia.get(
-        "/daily",
+        "/monthly",
         {
             search: search.value,
             startDate: startDate.value,
@@ -327,6 +781,7 @@ const filter = () => {
         },
         {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         }
     );

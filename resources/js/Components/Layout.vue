@@ -29,7 +29,7 @@
 import Sidebar from "./Sidebar.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
-import { onMounted, computed } from "vue";
+import { onMounted, computed, onBeforeMount, onBeforeUpdate } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
 import { useToast } from "vue-toastification";
 import Echo from "laravel-echo";
@@ -38,6 +38,9 @@ const toast = useToast();
 
 const username = computed(() => usePage().props.value.auth.user.username);
 const darkmode = computed(() => usePage().props.value.auth.user.darkmode);
+const created = computed(() => usePage().props.value.flash.created);
+const updated = computed(() => usePage().props.value.flash.updated);
+const deleted = computed(() => usePage().props.value.flash.deleted);
 
 window.Echo.channel("status-channel").listen(".status-event", (e) => {
     if (username.value != e.user) {
@@ -97,6 +100,29 @@ onMounted(() => {
         document.body.classList.add("dark-version");
     } else {
         document.body.classList.remove("dark-version");
+    }
+
+    if (created.value) {
+        toast.success(created.value, {
+            icon: "fa-solid fa-check",
+            timeout: 3000,
+        });
+    }
+
+    if (updated.value) {
+        toast.info(updated.value, {
+            icon: "fa-solid fa-pen-to-square",
+            timeout: 3000,
+        });
+    }
+});
+
+onBeforeUpdate(() => {
+    if (deleted.value) {
+        toast.error(deleted.value, {
+            icon: "fa-solid fa-trash-can",
+            timeout: 3000,
+        });
     }
 });
 </script>

@@ -307,40 +307,43 @@ class DashboardController extends Controller
 
     public function pusher()
     {
-        event(new ActivityEvent(Auth::user()->name, 'just added a new activity'));
-        event(new ActivityEvent('mika', 'just added a new activity'));
-        event(new ActivityEvent('erana', 'just added a new activity'));
-        event(new ActivityEvent('mika', 'just added a new activity'));
-        event(new ActivityEvent('mika', 'is struggling in current activity'));
-        event(new ActivityEvent('mika', 'just updated the activity'));
-        event(new StatusEvent(Auth::user()->name, 'just checked in'));
-        event(new StatusEvent('mila', 'just checked in'));
-        event(new StatusEvent('moni', 'just checked out'));
-        event(new StatusEvent('Kino', 'is marked out sick'));
-        event(new StatusEvent('Mola', 'is marked out off office'));
-        return 'ok';
+        // event(new ActivityEvent(Auth::user()->name, 'just added a new activity'));
+        // event(new ActivityEvent('Bella', 'just added a new activity'));
+        // event(new ActivityEvent('erana', 'just added a new activity'));
+        // event(new ActivityEvent('mika', 'just added a new activity'));
+        // event(new ActivityEvent('mika', 'is struggling in current activity'));
+        // event(new ActivityEvent('mika', 'just updated the activity'));
+        // event(new StatusEvent(Auth::user()->name, 'just checked in'));
+        // event(new StatusEvent('Olivia', 'just checked in'));
+        // event(new StatusEvent('moni', 'just checked out'));
+        // event(new StatusEvent('Kino', 'is marked out sick'));
+        // event(new StatusEvent('Mola', 'is marked out off office'));
+        // return 'ok';
+        return 'inactive';
     }
     
     public function correction()
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        $attendances = Attendance::whereDate('created_at', Carbon::now())->get();
-        foreach ($attendances as $attendance) {
-            if ($attendance->activities->last()->duration == 60) {
-                $activity = $attendance->activities->last();
-                $activity->end = Carbon::now()->hour(17)->minute(00)->second(00);
-                $activity->duration = $activity->start->diffInMinutes(Carbon::now()->hour(17)->minute(00)->second(00));
-                $activity->save();
+        // $attendances = Attendance::whereDate('created_at', Carbon::now())->get();
+        // foreach ($attendances as $attendance) {
+        //     if ($attendance->activities->last()->duration == 60) {
+        //         $activity = $attendance->activities->last();
+        //         $activity->end = Carbon::now()->hour(17)->minute(00)->second(00);
+        //         $activity->duration = $activity->start->diffInMinutes(Carbon::now()->hour(17)->minute(00)->second(00));
+        //         $activity->save();
 
-                $attendance->end = $activity->end;
-                $attendance->duration = $attendance->activities->sum('duration');
-                $attendance->save();
-            }
-        }
+        //         $attendance->end = $activity->end;
+        //         $attendance->duration = $attendance->activities->sum('duration');
+        //         $attendance->save();
+        //     }
+        // }
 
-        DB::commit();
+        // DB::commit();
         
-        return 'ok';
+        // return 'ok';
+
+        return 'inactive';
     }
 }

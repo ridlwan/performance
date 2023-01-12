@@ -10,7 +10,7 @@
         <hr class="horizontal dark" />
         <div id="sidenav-collapse-main">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li v-if="permissions.includes('view-dashboard')" class="nav-item">
                     <Link class="nav-link" href="/" :class="$page.component === 'Dashboard/Index' ? 'active' : 'btn-white'">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
@@ -18,10 +18,10 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </Link>
                 </li>
-                <li class="nav-item mt-3">
+                <li v-if="permissions.includes('view-report')" class="nav-item mt-3">
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Report</h6>
                 </li>
-                <li class="nav-item">
+                <li v-if="permissions.includes('view-report')" class="nav-item">
                     <Link class="nav-link" href="/daily" :class="$page.component === 'Daily/Index' ? 'active' : 'btn-white'">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
@@ -29,18 +29,18 @@
                         <span class="nav-link-text ms-1">Daily</span>
                     </Link>
                 </li>
-                <!-- <li class="nav-item">
-                    <Link class="nav-link" href="/">
+                <li v-if="permissions.includes('view-report')" class="nav-item">
+                    <Link class="nav-link" href="/monthly" :class="$page.component === 'Monthly/Index' ? 'active' : 'btn-white'">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-album-2 text-success text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Monthly</span>
                     </Link>
-                </li> -->
-                <!-- <li class="nav-item mt-3">
+                </li>
+                <li v-if="permissions.includes('manage-report') || permissions.includes('manage-account')" class="nav-item mt-3">
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master</h6>
                 </li>
-                <li class="nav-item">
+                <li v-if="permissions.includes('manage-report')" class="nav-item">
                     <Link class="nav-link" href="/">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-single-copy-04 text-info text-sm opacity-10"></i>
@@ -48,16 +48,24 @@
                         <span class="nav-link-text ms-1">Report</span>
                     </Link>
                 </li>
-                <li class="nav-item">
+                <li v-if="permissions.includes('manage-report')" class="nav-item">
+                    <Link class="nav-link" href="/projects" :class="$page.component === 'Project/Index' || $page.component === 'Project/Create' || $page.component === 'Project/Edit' ? 'active' : 'btn-white'">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-collection text-success text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Project</span>
+                    </Link>
+                </li>
+                <li v-if="permissions.includes('manage-account')" class="nav-item">
                     <Link class="nav-link" href="/">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-single-02 text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Account</span>
                     </Link>
-                </li> -->
-                <hr class="horizontal dark" />
-                <li class="nav-item">
+                </li>
+                <hr v-if="permissions.includes('doing-attendance')" class="horizontal dark" />
+                <li v-if="permissions.includes('doing-attendance')" class="nav-item">
                     <Link class="nav-link" href="/attendance">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-watch-time text-danger text-sm opacity-10"></i>
@@ -79,8 +87,8 @@
 </style>
 
 <script setup>
-import { Link } from "@inertiajs/inertia-vue3";
-import { useToggleStore } from "../stores/ToggleStore";
+import { computed } from "vue";
+import { usePage, Link } from "@inertiajs/inertia-vue3";
 
-let toggle = useToggleStore();
+const permissions = computed(() => usePage().props.value.auth.user.permissions);
 </script>
