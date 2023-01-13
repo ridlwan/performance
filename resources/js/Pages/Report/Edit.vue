@@ -18,7 +18,7 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Edit Report</p></h6>
+                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Create Report</p></h6>
                                 </div>
                                 <div class="col-6 text-end">
                                     <Link href="/reports" class="btn bg-gradient-secondary">Back</Link>
@@ -28,25 +28,117 @@
                         </div>
                         <div class="card-body pt-0">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Name</label>
+                                        <label class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
                                         <div v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-2">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Status</label>
-                                        <select class="form-control" v-model="form.status" :class="{ 'is-invalid': form.errors.status }">
-                                            <option v-for="(status, index) in statuses" :key="status" :value="index">
-                                                {{ status }}
-                                            </option>
-                                        </select>
-                                        <div v-if="form.errors.status" class="invalid-feedback">{{ form.errors.status }}</div>
+                                        <label class="form-control-label">Start</label>
+                                        <input class="form-control" type="date" v-model="form.start" :class="{ 'is-invalid': form.errors.start }" />
+                                        <div v-if="form.errors.start" class="invalid-feedback">{{ form.errors.start }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">End</label>
+                                        <input class="form-control" type="date" v-model="form.end" :class="{ 'is-invalid': form.errors.end }" />
+                                        <div v-if="form.errors.end" class="invalid-feedback">{{ form.errors.end }}</div>
                                     </div>
                                 </div>
                             </div>
+                            <hr class="horizontal dark" />
+                            <p class="text-uppercase text-sm">Progress</p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-0">
+                                        <label class="form-control-label">Project</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <label class="form-control-label">Jira</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <label class="form-control-label">Development</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <label class="form-control-label">Testing</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <label class="form-control-label">Overall</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-for="(progress, progress_index) in form.reportProgress" :key="progress_index" class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-0">
+                                        <select class="form-control" v-model="form.reportProgress[progress_index]['project_id']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.project_id`] }" @change="checkJira(progress_index)">
+                                            <option v-for="project in projects" :key="project.id" :value="project.id">
+                                                {{ project.name }}
+                                            </option>
+                                        </select>
+                                        <div v-if="form.errors[`reportProgress.${progress_index}.project_id`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.project_id`] }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.jira`] }">
+                                            <input class="form-control" type="text" v-model="form.reportProgress[progress_index]['jira']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.jira`] }" />
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div v-if="form.errors[`reportProgress.${progress_index}.jira`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.jira`] }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.development`] }">
+                                            <input class="form-control" type="text" v-model="form.reportProgress[progress_index]['development']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.development`] }" />
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div v-if="form.errors[`reportProgress.${progress_index}.development`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.development`] }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.testing`] }">
+                                            <input class="form-control" type="text" v-model="form.reportProgress[progress_index]['testing']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.testing`] }" />
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div v-if="form.errors[`reportProgress.${progress_index}.testing`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.testing`] }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.overall`] }">
+                                            <input class="form-control" type="text" v-model="form.reportProgress[progress_index]['overall']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.overall`] }" />
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div v-if="form.errors[`reportProgress.${progress_index}.overall`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.overall`] }}</div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-1">
+                                    <div class="form-group mb-0">
+                                        <button type="button" class="btn bg-gradient-danger btn-sm" @click="removeJira(progress_index)"><i class="fa-solid fa-trash-can"></i></button>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-sm bg-gradient-info" @click="addJira">Add</button>
+                                    </div>
+                                </div>
+                            </div> -->
                         </div>
                     </form>
                 </div>
@@ -57,15 +149,62 @@
 
 <script setup>
 import Layout from "../../Components/Layout.vue";
+import { onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
+import Swal from "sweetalert2";
+import moment from "moment";
 
 const props = defineProps({
     report: Object,
-    statuses: Array,
+    projects: Array,
 });
 
 const form = useForm({
     name: props.report.name,
-    status: props.report.status,
+    start: moment(props.report.start).format("Y-MM-DD"),
+    end: moment(props.report.end).format("Y-MM-DD"),
+    reportProgress: [],
 });
+
+onMounted(() => {
+    props.report.progresses.forEach((progress) => {
+        form.reportProgress.push({
+            id: progress.id,
+            project_id: progress.project_id,
+            jira: progress.jira,
+            development: progress.development,
+            testing: progress.testing,
+            overall: progress.overall,
+        });
+    });
+});
+
+const addJira = () => {
+    form.progress.push({
+        project_id: null,
+        value: null,
+    });
+};
+
+const removeJira = (index) => {
+    form.reportProgress.splice(index, 1);
+};
+
+const checkJira = (progress_index) => {
+    form.reportProgress.forEach((element, index) => {
+        if (progress_index != index) {
+            if (element["project_id"] == form.reportProgress[progress_index].project_id) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Duplicate Entry",
+                    text: "Make sure to select another project list",
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+
+                form.reportProgress[progress_index].project_id = null;
+            }
+        }
+    });
+};
 </script>

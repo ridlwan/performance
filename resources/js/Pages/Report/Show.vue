@@ -7,7 +7,7 @@
                 </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
                     <h6 class="font-weight-bolder text-white mb-0">
-                        {{ report.name }} <a href="javascript:;"> <i class="fas fa-pencil-alt text-info ms-1"></i></a>
+                        {{ report.name }} <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/edit`"> <i class="fas fa-pencil-alt text-info ms-1"></i></Link>
                     </h6>
                 </li>
             </ol>
@@ -321,6 +321,7 @@ const props = defineProps({
     report: Object,
     attendances: Object,
     users: Array,
+    reportedUsers: Array,
     filters: Object,
     showChart: Boolean,
     dailySeries: Array,
@@ -330,6 +331,8 @@ const props = defineProps({
     developmentSeries: Array,
     testingSeries: Array,
     overallSeries: Array,
+    performanceHoursSeries: Array,
+    performancePercentageSeries: Array,
 });
 
 let activities = ref([]);
@@ -350,36 +353,27 @@ let supportChart = ref({});
 let supportSeries = ref([4, 3, 5]);
 let resourceChart = ref({});
 let resourceSeries = ref([44, 55, 13, 43, 22, 47]);
+
 let performanceHoursChart = ref({});
-let performanceHoursSeries = ref([
-    {
-        name: "Hours",
-        data: [44, 55, 57, 56, 61, 58, 63],
-    },
-]);
 let performancePercentageChart = ref({});
-let performancePercentageSeries = ref([
-    {
-        name: "Percentage",
-        data: [44, 55, 57, 56, 61, 58, 63],
-    },
-]);
 
 let dailyChart = ref({});
 
 onBeforeMount(() => {
     if (props.showChart) {
-        renderChart();
+        renderDaily();
     }
+
+    renderReport();
 });
 
 onBeforeUpdate(() => {
     if (props.showChart) {
-        renderChart();
+        renderDaily();
     }
 });
 
-const renderChart = () => {
+const renderReport = () => {
     jiraChart.value = {
         chart: {
             type: "bar",
@@ -484,7 +478,7 @@ const renderChart = () => {
             height: 400,
         },
         title: {
-            text: "Overall",
+            text: "Testing",
             align: "left",
         },
         plotOptions: {
@@ -641,7 +635,7 @@ const renderChart = () => {
             },
         },
         xaxis: {
-            categories: ["Galuh", "Vana", "Rizky", "Oki", "Erlin", "Farhan", "Surya"],
+            categories: props.reportedUsers,
         },
         yaxis: {
             labels: {
@@ -680,7 +674,7 @@ const renderChart = () => {
             },
         },
         xaxis: {
-            categories: ["Galuh", "Vana", "Rizky", "Oki", "Erlin", "Farhan", "Surya"],
+            categories: props.reportedUsers,
         },
         yaxis: {
             labels: {
@@ -701,6 +695,9 @@ const renderChart = () => {
             },
         },
     };
+};
+
+const renderDaily = () => {
     dailyChart.value = {
         chart: {
             height: 600,

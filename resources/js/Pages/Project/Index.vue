@@ -58,7 +58,10 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ project.status_text }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <Link :href="`/projects/${project.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
+                                            <Link v-if="project.status_text == 'Close'" :href="`/projects/${project.id}/open`" class="text-success font-weight-bold" v-tooltip="'Open'"><i class="fa-solid fa-folder-closed"></i></Link>
+                                            <Link v-else :href="`/projects/${project.id}/close`" class="text-warning font-weight-bold" v-tooltip="'Close'"><i class="fa-solid fa-folder-open"></i></Link>
+
+                                            <Link :href="`/projects/${project.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
                                             <a v-if="project.progresses.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(project.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     </tr>

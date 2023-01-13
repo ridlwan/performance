@@ -53,7 +53,7 @@
                             <hr class="horizontal dark" />
                             <p class="text-uppercase text-sm">Progress</p>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0">
                                         <label class="form-control-label">Project</label>
                                     </div>
@@ -79,8 +79,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div v-for="(progress, progress_index) in form.reportProgress" :key="progress_index" class="row">
-                                <div class="col-md-3">
+                            <div v-for="(progress, progress_index) in form.reportProgress" :key="progress_index" class="row mb-3">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0">
                                         <select class="form-control" v-model="form.reportProgress[progress_index]['project_id']" :class="{ 'is-invalid': form.errors[`reportProgress.${progress_index}.project_id`] }" @change="checkJira(progress_index)" disabled>
                                             <option v-for="project in projects" :key="project.id" :value="project.id">
@@ -126,11 +126,11 @@
                                         <div v-if="form.errors[`reportProgress.${progress_index}.overall`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progress_index}.overall`] }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <!-- <div class="col-md-1">
                                     <div class="form-group mb-0">
                                         <button type="button" class="btn bg-gradient-danger btn-sm" @click="removeJira(progress_index)"><i class="fa-solid fa-trash-can"></i></button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- <div class="row">
                                 <div class="col-md-12 text-center">

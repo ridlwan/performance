@@ -129,6 +129,22 @@ class ProjectController extends Controller
         return redirect('/projects')->with('updated', 'Project updated successfully');
     }
 
+    public function open(Project $project)
+    {
+        $project->status = Project::STATUS_OPEN;
+        $project->save();
+
+        return redirect('/projects')->with('created', 'Project opened successfully');
+    }
+    
+    public function close(Project $project)
+    {
+        $project->status = Project::STATUS_CLOSE;
+        $project->save();
+
+        return redirect('/projects')->with('updated', 'Project closed successfully');
+    }
+
     /**
      * Remove the specified resource from storage.
      *

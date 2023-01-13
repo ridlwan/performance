@@ -178,7 +178,7 @@ class ReportController extends Controller
         $attendances->appends($queryString);
 
         $users = User::where('reported', User::REPORTED_YES)->get();
-
+        
         $userSeries = User::where('reported', User::REPORTED_YES)
             ->when($user != 'All', function ($query) use ($user) {
                 $query->where('id', $user);
@@ -277,10 +277,43 @@ class ReportController extends Controller
             array_push($overallSeries, $overallData);
         }
 
+        $reportedUsers = $users->pluck('name');
+
+        $performanceHoursSeries = [];
+        $performancePercentageSeries = [];
+        
+        $performanceHours = [];
+        $performancePercentage = [];
+        foreach ($users as $user) {
+            $duration = Attendance::where('user_id', $user->id)
+                ->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)->sum('duration');
+
+                $hours = floor($duration / 60);
+                $percentage = floor(($duration / (22 * 8 * 60)) * 100);
+                
+                array_push($performanceHours, $hours);
+                array_push($performancePercentage, $percentage);
+        }
+
+        $performanceHoursData = [
+            'name' => 'Hours',
+            'data' => $performanceHours
+        ];
+
+        $performancePercentageData = [
+            'name' => 'Percentage',
+            'data' => $performancePercentage
+        ];
+
+        array_push($performanceHoursSeries, $performanceHoursData);
+        array_push($performancePercentageSeries, $performancePercentageData);
+
         return Inertia::render('Report/Show', [
             'report' => $report,
             'attendances' => $attendances,
             'users' => $users,
+            'reportedUsers' => $reportedUsers,
             'filters' => $filters,
             'showChart' => $showChart,
             'dailySeries' => $dailySeries,
@@ -290,6 +323,8 @@ class ReportController extends Controller
             'developmentSeries' => $developmentSeries,
             'testingSeries' => $testingSeries,
             'overallSeries' => $overallSeries,
+            'performanceHoursSeries' => $performanceHoursSeries,
+            'performancePercentageSeries' => $performancePercentageSeries,
         ]);
     }
 
@@ -301,9 +336,13 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        $projects = Project::where('status', Project::STATUS_OPEN)->get();
+        $report->load('progresses');
+
+        $projects = Project::where('type', Project::TYPE_PROJECT)
+            ->where('status', Project::STATUS_OPEN)->get();
 
         return Inertia::render('Report/Edit', [
+            'report' => $report,
             'projects' => $projects
         ]);
     }
@@ -319,33 +358,54 @@ class ReportController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:reports,name,' . $report->id . ',id',
-            'status' => 'required'
-        ]);
-
-        $request->validate([
-            'name' => 'required|unique:reports,name',
             'start' => 'required',
             'end' => 'required',
-            'jira.*.project_id' => 'required',
-            'jira.*.value' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.project_id' => 'required',
+            'reportProgress.*.jira' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.development' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
         ], [
-            'jira.*.project_id.required' => 'The project field is required.',
-            'jira.*.value.required' => 'The percentage field is required.',
-            'jira.*.value.numeric' => 'The percentage field must be a number.',
-            'jira.*.value.min' => 'The percentage field must be at least 0.',
-            'jira.*.value.max' => 'The percentage field must not be greater than 100.',
+            'reportProgress.*.project_id.required' => 'The project field is required.',
+            'reportProgress.*.jira.required' => 'The jira percentage field is required.',
+            'reportProgress.*.jira.numeric' => 'The jira percentage field must be a number.',
+            'reportProgress.*.jira.min' => 'The jira percentage field must be at least 0.',
+            'reportProgress.*.jira.max' => 'The jira percentage field must not be greater than 100.',
+            'reportProgress.*.development.required' => 'The development percentage field is required.',
+            'reportProgress.*.development.numeric' => 'The development percentage field must be a number.',
+            'reportProgress.*.development.min' => 'The development percentage field must be at least 0.',
+            'reportProgress.*.development.max' => 'The development percentage field must not be greater than 100.',
+            'reportProgress.*.testing.required' => 'The testing percentage field is required.',
+            'reportProgress.*.testing.numeric' => 'The testing percentage field must be a number.',
+            'reportProgress.*.testing.min' => 'The testing percentage field must be at least 0.',
+            'reportProgress.*.testing.max' => 'The testing percentage field must not be greater than 100.',
+            'reportProgress.*.overall.required' => 'The overall percentage field is required.',
+            'reportProgress.*.overall.numeric' => 'The overall percentage field must be a number.',
+            'reportProgress.*.overall.min' => 'The overall percentage field must be at least 0.',
+            'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
         ]);
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        $report->update($request->only(['name', 'start', 'end']));
+        // $report = Report::create($request->only(['name', 'start', 'end']));
 
-        foreach ($request->jira as $jira) {
-            $jira['report_id'] = $report->id;
-            Jira::create($jira);
-        }
+        // foreach ($request->reportProgress as $progress) {
+        //     $progress['report_id'] = $report->id;
+        //     Progress::create($progress);
+        // }
 
-        DB::commit();
+        // DB::commit();
+
+        // DB::beginTransaction();
+
+        // $report->update($request->only(['name', 'start', 'end']));
+
+        // // foreach ($request->jira as $jira) {
+        // //     $jira['report_id'] = $report->id;
+        // //     Jira::create($jira);
+        // // }
+
+        // DB::commit();
 
         return redirect('/reports')->with('updated', 'Report updated successfully');
     }

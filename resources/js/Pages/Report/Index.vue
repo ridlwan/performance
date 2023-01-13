@@ -65,8 +65,8 @@
                                             <Link :href="`/reports/${report.id}`" class="text-info font-weight-bold" v-tooltip="'Show'"><i class="fa-solid fa-eye"></i></Link>
                                             <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/publish`" class="text-success font-weight-bold ms-2" v-tooltip="'Publish'"><i class="fa-solid fa-cloud-arrow-up"></i></Link>
                                             <Link v-else :href="`/reports/${report.id}/unpublish`" class="text-warning font-weight-bold ms-2" v-tooltip="'Unpublish'"><i class="fa-solid fa-cloud-arrow-down"></i></Link>
-                                            <Link :href="`/reports/${report.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(report.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
+                                            <a v-if="report.published_text == 'No'" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(report.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="reports.data.length < 1">

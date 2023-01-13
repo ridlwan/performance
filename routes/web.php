@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/{report}/unpublish', [ReportController::class, 'unpublish'])->middleware(['can:manage-report']);
     Route::resource('reports', ReportController::class)->middleware(['can:manage-report']);
     Route::resource('projects', ProjectController::class)->middleware(['can:manage-report']);
+    Route::get('/projects/{project}/open', [ProjectController::class, 'open'])->middleware(['can:manage-report']);
+    Route::get('/projects/{project}/close', [ProjectController::class, 'close'])->middleware(['can:manage-report']);
     Route::resource('users', UserController::class)->middleware(['can:manage-account']);
 
     Route::get('/pusher', [DashboardController::class, 'pusher']);
