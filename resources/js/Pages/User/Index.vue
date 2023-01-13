@@ -75,7 +75,7 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <Link :href="`/users/${user.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(user.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <a v-if="user.attendances.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(user.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="users.data.length < 1">

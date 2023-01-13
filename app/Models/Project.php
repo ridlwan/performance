@@ -43,4 +43,9 @@ class Project extends Model
     public function getStatusTextAttribute() {
         return self::STATUS_ARRAY[$this->status];
     }
+
+    public function progresses()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }

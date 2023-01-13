@@ -26,7 +26,8 @@ class ProjectController extends Controller
         $filters = $request->only(['search']);
         $filters['paginate'] = $paginate;
 
-        $projects = Project::when($search, function ($query) use ($search) {
+        $projects = Project::with('progresses')
+            ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })
             ->orderByDesc('id')->paginate($paginate);;

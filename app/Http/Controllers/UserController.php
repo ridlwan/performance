@@ -28,7 +28,7 @@ class UserController extends Controller
         $filters = $request->only(['search']);
         $filters['paginate'] = $paginate;
 
-        $users = User::with('roles')
+        $users = User::with('roles', 'attendances')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
