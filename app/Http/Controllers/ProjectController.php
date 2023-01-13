@@ -51,9 +51,11 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        $types = Project::TYPE_ARRAY;
         $statuses = Project::STATUS_ARRAY;
 
         return Inertia::render('Project/Create', [
+            'types' => $types,
             'statuses' => $statuses
         ]);
     }
@@ -68,6 +70,7 @@ class ProjectController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:projects,name',
+            'type' => 'required',
             'status' => 'required'
         ]);
 
@@ -95,10 +98,12 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $types = Project::TYPE_ARRAY;
         $statuses = Project::STATUS_ARRAY;
 
         return Inertia::render('Project/Edit', [
             'project' => $project,
+            'types' => $types,
             'statuses' => $statuses
         ]);
     }
@@ -114,6 +119,7 @@ class ProjectController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:projects,name,' . $project->id . ',id',
+            'type' => 'required',
             'status' => 'required'
         ]);
 

@@ -2,14 +2,19 @@
     <Layout>
         <template #heading>
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-white">
+                    <Link href="/reports" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Master Report</h6></Link>
+                </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
-                    <h6 class="font-weight-bolder text-white mb-0">Monthly Report</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">
+                        {{ report.name }} <a href="javascript:;"> <i class="fas fa-pencil-alt text-info ms-1"></i></a>
+                    </h6>
                 </li>
             </ol>
         </template>
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
@@ -18,10 +23,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
@@ -33,7 +35,16 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="testingChart" :series="testingSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
@@ -294,24 +305,11 @@
     flex: 0 0 auto;
     width: 20%;
 }
-
-.dp__main {
-    padding: 0px !important;
-}
-.dp__input_wrap {
-    border: unset !important;
-    padding-top: 1px;
-    padding-bottom: 1.5px;
-}
-.dp__input {
-    border: unset;
-    border-radius: 8px;
-    width: 150px;
-}
 </style>
 
 <script setup>
 import { ref, onBeforeMount, onBeforeUpdate } from "vue";
+import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import Layout from "../../Components/Layout.vue";
 import Pagination from "../../Components/Pagination.vue";
@@ -320,12 +318,18 @@ import apexchart from "vue3-apexcharts";
 import "axios";
 
 const props = defineProps({
+    report: Object,
     attendances: Object,
     users: Array,
     filters: Object,
     showChart: Boolean,
     dailySeries: Array,
     dates: Array,
+    projects: Array,
+    jiraSeries: Array,
+    developmentSeries: Array,
+    testingSeries: Array,
+    overallSeries: Array,
 });
 
 let activities = ref([]);
@@ -338,50 +342,10 @@ let endDate = ref(moment(String(props.filters.endDate)).format("YYYY-MM-DD"));
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
 let jiraChart = ref({});
-let jiraSeries = ref([
-    {
-        name: "January",
-        data: [44, 55, 57, 56, 61, 58, 63],
-    },
-    {
-        name: "Februari",
-        data: [76, 85, 101, 98, 87, 105, 91],
-    },
-    {
-        name: "Maret",
-        data: [35, 41, 36, 26, 45, 48, 52],
-    },
-]);
 let developmentChart = ref({});
-let developmentSeries = ref([
-    {
-        name: "January",
-        data: [44, 55, 57, 56, 61, 58, 63],
-    },
-    {
-        name: "Februari",
-        data: [76, 85, 101, 98, 87, 105, 91],
-    },
-    {
-        name: "Maret",
-        data: [35, 41, 36, 26, 45, 48, 52],
-    },
-]);
+let testingChart = ref({});
 let overallChart = ref({});
-let overallSeries = ref([
-    {
-        name: "January",
-        data: [44, 55, 57, 56, 61, 58, 63],
-    },
-    {
-        name: "Februari",
-        data: [76, 85, 101, 98, 87, 105, 91],
-    },
-    {
-        name: "Maret",
-        data: [35, 41, 36, 26, 45, 48, 52],
-    },
-]);
+
 let supportChart = ref({});
 let supportSeries = ref([4, 3, 5]);
 let resourceChart = ref({});
@@ -444,7 +408,7 @@ const renderChart = () => {
             },
         },
         xaxis: {
-            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+            categories: props.projects,
         },
         yaxis: {
             labels: {
@@ -493,7 +457,56 @@ const renderChart = () => {
             },
         },
         xaxis: {
-            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+            categories: props.projects,
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    testingChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Overall",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                endingShape: "rounded",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: props.projects,
         },
         yaxis: {
             labels: {
@@ -542,7 +555,7 @@ const renderChart = () => {
             },
         },
         xaxis: {
-            categories: ["GSMART", "PMO", "SP Document", "Kitting", "GSE", "IERAPPS", "Engine Stand"],
+            categories: props.projects,
         },
         yaxis: {
             labels: {
@@ -775,11 +788,9 @@ const resetActivity = () => {
 
 const filter = () => {
     Inertia.get(
-        "/monthly",
+        `/reports/${props.report.id}`,
         {
             search: search.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
             user: user.value,
             paginate: paginate.value,
         },

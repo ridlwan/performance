@@ -1,7 +1,11 @@
 <template>
     <Layout>
         <template #heading>
-            <h6 class="font-weight-bolder text-white mb-0">Master Project</h6>
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-white active" style="width: 300px">
+                    <h6 class="font-weight-bolder text-white mb-0">Master Project</h6>
+                </li>
+            </ol>
         </template>
 
         <div class="row">
@@ -37,6 +41,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-xs text-dark p-2">Project Name</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Type</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Status</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Action</th>
                                     </tr>
@@ -47,6 +52,9 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ project.name }}</span>
                                         </td>
                                         <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ project.type_text }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">{{ project.status_text }}</span>
                                         </td>
                                         <td class="align-middle text-center">
@@ -55,7 +63,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="projects.data.length < 1">
-                                        <td colspan="3" class="align-middle text-center text-secondary">Data not found</td>
+                                        <td colspan="4" class="align-middle text-center text-secondary">Data not found</td>
                                     </tr>
                                 </tbody>
                             </table>

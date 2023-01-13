@@ -1,7 +1,11 @@
 <template>
     <Layout>
         <template #heading>
-            <h6 class="font-weight-bolder text-white mb-0">Dashboard</h6>
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-white active" style="width: 300px">
+                    <h6 class="font-weight-bolder text-white mb-0">Dashboard</h6>
+                </li>
+            </ol>
         </template>
 
         <div class="row">

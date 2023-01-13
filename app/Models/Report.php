@@ -36,4 +36,9 @@ class Report extends Model
     public function getPublishedTextAttribute() {
         return self::PUBLISHED_ARRAY[$this->published];
     }
+
+    public function progresses()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }

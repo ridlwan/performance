@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jira extends Model
+class Progress extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'report_id',
         'project_id',
-        'value'
+        'jira',
+        'development',
+        'testing',
+        'overall'
     ];
 
     public function report()

@@ -13,11 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('developments', function (Blueprint $table) {
+        Schema::create('progress', function (Blueprint $table) {
             $table->id();
             $table->foreignId('report_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
             $table->foreignId('project_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
-            $table->integer('value');
+            $table->integer('jira')->nullable();
+            $table->integer('development')->nullable();
+            $table->integer('testing')->nullable();
+            $table->integer('overall')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('developments');
+        Schema::dropIfExists('progress');
     }
 };

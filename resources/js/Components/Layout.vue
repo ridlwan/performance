@@ -23,6 +23,11 @@
 .apexcharts-active {
     color: black !important;
 }
+
+.breadcrumb-item.text-white::before {
+    color: #fff;
+    font-size: 1.1rem;
+}
 </style>
 
 <script setup>

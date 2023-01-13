@@ -1,7 +1,11 @@
 <template>
     <Layout>
         <template #heading>
-            <h6 class="font-weight-bolder text-white mb-0">Master Report</h6>
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-white active" style="width: 300px">
+                    <h6 class="font-weight-bolder text-white mb-0">Master Report</h6>
+                </li>
+            </ol>
         </template>
 
         <div class="row">
@@ -58,8 +62,9 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ report.published_text }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/publish`" class="text-success font-weight-bold" v-tooltip="'Publish'"><i class="fa-solid fa-cloud-arrow-up"></i></Link>
-                                            <Link v-else :href="`/reports/${report.id}/unpublish`" class="text-warning font-weight-bold" v-tooltip="'Unpublish'"><i class="fa-solid fa-cloud-arrow-down"></i></Link>
+                                            <Link :href="`/reports/${report.id}`" class="text-info font-weight-bold" v-tooltip="'Show'"><i class="fa-solid fa-eye"></i></Link>
+                                            <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/publish`" class="text-success font-weight-bold ms-2" v-tooltip="'Publish'"><i class="fa-solid fa-cloud-arrow-up"></i></Link>
+                                            <Link v-else :href="`/reports/${report.id}/unpublish`" class="text-warning font-weight-bold ms-2" v-tooltip="'Unpublish'"><i class="fa-solid fa-cloud-arrow-down"></i></Link>
                                             <Link :href="`/reports/${report.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
                                             <a href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(report.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
