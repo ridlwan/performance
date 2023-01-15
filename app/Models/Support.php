@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Support extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'report_id',
+        'closed',
+        'completed',
+        'waiting'
+    ];
+
+    public function report()
+    {
+        return $this->belongsTo(Report::class);
+    }
 }

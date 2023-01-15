@@ -21,13 +21,11 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fa-regular fa-calendar"></i></span>
                                     <input type="date" class="form-control" v-model="startDate" @change="filter" />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fa-regular fa-calendar"></i></span>
                                     <input type="date" class="form-control" v-model="endDate" @change="filter" />
                                 </div>
                             </div>
@@ -70,7 +68,7 @@
                                 <tbody>
                                     <tr v-for="attendance in attendances.data" :key="attendance.id">
                                         <td>
-                                            <div class="d-flex px-2 py-1">
+                                            <div class="d-flex px-2">
                                                 <div>
                                                     <img :src="attendance.user.avatar ? '/storage/' + attendance.user.avatar : '/assets/img/logo-sq.png'" class="avatar avatar-sm me-3" />
                                                 </div>
@@ -113,7 +111,7 @@
                             </table>
                         </div>
                         <Pagination :links="attendances.links" />
-                        <a href="javascript:;" id="openModalActivities" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
+                        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
                     </div>
                 </div>
             </div>
@@ -123,7 +121,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title opacity-7" id="activityModalTitle" style="color: black !important">
+                        <h6 class="modal-title opacity-7" style="color: black !important">
                             {{ username }} <span class="opacity-6">at {{ $filters.formatDate(at) }}</span>
                         </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
@@ -308,7 +306,7 @@ const showDetail = (event, chartContext, config) => {
             }
             username.value = props.series[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
-            document.getElementById("openModalActivities").click();
+            document.getElementById("openActivityModal").click();
         });
 };
 
@@ -331,6 +329,7 @@ const filter = () => {
         },
         {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         }
     );

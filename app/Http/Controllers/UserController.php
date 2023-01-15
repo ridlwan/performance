@@ -33,7 +33,7 @@ class UserController extends Controller
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
             })
-            ->orderByDesc('id')->paginate($paginate);;
+            ->orderBy('order')->paginate($paginate);;
 
         $queryString = [
             'search' => $search,
@@ -81,7 +81,8 @@ class UserController extends Controller
             'password' => 'required',
             'role' => 'required',
             'teammate' => 'required',
-            'reported' => 'required'
+            'reported' => 'required',
+            'order' => 'required|numeric|min:0',
         ]);
         
         DB::beginTransaction();
@@ -91,7 +92,8 @@ class UserController extends Controller
             'position',
             'email',
             'teammate',
-            'reported'
+            'reported',
+            'order'
         ]);
 
         $data['password'] = bcrypt($request->password);
@@ -153,7 +155,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id . ',id',
             'role' => 'required',
             'teammate' => 'required',
-            'reported' => 'required'
+            'reported' => 'required',
+            'order' => 'required|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -163,7 +166,8 @@ class UserController extends Controller
             'position',
             'email',
             'teammate',
-            'reported'
+            'reported',
+            'order'
         ]);
 
         if ($request->password) {

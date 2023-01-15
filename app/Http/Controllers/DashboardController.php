@@ -44,7 +44,8 @@ class DashboardController extends Controller
             })
             ->orderByDesc('id')->get();
 
-        $teammate = User::where('teammate', User::TEAMMATE_YES)->get();
+        $teammate = User::where('teammate', User::TEAMMATE_YES)
+            ->orderBy('order')->get();
 
         if ($request->data) {
             return response()->json([
@@ -143,7 +144,8 @@ class DashboardController extends Controller
 
         $attendances->appends($queryString);
 
-        $users = User::where('teammate', User::TEAMMATE_YES)->get();
+        $users = User::where('teammate', User::TEAMMATE_YES)
+            ->orderBy('order')->get();
 
         $userSeries = User::where('teammate', User::TEAMMATE_YES)
             ->when($user != 'All', function ($query) use ($user) {
@@ -152,7 +154,8 @@ class DashboardController extends Controller
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
-            })->get();
+            })
+            ->orderBy('order')->get();
 
         $series = [];
         foreach ($userSeries as $user) {
@@ -189,118 +192,6 @@ class DashboardController extends Controller
             'filters' => $filters,
             'showChart' => $showChart,
             'series' => $series,
-            'dates' => $dates
-        ]);
-    }
-
-    public function monthly(Request $request)
-    {
-        $search = $request->get('search');
-        $user = $request->get('user');
-
-        if ($request->get('user')) {
-            $user = $request->get('user');
-        } else {
-            $user = 'All';
-        }
-
-        if ($request->get('startDate')) {
-            $startDate = $request->get('startDate');
-        } else {
-            $startDate = Carbon::now()->subDay(6);
-        }
-
-        if ($request->get('endDate')) {
-            $endDate = $request->get('endDate');
-        } else {
-            $endDate = Carbon::now();
-        }
-
-        if ($request->get('paginate')) {
-            $paginate = $request->get('paginate');
-        } else {
-            $paginate = 10;
-        }
-
-        $filters = $request->only(['search']);
-        $filters['startDate'] = $startDate;
-        $filters['endDate'] = $endDate;
-        $filters['user'] = $user;
-        $filters['paginate'] = $paginate;
-
-        $attendances = Attendance::with('activities', 'user')
-            ->when($search, function ($query) use ($search) {
-                $query->whereHas('user', function ($subQuery) use ($search) {
-                    $subQuery->where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%");
-                });
-            })
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->whereHas('user', function ($query) use ($user) {
-                $query->where('teammate', User::TEAMMATE_YES)
-                    ->when($user != 'All', function ($query) use ($user) {
-                        $query->where('id', $user);
-                    });
-            })
-            ->orderByDesc('id')->paginate($paginate);
-
-        $queryString = [
-            'search' => $search,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'user' => $user,
-            'paginate' => $paginate,
-        ];
-
-        $attendances->appends($queryString);
-
-        $users = User::where('teammate', User::TEAMMATE_YES)->get();
-
-        $userSeries = User::where('teammate', User::TEAMMATE_YES)
-            ->when($user != 'All', function ($query) use ($user) {
-                $query->where('id', $user);
-            })
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%");
-            })->get();
-
-        $dailySeries = [];
-        foreach ($userSeries as $user) {
-            $data = [
-                'name' => $user->name,
-                'data' => []
-            ];
-            array_push($dailySeries, $data);
-        }
-
-        $dates = [];
-        if ($startDate == $endDate || $startDate > $endDate || $attendances->count() < 1) {
-            $showChart = false;
-        } else {
-            $showChart = true;
-
-            $range = CarbonPeriod::create($startDate, $endDate);
-            foreach ($range as $period) {
-                array_push($dates, $period->format('D d M y'));
-
-                foreach ($dailySeries as $key => $value) {
-                    if ($attendance = Attendance::where('user_id', $userSeries[$key]->id)->whereDate('created_at', $period)->first()) {
-                        array_push($dailySeries[$key]['data'], number_format((float) ($attendance->duration / 60), 1));
-                    } else {
-                        array_push($dailySeries[$key]['data'], 0);
-                    }
-                }
-            }
-        }
-
-        return Inertia::render('Monthly/Index', [
-            'attendances' => $attendances,
-            'users' => $users,
-            'filters' => $filters,
-            'showChart' => $showChart,
-            'dailySeries' => $dailySeries,
             'dates' => $dates
         ]);
     }

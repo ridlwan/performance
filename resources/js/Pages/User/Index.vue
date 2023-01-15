@@ -47,6 +47,7 @@
                                         <th class="text-center text-uppercase text-xs text-dark">Teammate</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Reported</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Status</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Order</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Action</th>
                                     </tr>
                                 </thead>
@@ -72,6 +73,9 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">{{ user.status_text }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ user.order }}</span>
                                         </td>
                                         <td class="align-middle text-center">
                                             <Link :href="`/users/${user.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
@@ -126,6 +130,7 @@ const filter = () => {
         },
         {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         }
     );

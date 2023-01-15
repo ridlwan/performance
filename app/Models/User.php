@@ -67,6 +67,7 @@ class User extends Authenticatable
         'status',
         'reported',
         'teammate',
+        'order',
         'resigned_at',
     ];
 
@@ -119,5 +120,10 @@ class User extends Authenticatable
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+    
+    public function responsibilities()
+    {
+        return $this->hasMany(Responsibility::class);
     }
 }

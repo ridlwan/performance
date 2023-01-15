@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('supports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('report_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
-            $table->integer('value');
-            $table->tinyInteger('type')->default(0);
+            $table->integer('closed')->nullable();
+            $table->integer('completed')->nullable();
+            $table->integer('waiting')->nullable();
             $table->timestamps();
         });
     }

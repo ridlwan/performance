@@ -8,10 +8,13 @@ use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Report;
 use App\Models\Project;
-use Carbon\CarbonPeriod;
-use App\Models\Attendance;
+use App\Models\Support;
 use App\Models\Progress;
+use Carbon\CarbonPeriod;
+use App\Models\Assignment;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
+use App\Models\Responsibility;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -62,8 +65,16 @@ class ReportController extends Controller
         $projects = Project::where('type', Project::TYPE_PROJECT)
             ->where('status', Project::STATUS_OPEN)->get();
 
+        $allProjects = Project::where('status', Project::STATUS_OPEN)->get();
+
+        $users = User::where('reported', User::REPORTED_YES)
+            ->where('teammate', User::TEAMMATE_YES)
+            ->orderBy('order')->get();
+
         return Inertia::render('Report/Create', [
-            'projects' => $projects
+            'projects' => $projects,
+            'allProjects' => $allProjects,
+            'users' => $users
         ]);
     }
 
@@ -84,6 +95,9 @@ class ReportController extends Controller
             'reportProgress.*.development' => 'required|numeric|min:0|max:100',
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'closed' => 'required|numeric|min:0',
+            'completed' => 'required|numeric|min:0',
+            'waiting' => 'required|numeric|min:0',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
             'reportProgress.*.jira.required' => 'The jira percentage field is required.',
@@ -111,6 +125,27 @@ class ReportController extends Controller
         foreach ($request->reportProgress as $progress) {
             $progress['report_id'] = $report->id;
             Progress::create($progress);
+        }
+
+        Support::create([
+            'report_id' => $report->id,
+            'closed' => $request->closed,
+            'completed' => $request->completed,
+            'waiting' => $request->waiting
+        ]);
+
+        foreach ($request->responsibilities as $responsibility) {
+            $responsibilityData = Responsibility::create([
+                'report_id' => $report->id,
+                'user_id' => $responsibility['user']['id']
+            ]);
+
+            foreach ($responsibility['assignments'] as $assignment) {
+                Assignment::create([
+                    'responsibility_id' => $responsibilityData->id,
+                    'project_id' => $assignment['project_id']
+                ]);
+            }
         }
 
         DB::commit();
@@ -161,6 +196,7 @@ class ReportController extends Controller
             ->whereDate('created_at', '<=', $endDate)
             ->whereHas('user', function ($query) use ($user) {
                 $query->where('reported', User::REPORTED_YES)
+                    ->where('teammate', User::TEAMMATE_YES)
                     ->when($user != 'All', function ($query) use ($user) {
                         $query->where('id', $user);
                     });
@@ -177,16 +213,20 @@ class ReportController extends Controller
 
         $attendances->appends($queryString);
 
-        $users = User::where('reported', User::REPORTED_YES)->get();
+        $users = User::where('reported', User::REPORTED_YES)
+            ->where('teammate', User::TEAMMATE_YES)
+            ->orderBy('order')->get();
         
         $userSeries = User::where('reported', User::REPORTED_YES)
+            ->where('teammate', User::TEAMMATE_YES)
             ->when($user != 'All', function ($query) use ($user) {
                 $query->where('id', $user);
             })
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
-            })->get();
+            })
+            ->orderBy('order')->get();
 
         $dailySeries = [];
         foreach ($userSeries as $user) {
@@ -309,6 +349,25 @@ class ReportController extends Controller
         array_push($performanceHoursSeries, $performanceHoursData);
         array_push($performancePercentageSeries, $performancePercentageData);
 
+        $supportSeries = [];
+        array_push($supportSeries, $report->support->closed);
+        array_push($supportSeries, $report->support->completed);
+        array_push($supportSeries, $report->support->waiting);
+
+        $responsibilities = Responsibility::with('user', 'assignments.project')
+            ->where('report_id', $report->id)->get();
+
+        $assignments = Assignment::whereIn('responsibility_id', $responsibilities->pluck('id'))->get();
+
+        $resourceSeries = [];
+        $resourceData = [];
+        foreach ($assignments as $assignment) {
+            if (!in_array($assignment->project->name, $resourceData)) {
+                array_push($resourceSeries, $assignments->where('project_id', $assignment->project_id)->count());
+                array_push($resourceData, $assignment->project->name);
+            }
+        }
+
         return Inertia::render('Report/Show', [
             'report' => $report,
             'attendances' => $attendances,
@@ -325,6 +384,10 @@ class ReportController extends Controller
             'overallSeries' => $overallSeries,
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
+            'supportSeries' => $supportSeries,
+            'responsibilities' => $responsibilities,
+            'resourceSeries' => $resourceSeries,
+            'resourceData' => $resourceData,
         ]);
     }
 
@@ -336,14 +399,19 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        $report->load('progresses');
+        $report->load('progresses', 'support', 'responsibilities.user', 'responsibilities.assignments.project');
 
-        $projects = Project::where('type', Project::TYPE_PROJECT)
-            ->where('status', Project::STATUS_OPEN)->get();
+        $projects = Project::whereIn('id', $report->progresses->pluck('project_id'))->get();
 
+        $allProjects = Project::whereHas('assignments', function ($query) use ($report) {
+            $query->whereIn('responsibility_id', $report->responsibilities->pluck('id'));
+        })
+        ->orWhere('status', Project::STATUS_OPEN)->get();
+        
         return Inertia::render('Report/Edit', [
             'report' => $report,
-            'projects' => $projects
+            'projects' => $projects,
+            'allProjects' => $allProjects,
         ]);
     }
 
@@ -365,6 +433,9 @@ class ReportController extends Controller
             'reportProgress.*.development' => 'required|numeric|min:0|max:100',
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'closed' => 'required|numeric|min:0',
+            'completed' => 'required|numeric|min:0',
+            'waiting' => 'required|numeric|min:0',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
             'reportProgress.*.jira.required' => 'The jira percentage field is required.',
@@ -385,27 +456,42 @@ class ReportController extends Controller
             'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
         ]);
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // $report = Report::create($request->only(['name', 'start', 'end']));
+        $report->update($request->only(['name', 'start', 'end']));
 
-        // foreach ($request->reportProgress as $progress) {
-        //     $progress['report_id'] = $report->id;
-        //     Progress::create($progress);
-        // }
+        foreach ($request->reportProgress as $progress) {
+            if ($progressData = Progress::find($progress['id'])) {
+                $progressData->update($progress);
+            }
+        }
 
-        // DB::commit();
+        $support = $report->support;
 
-        // DB::beginTransaction();
+        $support->update([
+            'closed' => $request->closed,
+            'completed' => $request->completed,
+            'waiting' => $request->waiting
+        ]);
 
-        // $report->update($request->only(['name', 'start', 'end']));
+        $report->responsibilities()->delete();
 
-        // // foreach ($request->jira as $jira) {
-        // //     $jira['report_id'] = $report->id;
-        // //     Jira::create($jira);
-        // // }
+        foreach ($request->responsibilities as $responsibility) {
 
-        // DB::commit();
+            $responsibilityData = Responsibility::create([
+                'report_id' => $report->id,
+                'user_id' => $responsibility['user']['id']
+            ]);
+
+            foreach ($responsibility['assignments'] as $assignment) {
+                Assignment::create([
+                    'responsibility_id' => $responsibilityData->id,
+                    'project_id' => $assignment['project_id']
+                ]);
+            }
+        }
+
+        DB::commit();
 
         return redirect('/reports')->with('updated', 'Report updated successfully');
     }

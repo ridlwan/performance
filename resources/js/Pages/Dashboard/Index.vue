@@ -258,7 +258,7 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title opacity-6" id="userModalTitle" style="color: black !important">{{ userListTitle }}</h6>
+                        <h6 class="modal-title opacity-6" style="color: black !important">{{ userListTitle }}</h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
                             <span aria-hidden="true">&times;</span>
                         </button>

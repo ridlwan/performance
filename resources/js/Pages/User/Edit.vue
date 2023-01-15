@@ -95,6 +95,13 @@
                                         <div v-if="form.errors.reported" class="invalid-feedback">{{ form.errors.reported }}</div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Order</label>
+                                        <input class="form-control" type="text" v-model="form.order" :class="{ 'is-invalid': form.errors.order }" />
+                                        <div v-if="form.errors.order" class="invalid-feedback">{{ form.errors.order }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -124,5 +131,6 @@ const form = useForm({
     role: props.userRole,
     teammate: props.user.teammate,
     reported: props.user.reported,
+    order: props.user.order,
 });
 </script>

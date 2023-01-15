@@ -48,4 +48,9 @@ class Project extends Model
     {
         return $this->hasMany(Progress::class);
     }
+    
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
 }

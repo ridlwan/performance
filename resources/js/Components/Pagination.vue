@@ -3,7 +3,7 @@
         <nav>
             <ul class="pagination">
                 <li v-for="(link, index) in links" :key="index" class="page-item" :class="{ disabled: !link.url, active: link.active }">
-                    <Link :href="link.url" class="page-link">
+                    <Link :href="link.url" class="page-link" preserve-scroll>
                         <span v-if="index == 0">
                             <i class="fa fa-angle-left"></i>
                         </span>

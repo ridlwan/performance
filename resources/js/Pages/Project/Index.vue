@@ -113,6 +113,7 @@ const filter = () => {
         },
         {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         }
     );

@@ -25,7 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/activity', [DashboardController::class, 'activity']);
     Route::get('/daily', [DashboardController::class, 'daily'])->middleware(['can:view-report']);
-    Route::get('/monthly', [DashboardController::class, 'monthly'])->middleware(['can:view-report']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/working-user', [AttendanceController::class, 'workingUser'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->middleware(['can:doing-attendance']);

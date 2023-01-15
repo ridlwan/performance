@@ -59,7 +59,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h6 class="modal-title opacity-7" id="activityModalTitle" style="color: black !important">Activity List</h6>
+                                <h6 class="modal-title opacity-7" style="color: black !important">Activity List</h6>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

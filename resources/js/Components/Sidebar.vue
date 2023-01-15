@@ -30,7 +30,7 @@
                     </Link>
                 </li>
                 <li v-if="permissions.includes('view-report')" class="nav-item">
-                    <Link class="nav-link" href="/monthly" :class="$page.component === 'Monthly/Index' ? 'active' : 'btn-white'">
+                    <Link class="nav-link" href="/reports" :class="$page.component === 'Report/Index' || $page.component === 'Report/Create' || $page.component === 'Report/Edit' || $page.component === 'Report/Show' ? 'active' : 'btn-white'">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-album-2 text-success text-sm opacity-10"></i>
                         </div>
@@ -41,17 +41,9 @@
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master</h6>
                 </li>
                 <li v-if="permissions.includes('manage-report')" class="nav-item">
-                    <Link class="nav-link" href="/reports" :class="$page.component === 'Report/Index' || $page.component === 'Report/Create' || $page.component === 'Report/Edit' || $page.component === 'Report/Show' ? 'active' : 'btn-white'">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-copy-04 text-info text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Report</span>
-                    </Link>
-                </li>
-                <li v-if="permissions.includes('manage-report')" class="nav-item">
                     <Link class="nav-link" href="/projects" :class="$page.component === 'Project/Index' || $page.component === 'Project/Create' || $page.component === 'Project/Edit' ? 'active' : 'btn-white'">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-collection text-success text-sm opacity-10"></i>
+                            <i class="ni ni-collection text-info text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Project</span>
                     </Link>

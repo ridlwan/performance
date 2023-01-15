@@ -16,7 +16,7 @@
                     <div class="card-body pt-0">
                         <hr class="horizontal dark" />
                         <div id="activities" style="overflow: auto; height: 300px">
-                            <div v-for="(activity, activity_index) in activities" :key="activity.id">
+                            <div v-for="(activity, activityIndex) in activities" :key="activity.id">
                                 <div class="d-flex">
                                     <span class="mb-0 me-3 font-weight-bolder opacity-7" style="white-space: nowrap">{{ activity.start_time }}</span>
                                     <div>
@@ -25,7 +25,7 @@
                                                 >{{ activity.description }} <a href="javascript:;" @click="openEditActivityForm(activity)"><i class="fas fa-pencil-alt text-primary me-3" aria-hidden="true"></i></a
                                             ></small>
                                         </h6>
-                                        <button v-if="activity_index == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0" data-bs-toggle="tooltip" title="I'm struggling here">
+                                        <button v-if="activityIndex == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0" data-bs-toggle="tooltip" title="I'm struggling here">
                                             <span class="btn-inner--icon"><i class="fa-solid fa-user-ninja"></i></span>
                                         </button>
 

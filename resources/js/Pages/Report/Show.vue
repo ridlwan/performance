@@ -3,7 +3,7 @@
         <template #heading>
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                 <li class="breadcrumb-item text-white">
-                    <Link href="/reports" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Master Report</h6></Link>
+                    <Link href="/reports" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Monthly Report</h6></Link>
                 </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
                     <h6 class="font-weight-bolder text-white mb-0">
@@ -85,28 +85,35 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center text-uppercase text-xs text-dark">No</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Name</th>
+                                        <th class="text-uppercase text-xs text-dark">Personel</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Role</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(attendance, attendance_index) in attendances.data" :key="attendance_index">
+                                    <tr v-for="(responsibility, responsibilityIndex) in responsibilities" :key="responsibilityIndex">
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance_index + 1 }}</span>
+                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibilityIndex + 1 }}</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex px-3">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{ responsibility.user.name }}</h6>
+                                                    <p class="text-xs text-secondary mb-0">{{ responsibility.user.email }}</p>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
+                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibility.user.position }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ attendance.user.name }}</span>
+                                            <button v-for="(assignment, assignmentIndex) in responsibility.assignments" :key="assignmentIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button">
+                                                <span class="btn-inner--text">{{ assignment.project.name }}</span>
+                                            </button>
                                         </td>
                                     </tr>
-                                    <tr v-if="attendances.data.length < 1">
-                                        <td colspan="7" class="align-middle text-center text-secondary">Data not found</td>
+                                    <tr v-if="responsibilities.length < 1">
+                                        <td colspan="4" class="align-middle text-center text-secondary">Data not found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -142,25 +149,13 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                                     <input type="text" class="form-control" placeholder="Search" v-model="search" @change="filter" />
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="input-group">
-                                    <span class="input-group-text" style="background: #e9ecef"><i class="fa-regular fa-calendar"></i></span>
-                                    <input type="date" class="form-control" v-model="startDate" disabled />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="input-group">
-                                    <span class="input-group-text" style="background: #e9ecef"><i class="fa-regular fa-calendar"></i></span>
-                                    <input type="date" class="form-control" v-model="endDate" disabled />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <select class="form-control" v-model="user" @change="filter">
                                     <option value="All" selected>All Personel</option>
                                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
@@ -199,10 +194,10 @@
                                 <tbody>
                                     <tr v-for="attendance in attendances.data" :key="attendance.id">
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
+                                            <div class="d-flex px-3">
+                                                <!-- <div>
                                                     <img :src="attendance.user.avatar ? '/storage/' + attendance.user.avatar : '/assets/img/logo-sq.png'" class="avatar avatar-sm me-3" />
-                                                </div>
+                                                </div> -->
                                                 <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-sm">{{ attendance.user.name }}</h6>
                                                     <p class="text-xs text-secondary mb-0">{{ attendance.user.email }}</p>
@@ -242,7 +237,7 @@
                             </table>
                         </div>
                         <Pagination :links="attendances.links" />
-                        <a href="javascript:;" id="openModalActivities" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
+                        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
                     </div>
                 </div>
             </div>
@@ -252,7 +247,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title opacity-7" id="activityModalTitle" style="color: black !important">
+                        <h6 class="modal-title opacity-7" style="color: black !important">
                             {{ username }} <span class="opacity-6">at {{ $filters.formatDate(at) }}</span>
                         </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
@@ -333,6 +328,10 @@ const props = defineProps({
     overallSeries: Array,
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
+    supportSeries: Array,
+    responsibilities: Array,
+    resourceSeries: Array,
+    resourceData: Array,
 });
 
 let activities = ref([]);
@@ -340,20 +339,14 @@ let username = ref(null);
 let at = ref(null);
 let status = ref(null);
 let search = ref(props.filters.search);
-let startDate = ref(moment(String(props.filters.startDate)).format("YYYY-MM-DD"));
-let endDate = ref(moment(String(props.filters.endDate)).format("YYYY-MM-DD"));
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
 let jiraChart = ref({});
 let developmentChart = ref({});
 let testingChart = ref({});
 let overallChart = ref({});
-
 let supportChart = ref({});
-let supportSeries = ref([4, 3, 5]);
 let resourceChart = ref({});
-let resourceSeries = ref([44, 55, 13, 43, 22, 47]);
-
 let performanceHoursChart = ref({});
 let performancePercentageChart = ref({});
 
@@ -605,7 +598,7 @@ const renderReport = () => {
             text: "Resource In Charge",
             align: "left",
         },
-        labels: ["PLB", "GSMART", "XOPS", "AMS", "PMO", "PLBx"],
+        labels: props.resourceData,
         legend: {
             position: "bottom",
         },
@@ -746,8 +739,6 @@ const reset = () => {
     search.value = null;
     let subStartDate = new Date();
     subStartDate.setDate(subStartDate.getDate() - 6);
-    startDate.value = moment(String(subStartDate)).format("YYYY-MM-DD");
-    endDate.value = moment(String(new Date())).format("YYYY-MM-DD");
     user.value = "All";
     paginate.value = 10;
 
@@ -772,7 +763,7 @@ const showDetail = (event, chartContext, config) => {
             }
             username.value = props.dailySeries[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
-            document.getElementById("openModalActivities").click();
+            document.getElementById("openActivityModal").click();
         });
 };
 

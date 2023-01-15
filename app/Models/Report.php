@@ -41,4 +41,14 @@ class Report extends Model
     {
         return $this->hasMany(Progress::class);
     }
+    
+    public function support()
+    {
+        return $this->hasOne(Support::class);
+    }
+
+    public function responsibilities()
+    {
+        return $this->hasMany(Responsibility::class);
+    }
 }
