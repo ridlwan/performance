@@ -37,10 +37,40 @@ class DashboardController extends Controller
         $notAvailable = User::where('status', User::STATUS_NOT_AVAILABLE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
+        if ($request->get('struggling')) {
+            $struggling = $request->get('struggling');
+        } else {
+            $struggling = false;
+        }
+
+        if ($request->get('status')) {
+            $status = $request->get('status');
+        } else {
+            $status = 'All';
+        }
+
+        if ($request->get('seletedUser')) {
+            $seletedUser = $request->get('seletedUser');
+        } else {
+            $seletedUser = 'All';
+        }
+
         $activities = Activity::with('attendance.user')
             ->whereDate('created_at', Carbon::now())
-            ->whereHas('attendance.user', function ($query) {
-                $query->where('teammate', User::TEAMMATE_YES);
+            ->whereHas('attendance.user', function ($query) use ($seletedUser) {
+                $query->where('teammate', User::TEAMMATE_YES)
+                ->when($seletedUser != 'All', function ($query) use ($seletedUser) {
+                    $query->where('id', $seletedUser);
+                });
+            })
+            ->when($status == 'Completed', function ($query) {
+                $query->whereNotNull('end');
+            })
+            ->when($status == 'In Progress', function ($query) {
+                $query->whereNull('end');
+            })
+            ->when($struggling == 'true', function ($query) {
+                $query->where('struggle', Activity::STRUGGLE_YES);
             })
             ->orderByDesc('id')->get();
 
@@ -54,7 +84,10 @@ class DashboardController extends Controller
                 'outOfOffice' => $outOfOffice,
                 'outSick' => $outSick,
                 'notAvailable' => $notAvailable,
-                'activities' => $activities
+                'activities' => $activities,
+                'struggling' => $struggling,
+                'status' => $status,
+                'seletedUser' => $seletedUser
             ]);
         } else {
             return Inertia::render('Dashboard/Index', [
@@ -64,6 +97,9 @@ class DashboardController extends Controller
                 'outSick' => $outSick,
                 'notAvailable' => $notAvailable,
                 'activities' => $activities,
+                'struggling' => $struggling,
+                'status' => $status,
+                'seletedUser' => $seletedUser,
                 'teammate' => $teammate
             ]);
         }

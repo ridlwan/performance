@@ -410,6 +410,7 @@ const renderReport = () => {
                 },
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -459,6 +460,7 @@ const renderReport = () => {
                 },
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -508,6 +510,7 @@ const renderReport = () => {
                 },
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -557,6 +560,7 @@ const renderReport = () => {
                 },
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -640,6 +644,7 @@ const renderReport = () => {
                 text: "Hours",
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -684,6 +689,7 @@ const renderReport = () => {
                 },
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -731,6 +737,7 @@ const renderDaily = () => {
                 text: "Hours",
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
 };
 
