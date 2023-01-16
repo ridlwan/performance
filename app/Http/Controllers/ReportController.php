@@ -15,10 +15,17 @@ use App\Models\Assignment;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Models\Responsibility;
+use App\Exports\ActivitiesExport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Report::class, 'report');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +33,12 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::user()->can('manage-report')) {
+            $publihed = true;
+        } else {
+            $publihed = false;
+        }
+        
         $search = $request->get('search');
 
         if ($request->get('paginate')) {
@@ -39,6 +52,9 @@ class ReportController extends Controller
 
         $reports = Report::when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
+            })
+            ->when($publihed, function ($query) {
+                $query->where('published', Report::PUBLISHED_YES);
             })
             ->orderByDesc('id')->paginate($paginate);;
 
@@ -510,6 +526,11 @@ class ReportController extends Controller
         $report->save();
 
         return redirect('/reports')->with('updated', 'Report unpublished successfully');
+    }
+
+    public function export(Report $report) 
+    {
+        return (new ActivitiesExport($report->start, $report->end))->download($report->name . '.xlsx');
     }
 
     /**

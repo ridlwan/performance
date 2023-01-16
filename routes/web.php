@@ -42,10 +42,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
-    Route::resource('reports', ReportController::class)->middleware(['can:manage-report']);
+    Route::get('/reports/{report}/export', [ReportController::class, 'export'])->middleware(['can:view-report']);
     Route::get('/reports/{report}/publish', [ReportController::class, 'publish'])->middleware(['can:manage-report']);
     Route::get('/reports/{report}/unpublish', [ReportController::class, 'unpublish'])->middleware(['can:manage-report']);
-    Route::resource('reports', ReportController::class)->middleware(['can:manage-report']);
+    Route::resource('reports', ReportController::class);
     Route::resource('projects', ProjectController::class)->middleware(['can:manage-report']);
     Route::get('/projects/{project}/open', [ProjectController::class, 'open'])->middleware(['can:manage-report']);
     Route::get('/projects/{project}/close', [ProjectController::class, 'close'])->middleware(['can:manage-report']);

@@ -7,7 +7,7 @@
                 </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
                     <h6 class="font-weight-bolder text-white mb-0">
-                        {{ report.name }} <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/edit`"> <i class="fas fa-pencil-alt text-info ms-1"></i></Link>
+                        {{ report.name }} <Link v-if="permissions.includes('manage-report') && report.published_text == 'No'" :href="`/reports/${report.id}/edit`"> <i class="fas fa-pencil-alt text-info ms-1"></i></Link>
                     </h6>
                 </li>
             </ol>
@@ -149,7 +149,7 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                                     <input type="text" class="form-control" placeholder="Search" v-model="search" @change="filter" />
@@ -171,6 +171,9 @@
                             </div>
                             <div class="col-md-1">
                                 <button type="button" class="btn bg-gradient-secondary" @click="reset">Reset</button>
+                            </div>
+                            <div class="col-md-2">
+                                <a :href="`/reports/${report.id}/export`" class="btn bg-gradient-info">Download Activity</a>
                             </div>
                         </div>
                     </div>
@@ -303,14 +306,16 @@
 </style>
 
 <script setup>
-import { ref, onBeforeMount, onBeforeUpdate } from "vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import { ref, computed, onBeforeMount, onBeforeUpdate } from "vue";
+import { usePage, Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import Layout from "../../Components/Layout.vue";
 import Pagination from "../../Components/Pagination.vue";
 import moment from "moment";
 import apexchart from "vue3-apexcharts";
 import "axios";
+
+const permissions = computed(() => usePage().props.value.auth.user.permissions);
 
 const props = defineProps({
     report: Object,
@@ -631,8 +636,8 @@ const renderReport = () => {
             categories: props.reportedUsers,
         },
         yaxis: {
-            labels: {
-                show: false,
+            title: {
+                text: "Hours",
             },
         },
         fill: {
@@ -670,8 +675,10 @@ const renderReport = () => {
             categories: props.reportedUsers,
         },
         yaxis: {
+            title: {
+                text: "Percentage",
+            },
             labels: {
-                show: false,
                 formatter: function (val) {
                     return val + "%";
                 },

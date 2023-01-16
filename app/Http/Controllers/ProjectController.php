@@ -17,6 +17,18 @@ class ProjectController extends Controller
     {
         $search = $request->get('search');
 
+        if ($request->get('status')) {
+            $status = $request->get('status');
+            if ($status == 'Close') {
+                $statusData = 1;
+            } else {
+                $statusData = 0;
+            }
+        } else {
+            $status = 'All';
+            $statusData = null;
+        }
+
         if ($request->get('paginate')) {
             $paginate = $request->get('paginate');
         } else {
@@ -24,16 +36,21 @@ class ProjectController extends Controller
         }
 
         $filters = $request->only(['search']);
+        $filters['status'] = $status;
         $filters['paginate'] = $paginate;
 
         $projects = Project::with('progresses')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })
+            ->when($status != 'All', function ($query) use ($statusData) {
+                $query->where('status', $statusData);
+            })
             ->orderByDesc('id')->paginate($paginate);;
 
         $queryString = [
             'search' => $search,
+            'status' => $status,
             'paginate' => $paginate,
         ];
 

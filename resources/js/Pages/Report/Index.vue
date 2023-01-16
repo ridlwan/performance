@@ -13,7 +13,7 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div :class="permissions.includes('manage-report') ? 'col-md-8' : 'col-md-9'">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                                     <input type="text" class="form-control" placeholder="Search" v-model="search" @change="filter" />
@@ -30,7 +30,7 @@
                             <div class="col-md-1">
                                 <button type="button" class="btn bg-gradient-secondary" @click="reset">Reset</button>
                             </div>
-                            <div class="col-md-1">
+                            <div v-if="permissions.includes('manage-report')" class="col-md-1">
                                 <Link href="/reports/create" class="btn bg-gradient-primary">New</Link>
                             </div>
                         </div>
@@ -63,10 +63,12 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <Link :href="`/reports/${report.id}`" class="text-info font-weight-bold" v-tooltip="'Show'"><i class="fa-solid fa-eye"></i></Link>
-                                            <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/publish`" class="text-success font-weight-bold ms-2" v-tooltip="'Publish'"><i class="fa-solid fa-cloud-arrow-up"></i></Link>
-                                            <Link v-else :href="`/reports/${report.id}/unpublish`" class="text-warning font-weight-bold ms-2" v-tooltip="'Unpublish'"><i class="fa-solid fa-cloud-arrow-down"></i></Link>
-                                            <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a v-if="report.published_text == 'No'" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(report.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <span v-if="permissions.includes('manage-report')">
+                                                <a v-if="report.published_text == 'No'" href="javascript:;" class="text-success font-weight-bold ms-2" v-tooltip="'Publish'" @click="publish(report.id)"><i class="fa-solid fa-cloud-arrow-up"></i></a>
+                                                <a v-else href="javascript:;" class="text-warning font-weight-bold ms-2" v-tooltip="'Unpublish'" @click="unpublish(report.id)"><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                                                <Link v-if="report.published_text == 'No'" :href="`/reports/${report.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
+                                                <a v-if="report.published_text == 'No'" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(report.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr v-if="reports.data.length < 1">
@@ -85,12 +87,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import { Link } from "@inertiajs/inertia-vue3";
+import { usePage, Link } from "@inertiajs/inertia-vue3";
 import Layout from "../../Components/Layout.vue";
 import Pagination from "../../Components/Pagination.vue";
 import Swal from "sweetalert2";
+
+const permissions = computed(() => usePage().props.value.auth.user.permissions);
 
 const props = defineProps({
     reports: Object,
@@ -121,6 +125,46 @@ const filter = () => {
             replace: true,
         }
     );
+};
+
+const publish = (id) => {
+    Swal.fire({
+        title: "Are you sure? <br> <i class='fa-solid fa-cloud-arrow-up'></i>",
+        text: "Do you want to publish this report?",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "orange",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Inertia.get(`/reports/${id}/publish`, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            });
+        }
+    });
+};
+
+const unpublish = (id) => {
+    Swal.fire({
+        title: "Are you sure? <br> <i class='fa-solid fa-cloud-arrow-down'></i>",
+        text: "Do you want to unpublish this report?",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "orange",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Inertia.get(`/reports/${id}/unpublish`, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            });
+        }
+    });
 };
 
 const destroy = (id) => {
