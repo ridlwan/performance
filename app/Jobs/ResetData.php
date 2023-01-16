@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Activity;
 use App\Models\Attendance;
+use App\Events\StatusEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
@@ -36,8 +37,12 @@ class ResetData implements ShouldQueue
     public function handle()
     {
         foreach (User::get() as $user) {
-            $user->status = User::STATUS_NOT_AVAILABLE;
-            $user->save();
+            if ($user->status != User::STATUS_NOT_AVAILABLE) {
+                $user->status = User::STATUS_NOT_AVAILABLE;
+                $user->save();
+    
+                event(new StatusEvent($user->name, 'just checked out'));
+            }
         }
 
         $activities = Activity::whereNull('end')->get();
