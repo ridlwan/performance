@@ -124,6 +124,58 @@
         </div>
 
         <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-3 px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3 pt-0 pb-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-xs text-dark">No</th>
+                                        <th class="text-uppercase text-xs text-dark">Project</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Jira Planning</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Development</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Testing</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">SLA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(progress, progressIndex) in report.progresses" :key="progressIndex">
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progressIndex + 1 }}</span>
+                                        </td>
+                                        <td class="align-middle px-4">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.project.name }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.jira }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.development }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.testing }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.sla }}%</span>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="report.progresses.length > 0">
+                                        <td class="text-center text-uppercase text-xs text-dark font-weight-bold" colspan="5">SLA ({{ report.progresses.length }} Project)</td>
+                                        <td class="text-center text-uppercase text-xs text-dark font-weight-bold">{{ slaAverage }}%</td>
+                                    </tr>
+                                    <tr v-if="report.progresses.length < 1">
+                                        <td colspan="6" class="align-middle text-center text-secondary">Data not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-lg-6">
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
@@ -198,9 +250,6 @@
                                     <tr v-for="attendance in attendances.data" :key="attendance.id">
                                         <td>
                                             <div class="d-flex px-3">
-                                                <!-- <div>
-                                                    <img :src="attendance.user.avatar ? '/storage/' + attendance.user.avatar : '/assets/img/logo-sq.png'" class="avatar avatar-sm me-3" />
-                                                </div> -->
                                                 <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-sm">{{ attendance.user.name }}</h6>
                                                     <p class="text-xs text-secondary mb-0">{{ attendance.user.email }}</p>
@@ -334,9 +383,11 @@ const props = defineProps({
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
     supportSeries: Array,
+    supportSla: Number,
     responsibilities: Array,
     resourceSeries: Array,
     resourceData: Array,
+    slaAverage: Number,
 });
 
 let activities = ref([]);
@@ -581,7 +632,7 @@ const renderReport = () => {
             },
         },
         title: {
-            text: "Support",
+            text: `Support (SLA: ${props.supportSla}%)`,
             align: "left",
         },
         labels: ["Closed", "Completed", "Waiting for support"],

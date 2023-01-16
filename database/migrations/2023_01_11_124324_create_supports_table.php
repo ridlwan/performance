@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('closed')->nullable();
             $table->integer('completed')->nullable();
             $table->integer('waiting')->nullable();
+            $table->integer('sla')->nullable();
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('development')->nullable();
             $table->integer('testing')->nullable();
             $table->integer('overall')->nullable();
+            $table->integer('sla')->nullable();
             $table->timestamps();
         });
     }

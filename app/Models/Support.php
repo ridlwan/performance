@@ -13,7 +13,8 @@ class Support extends Model
         'report_id',
         'closed',
         'completed',
-        'waiting'
+        'waiting',
+        'sla'
     ];
 
     public function report()

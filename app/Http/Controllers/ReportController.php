@@ -111,9 +111,11 @@ class ReportController extends Controller
             'reportProgress.*.development' => 'required|numeric|min:0|max:100',
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
             'closed' => 'required|numeric|min:0',
             'completed' => 'required|numeric|min:0',
             'waiting' => 'required|numeric|min:0',
+            'sla' => 'required|numeric|min:0|max:100',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
             'reportProgress.*.jira.required' => 'The jira percentage field is required.',
@@ -132,6 +134,10 @@ class ReportController extends Controller
             'reportProgress.*.overall.numeric' => 'The overall percentage field must be a number.',
             'reportProgress.*.overall.min' => 'The overall percentage field must be at least 0.',
             'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
+            'reportProgress.*.sla.required' => 'The sla percentage field is required.',
+            'reportProgress.*.sla.numeric' => 'The sla percentage field must be a number.',
+            'reportProgress.*.sla.min' => 'The sla percentage field must be at least 0.',
+            'reportProgress.*.sla.max' => 'The sla percentage field must not be greater than 100.',
         ]);
 
         DB::beginTransaction();
@@ -147,7 +153,8 @@ class ReportController extends Controller
             'report_id' => $report->id,
             'closed' => $request->closed,
             'completed' => $request->completed,
-            'waiting' => $request->waiting
+            'waiting' => $request->waiting,
+            'sla' => $request->sla
         ]);
 
         foreach ($request->responsibilities as $responsibility) {
@@ -369,6 +376,7 @@ class ReportController extends Controller
         array_push($supportSeries, $report->support->closed);
         array_push($supportSeries, $report->support->completed);
         array_push($supportSeries, $report->support->waiting);
+        $supportSla = $report->support->sla;
 
         $responsibilities = Responsibility::with('user', 'assignments.project')
             ->where('report_id', $report->id)->get();
@@ -382,6 +390,12 @@ class ReportController extends Controller
                 array_push($resourceSeries, $assignments->where('project_id', $assignment->project_id)->count());
                 array_push($resourceData, $assignment->project->name);
             }
+        }
+
+        $slaAverage = 0;
+        
+        if ($report->progresses->count() > 0 && $report->progresses->sum('sla') > 0) {
+            $slaAverage = $report->progresses->sum('sla') / $report->progresses->count();
         }
 
         return Inertia::render('Report/Show', [
@@ -401,9 +415,11 @@ class ReportController extends Controller
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
             'supportSeries' => $supportSeries,
+            'supportSla' => $supportSla,
             'responsibilities' => $responsibilities,
             'resourceSeries' => $resourceSeries,
             'resourceData' => $resourceData,
+            'slaAverage' => $slaAverage,
         ]);
     }
 
@@ -449,9 +465,11 @@ class ReportController extends Controller
             'reportProgress.*.development' => 'required|numeric|min:0|max:100',
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
             'closed' => 'required|numeric|min:0',
             'completed' => 'required|numeric|min:0',
             'waiting' => 'required|numeric|min:0',
+            'sla' => 'required|numeric|min:0|max:100',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
             'reportProgress.*.jira.required' => 'The jira percentage field is required.',
@@ -470,6 +488,10 @@ class ReportController extends Controller
             'reportProgress.*.overall.numeric' => 'The overall percentage field must be a number.',
             'reportProgress.*.overall.min' => 'The overall percentage field must be at least 0.',
             'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
+            'reportProgress.*.sla.required' => 'The sla percentage field is required.',
+            'reportProgress.*.sla.numeric' => 'The sla percentage field must be a number.',
+            'reportProgress.*.sla.min' => 'The sla percentage field must be at least 0.',
+            'reportProgress.*.sla.max' => 'The sla percentage field must not be greater than 100.',
         ]);
 
         DB::beginTransaction();
@@ -487,7 +509,8 @@ class ReportController extends Controller
         $support->update([
             'closed' => $request->closed,
             'completed' => $request->completed,
-            'waiting' => $request->waiting
+            'waiting' => $request->waiting,
+            'sla' => $request->sla
         ]);
 
         $report->responsibilities()->delete();

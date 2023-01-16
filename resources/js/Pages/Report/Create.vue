@@ -54,7 +54,7 @@
                             <p class="text-uppercase text-sm">Progress</p>
                             <div class="row mb-3">
                                 <div v-for="(progress, progressIndex) in form.reportProgress" :key="progressIndex" class="row mb-2">
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group mb-0">
                                             <label v-if="progressIndex == 0" class="form-control-label">Project</label>
                                             <select class="form-control" disabled>
@@ -104,30 +104,50 @@
                                             <div v-if="form.errors[`reportProgress.${progressIndex}.overall`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.overall`] }}</div>
                                         </div>
                                     </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">SLA</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['sla']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.sla`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.sla`] }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <hr class="horizontal dark mt-4" />
                             <p class="text-uppercase text-sm">Support</p>
                             <div class="row mb-3">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-control-label">Closed</label>
                                         <input class="form-control" type="text" v-model="form.closed" :class="{ 'is-invalid': form.errors.closed }" />
                                         <div v-if="form.errors.closed" class="invalid-feedback">{{ form.errors.closed }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-control-label">Completed</label>
                                         <input class="form-control" type="text" v-model="form.completed" :class="{ 'is-invalid': form.errors.completed }" />
                                         <div v-if="form.errors.completed" class="invalid-feedback">{{ form.errors.completed }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-control-label">Waiting for support</label>
                                         <input class="form-control" type="text" v-model="form.waiting" :class="{ 'is-invalid': form.errors.waiting }" />
                                         <div v-if="form.errors.waiting" class="invalid-feedback">{{ form.errors.waiting }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">SLA</label>
+                                        <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors.sla }">
+                                            <input class="form-control" type="text" v-model="form.sla" :class="{ 'is-invalid': form.errors.sla }" />
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div v-if="form.errors.sla" class="invalid-feedback">{{ form.errors.sla }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -232,11 +252,12 @@ const form = useForm({
     closed: null,
     completed: null,
     waiting: null,
+    sla: null,
     responsibilities: [],
 });
 
 let userResponsibilityIndex = ref(null);
-let responsibilityProjectId = ref(props.allProjects[0].id);
+let responsibilityProjectId = ref(null);
 
 onMounted(() => {
     props.projects.forEach((project) => {
@@ -246,6 +267,7 @@ onMounted(() => {
             development: null,
             testing: null,
             overall: null,
+            sla: null,
         });
     });
 
@@ -255,6 +277,10 @@ onMounted(() => {
             assignments: [],
         });
     });
+
+    if (props.allProjects.length > 0) {
+        responsibilityProjectId.value = props.allProjects[0].id;
+    }
 });
 
 const openProjectModal = (index) => {

@@ -15,7 +15,8 @@ class Progress extends Model
         'jira',
         'development',
         'testing',
-        'overall'
+        'overall',
+        'sla'
     ];
 
     public function report()
