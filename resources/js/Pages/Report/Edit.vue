@@ -119,28 +119,77 @@
                             <hr class="horizontal dark mt-4" />
                             <p class="text-uppercase text-sm">Support</p>
                             <div class="row mb-3">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="form-control-label">Closed</label>
-                                        <input class="form-control" type="text" v-model="form.closed" :class="{ 'is-invalid': form.errors.closed }" />
-                                        <div v-if="form.errors.closed" class="invalid-feedback">{{ form.errors.closed }}</div>
+                                        <label class="form-control-label">Waiting For Support</label>
+                                        <input class="form-control" type="text" v-model="form.waiting_for_support" :class="{ 'is-invalid': form.errors.waiting_for_support }" />
+                                        <div v-if="form.errors.waiting_for_support" class="invalid-feedback">{{ form.errors.waiting_for_support }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Waiting For Customer</label>
+                                        <input class="form-control" type="text" v-model="form.waiting_for_customer" :class="{ 'is-invalid': form.errors.waiting_for_customer }" />
+                                        <div v-if="form.errors.waiting_for_customer" class="invalid-feedback">{{ form.errors.waiting_for_customer }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Waiting For Partner</label>
+                                        <input class="form-control" type="text" v-model="form.waiting_for_partner" :class="{ 'is-invalid': form.errors.waiting_for_partner }" />
+                                        <div v-if="form.errors.waiting_for_partner" class="invalid-feedback">{{ form.errors.waiting_for_partner }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Escalated</label>
+                                        <input class="form-control" type="text" v-model="form.escalated" :class="{ 'is-invalid': form.errors.escalated }" />
+                                        <div v-if="form.errors.escalated" class="invalid-feedback">{{ form.errors.escalated }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Pending</label>
+                                        <input class="form-control" type="text" v-model="form.pending" :class="{ 'is-invalid': form.errors.pending }" />
+                                        <div v-if="form.errors.pending" class="invalid-feedback">{{ form.errors.pending }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">In Progress</label>
+                                        <input class="form-control" type="text" v-model="form.in_progress" :class="{ 'is-invalid': form.errors.in_progress }" />
+                                        <div v-if="form.errors.in_progress" class="invalid-feedback">{{ form.errors.in_progress }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Resolved</label>
+                                        <input class="form-control" type="text" v-model="form.resolved" :class="{ 'is-invalid': form.errors.resolved }" />
+                                        <div v-if="form.errors.resolved" class="invalid-feedback">{{ form.errors.resolved }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="form-control-label">Completed</label>
                                         <input class="form-control" type="text" v-model="form.completed" :class="{ 'is-invalid': form.errors.completed }" />
                                         <div v-if="form.errors.completed" class="invalid-feedback">{{ form.errors.completed }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="form-control-label">Waiting for support</label>
-                                        <input class="form-control" type="text" v-model="form.waiting" :class="{ 'is-invalid': form.errors.waiting }" />
-                                        <div v-if="form.errors.waiting" class="invalid-feedback">{{ form.errors.waiting }}</div>
+                                        <label class="form-control-label">Closed</label>
+                                        <input class="form-control" type="text" v-model="form.closed" :class="{ 'is-invalid': form.errors.closed }" />
+                                        <div v-if="form.errors.closed" class="invalid-feedback">{{ form.errors.closed }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Canceled</label>
+                                        <input class="form-control" type="text" v-model="form.canceled" :class="{ 'is-invalid': form.errors.canceled }" />
+                                        <div v-if="form.errors.canceled" class="invalid-feedback">{{ form.errors.canceled }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">SLA</label>
                                         <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors.sla }">
@@ -250,9 +299,16 @@ const form = useForm({
     start: moment(props.report.start).format("Y-MM-DD"),
     end: moment(props.report.end).format("Y-MM-DD"),
     reportProgress: [],
-    closed: props.report.support.closed,
+    waiting_for_support: props.report.support.waiting_for_support,
+    waiting_for_customer: props.report.support.waiting_for_customer,
+    waiting_for_partner: props.report.support.waiting_for_partner,
+    escalated: props.report.support.escalated,
+    pending: props.report.support.pending,
+    in_progress: props.report.support.in_progress,
+    resolved: props.report.support.resolved,
     completed: props.report.support.completed,
-    waiting: props.report.support.waiting,
+    closed: props.report.support.closed,
+    canceled: props.report.support.canceled,
     sla: props.report.support.sla,
     responsibilities: [],
 });

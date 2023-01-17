@@ -112,9 +112,16 @@ class ReportController extends Controller
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
             'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
-            'closed' => 'required|numeric|min:0',
+            'waiting_for_support' => 'required|numeric|min:0',
+            'waiting_for_customer' => 'required|numeric|min:0',
+            'waiting_for_partner' => 'required|numeric|min:0',
+            'escalated' => 'required|numeric|min:0',
+            'pending' => 'required|numeric|min:0',
+            'in_progress' => 'required|numeric|min:0',
+            'resolved' => 'required|numeric|min:0',
             'completed' => 'required|numeric|min:0',
-            'waiting' => 'required|numeric|min:0',
+            'closed' => 'required|numeric|min:0',
+            'canceled' => 'required|numeric|min:0',
             'sla' => 'required|numeric|min:0|max:100',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
@@ -151,9 +158,16 @@ class ReportController extends Controller
 
         Support::create([
             'report_id' => $report->id,
-            'closed' => $request->closed,
+            'waiting_for_support' => $request->waiting_for_support,
+            'waiting_for_customer' => $request->waiting_for_customer,
+            'waiting_for_partner' => $request->waiting_for_partner,
+            'escalated' => $request->escalated,
+            'pending' => $request->pending,
+            'in_progress' => $request->in_progress,
+            'resolved' => $request->resolved,
             'completed' => $request->completed,
-            'waiting' => $request->waiting,
+            'closed' => $request->closed,
+            'canceled' => $request->canceled,
             'sla' => $request->sla
         ]);
 
@@ -373,9 +387,58 @@ class ReportController extends Controller
         array_push($performancePercentageSeries, $performancePercentageData);
 
         $supportSeries = [];
-        array_push($supportSeries, $report->support->closed);
-        array_push($supportSeries, $report->support->completed);
-        array_push($supportSeries, $report->support->waiting);
+        $supportData = [];
+
+        if ($report->support->waiting_for_support > 0) {
+            array_push($supportSeries, $report->support->waiting_for_support);
+            array_push($supportData, 'Waiting For Support');
+        }
+
+        if ($report->support->waiting_for_customer > 0) {
+            array_push($supportSeries, $report->support->waiting_for_customer);
+            array_push($supportData, 'Waiting For Customer');
+        }
+
+        if ($report->support->waiting_for_partner > 0) {
+            array_push($supportSeries, $report->support->waiting_for_partner);
+            array_push($supportData, 'Waiting For Partner');
+        }
+
+        if ($report->support->escalated > 0) {
+            array_push($supportSeries, $report->support->escalated);
+            array_push($supportData, 'Escalated');
+        }
+
+        if ($report->support->pending > 0) {
+            array_push($supportSeries, $report->support->pending);
+            array_push($supportData, 'Pending');
+        }
+
+        if ($report->support->in_progress > 0) {
+            array_push($supportSeries, $report->support->in_progress);
+            array_push($supportData, 'In Progress');
+        }
+
+        if ($report->support->resolved > 0) {
+            array_push($supportSeries, $report->support->resolved);
+            array_push($supportData, 'Resolved');
+        }
+
+        if ($report->support->completed > 0) {
+            array_push($supportSeries, $report->support->completed);
+            array_push($supportData, 'Completed');
+        }
+
+        if ($report->support->closed > 0) {
+            array_push($supportSeries, $report->support->closed);
+            array_push($supportData, 'Closed');
+        }
+
+        if ($report->support->canceled > 0) {
+            array_push($supportSeries, $report->support->canceled);
+            array_push($supportData, 'Canceled');
+        }
+
         $supportSla = $report->support->sla;
 
         $responsibilities = Responsibility::with('user', 'assignments.project')
@@ -415,6 +478,7 @@ class ReportController extends Controller
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
             'supportSeries' => $supportSeries,
+            'supportData' => $supportData,
             'supportSla' => $supportSla,
             'responsibilities' => $responsibilities,
             'resourceSeries' => $resourceSeries,
@@ -466,9 +530,16 @@ class ReportController extends Controller
             'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
             'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
             'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
-            'closed' => 'required|numeric|min:0',
+            'waiting_for_support' => 'required|numeric|min:0',
+            'waiting_for_customer' => 'required|numeric|min:0',
+            'waiting_for_partner' => 'required|numeric|min:0',
+            'escalated' => 'required|numeric|min:0',
+            'pending' => 'required|numeric|min:0',
+            'in_progress' => 'required|numeric|min:0',
+            'resolved' => 'required|numeric|min:0',
             'completed' => 'required|numeric|min:0',
-            'waiting' => 'required|numeric|min:0',
+            'closed' => 'required|numeric|min:0',
+            'canceled' => 'required|numeric|min:0',
             'sla' => 'required|numeric|min:0|max:100',
         ], [
             'reportProgress.*.project_id.required' => 'The project field is required.',
@@ -507,9 +578,16 @@ class ReportController extends Controller
         $support = $report->support;
 
         $support->update([
-            'closed' => $request->closed,
+            'waiting_for_support' => $request->waiting_for_support,
+            'waiting_for_customer' => $request->waiting_for_customer,
+            'waiting_for_partner' => $request->waiting_for_partner,
+            'escalated' => $request->escalated,
+            'pending' => $request->pending,
+            'in_progress' => $request->in_progress,
+            'resolved' => $request->resolved,
             'completed' => $request->completed,
-            'waiting' => $request->waiting,
+            'closed' => $request->closed,
+            'canceled' => $request->canceled,
             'sla' => $request->sla
         ]);
 

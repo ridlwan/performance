@@ -11,9 +11,16 @@ class Support extends Model
 
     protected $fillable = [
         'report_id',
-        'closed',
+        'waiting_for_support',
+        'waiting_for_customer',
+        'waiting_for_partner',
+        'escalated',
+        'pending',
+        'in_progress',
+        'resolved',
         'completed',
-        'waiting',
+        'closed',
+        'canceled',
         'sla'
     ];
 

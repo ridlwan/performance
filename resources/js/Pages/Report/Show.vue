@@ -383,6 +383,7 @@ const props = defineProps({
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
     supportSeries: Array,
+    supportData: Array,
     supportSla: Number,
     responsibilities: Array,
     resourceSeries: Array,
@@ -635,7 +636,7 @@ const renderReport = () => {
             text: `Support (SLA: ${props.supportSla}%)`,
             align: "left",
         },
-        labels: ["Closed", "Completed", "Waiting for support"],
+        labels: props.supportData,
         legend: {
             position: "bottom",
         },
@@ -645,6 +646,7 @@ const renderReport = () => {
                 return opt.w.config.series[opt.seriesIndex];
             },
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
     resourceChart.value = {
         chart: {
@@ -662,6 +664,7 @@ const renderReport = () => {
         legend: {
             position: "bottom",
         },
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
     performanceHoursChart.value = {
         chart: {

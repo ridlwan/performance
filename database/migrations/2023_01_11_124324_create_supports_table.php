@@ -16,9 +16,16 @@ return new class extends Migration
         Schema::create('supports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('report_id')->constrained()->restrictOnUpdate()->cascadeOnDelete();
-            $table->integer('closed')->nullable();
+            $table->integer('waiting_for_support')->nullable();
+            $table->integer('waiting_for_customer')->nullable();
+            $table->integer('waiting_for_partner')->nullable();
+            $table->integer('escalated')->nullable();
+            $table->integer('pending')->nullable();
+            $table->integer('in_progress')->nullable();
+            $table->integer('resolved')->nullable();
             $table->integer('completed')->nullable();
-            $table->integer('waiting')->nullable();
+            $table->integer('closed')->nullable();
+            $table->integer('canceled')->nullable();
             $table->integer('sla')->nullable();
             $table->timestamps();
         });
