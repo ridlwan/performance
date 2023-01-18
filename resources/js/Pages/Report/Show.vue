@@ -435,7 +435,6 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
                 dataLabels: {
                     position: "top",
                 },
@@ -447,7 +446,7 @@ const renderReport = () => {
             },
             offsetY: -20,
             style: {
-                fontSize: "12px",
+                fontSize: "11px",
                 colors: ["#304758"],
             },
         },
@@ -462,7 +461,6 @@ const renderReport = () => {
                 },
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -485,7 +483,6 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
                 dataLabels: {
                     position: "top",
                 },
@@ -497,7 +494,7 @@ const renderReport = () => {
             },
             offsetY: -20,
             style: {
-                fontSize: "12px",
+                fontSize: "11px",
                 colors: ["#304758"],
             },
         },
@@ -512,7 +509,6 @@ const renderReport = () => {
                 },
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -535,7 +531,6 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
                 dataLabels: {
                     position: "top",
                 },
@@ -547,7 +542,7 @@ const renderReport = () => {
             },
             offsetY: -20,
             style: {
-                fontSize: "12px",
+                fontSize: "11px",
                 colors: ["#304758"],
             },
         },
@@ -562,7 +557,6 @@ const renderReport = () => {
                 },
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -585,7 +579,6 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
                 dataLabels: {
                     position: "top",
                 },
@@ -597,7 +590,7 @@ const renderReport = () => {
             },
             offsetY: -20,
             style: {
-                fontSize: "12px",
+                fontSize: "11px",
                 colors: ["#304758"],
             },
         },
@@ -612,7 +605,6 @@ const renderReport = () => {
                 },
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -677,7 +669,7 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
+                columnWidth: "50%",
                 dataLabels: {
                     position: "top",
                 },
@@ -698,7 +690,6 @@ const renderReport = () => {
                 text: "Hours",
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
         fill: {
             opacity: 1,
         },
@@ -714,7 +705,7 @@ const renderReport = () => {
         },
         plotOptions: {
             bar: {
-                endingShape: "rounded",
+                columnWidth: "50%",
                 dataLabels: {
                     position: "top",
                 },
@@ -743,7 +734,7 @@ const renderReport = () => {
                 },
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
+        colors: ["#00e396"],
         fill: {
             opacity: 1,
         },
