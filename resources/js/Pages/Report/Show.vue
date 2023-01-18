@@ -827,7 +827,11 @@ const showDetail = (event, chartContext, config) => {
             if (response.data == "Out of Office" || response.data == "Out Sick" || response.data == "Not Available") {
                 status.value = response.data;
             } else {
-                activities.value = response.data;
+                if (response.data == "Working") {
+                    status.value = "Not Available";
+                } else {
+                    activities.value = response.data;
+                }
             }
             username.value = props.dailySeries[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];

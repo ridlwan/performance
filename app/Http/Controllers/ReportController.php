@@ -458,7 +458,7 @@ class ReportController extends Controller
         $slaAverage = 0;
         
         if ($report->progresses->count() > 0 && $report->progresses->sum('sla') > 0) {
-            $slaAverage = $report->progresses->sum('sla') / $report->progresses->count();
+            $slaAverage =  number_format((float) $report->progresses->sum('sla') / $report->progresses->count(), 2, '.', '');
         }
 
         return Inertia::render('Report/Show', [

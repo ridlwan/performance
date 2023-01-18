@@ -265,7 +265,7 @@ const renderChart = () => {
                 text: "Hours",
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae",  "#5fb7d4", "#97d9ff"],
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
 };
 
@@ -303,7 +303,11 @@ const showDetail = (event, chartContext, config) => {
             if (response.data == "Out of Office" || response.data == "Out Sick" || response.data == "Not Available") {
                 status.value = response.data;
             } else {
-                activities.value = response.data;
+                if (response.data == "Working") {
+                    status.value = "Not Available";
+                } else {
+                    activities.value = response.data;
+                }
             }
             username.value = props.series[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
