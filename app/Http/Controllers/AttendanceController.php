@@ -81,6 +81,11 @@ class AttendanceController extends Controller
             'dates' => $dates
         ]);
     }
+    
+    public function userStatus()
+    {
+        return Auth::user()->status_text;
+    }
 
     public function checkIn(Request $request)
     {

@@ -4,7 +4,7 @@
             <h6 class="font-weight-bolder text-white mb-0">Attendance</h6>
         </template>
 
-        <div class="row" v-if="status == 'Working Remote' || status == 'Working Onsite'">
+        <div class="row" v-if="userStatus == 'Working Remote' || userStatus == 'Working Onsite'">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header pb-0">
@@ -160,6 +160,8 @@ import Layout from "../../Components/LayoutAttendance.vue";
 import Swal from "sweetalert2";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import Echo from "laravel-echo";
+import "axios";
 
 const form = useForm({
     description: null,
@@ -167,6 +169,7 @@ const form = useForm({
     start: null,
 });
 
+let userStatus = ref(null);
 let addActivityForm = ref(false);
 let editActivityForm = ref(false);
 let editActivityID = ref(null);
@@ -179,7 +182,12 @@ const props = defineProps({
     relogin: Boolean,
 });
 
+const status = computed(() => usePage().props.value.auth.user.status);
+const username = computed(() => usePage().props.value.auth.user.username);
+
 onMounted(() => {
+    userStatus.value = status.value;
+
     if ((status == "Working Remote" || status == "Working Onsite") && props.activities.length > 0) {
         scrollDown();
     }
@@ -190,7 +198,13 @@ onMounted(() => {
     }
 });
 
-const status = computed(() => usePage().props.value.auth.user.status);
+window.Echo.channel("status-channel").listen(".status-event", (e) => {
+    if (username.value == e.user) {
+        axios.get("/attendance/user-status").then((response) => {
+            userStatus.value = response.data;
+        });
+    }
+});
 
 const checkIn = () => {
     if (props.relogin) {

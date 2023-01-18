@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/out-sick', [AttendanceController::class, 'outSick'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/history', [AttendanceController::class, 'history'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/performance', [AttendanceController::class, 'performance'])->middleware(['can:doing-attendance']);
+    Route::get('/attendance/user-status', [AttendanceController::class, 'userStatus'])->middleware(['can:doing-attendance']);
     Route::get('/profile', [ProfileController::class, 'edit'])->middleware(['can:manage-profile']);
     Route::post('/profile', [ProfileController::class, 'update'])->middleware(['can:manage-profile']);
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->middleware(['can:manage-profile']);
