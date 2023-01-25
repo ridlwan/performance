@@ -16,7 +16,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Onsite</p>
-                                    <h5 class="font-weight-bolder text-success">{{ workingOnsiteData.length }}</h5>
+                                    <a v-if="workingOnsiteData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('workingOnsite')"
+                                        ><h5 class="font-weight-bolder text-success">{{ workingOnsiteData.length }}</h5></a
+                                    >
+                                    <h5 v-else class="font-weight-bolder text-success">{{ workingOnsiteData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -42,7 +45,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Remote</p>
-                                    <h5 class="font-weight-bolder text-success">{{ workingRemoteData.length }}</h5>
+                                    <a v-if="workingRemoteData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('workingRemote')"
+                                        ><h5 class="font-weight-bolder text-success">{{ workingRemoteData.length }}</h5></a
+                                    >
+                                    <h5 v-else class="font-weight-bolder text-success">{{ workingRemoteData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -68,7 +74,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Out Office</p>
-                                    <h5 class="font-weight-bolder text-warning">{{ outOfOfficeData.length }}</h5>
+                                    <a v-if="outOfOfficeData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('outOfOffice')">
+                                        <h5 class="font-weight-bolder text-warning">{{ outOfOfficeData.length }}</h5></a
+                                    >
+                                    <h5 v-else class="font-weight-bolder text-warning">{{ outOfOfficeData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -94,7 +103,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Out Sick</p>
-                                    <h5 class="font-weight-bolder text-danger">{{ outSickData.length }}</h5>
+                                    <a v-if="outSickData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('outSick')">
+                                        <h5 class="font-weight-bolder text-danger">{{ outSickData.length }}</h5></a
+                                    >
+                                    <h5 v-else class="font-weight-bolder text-danger">{{ outSickData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -120,7 +132,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Unavailable</p>
-                                    <h5 class="font-weight-bolder text-secondary">{{ notAvailableData.length }}</h5>
+                                    <a v-if="notAvailableData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('notAvailable')">
+                                        <h5 class="font-weight-bolder text-secondary">{{ notAvailableData.length }}</h5></a
+                                    >
+                                    <h5 v-else class="font-weight-bolder text-secondary">{{ notAvailableData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -146,7 +161,7 @@
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <h6 class="mb-2">Current Activity</h6>
                             </div>
                             <div class="col-md-2">
@@ -162,7 +177,14 @@
                                     <option value="In Progress">In Progress</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
+                                <select class="form-control" v-model="seletedProject" @change="getData">
+                                    <option value="All">All Project</option>
+                                    <option value="General">General</option>
+                                    <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
                                 <select class="form-control" v-model="seletedUser" @change="getData">
                                     <option value="All">All Personel</option>
                                     <option v-for="user in teammate" :key="user.id" :value="user.id">{{ user.name }}</option>
@@ -188,7 +210,10 @@
                                         <div>
                                             <span class="text-sm font-weight-bold opacity-8">{{ activity.attendance.user.name }}</span>
 
-                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                            <span v-if="activity.project" class="badge bg-gradient-primary ms-2" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> {{ activity.project.name }}</span>
+                                            <span v-else class="badge bg-gradient-primary ms-2" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> General</span>
+
+                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
                                         </div>
                                         <p class="mb-1 mt-2 text-dark text-sm">{{ activity.description }}</p>
                                     </div>
@@ -278,7 +303,9 @@ const props = defineProps({
     teammate: Array,
     struggling: Boolean,
     status: Array,
-    seletedUser: Array,
+    seletedUser: Object,
+    projects: Array,
+    seletedProject: String,
 });
 
 let workingRemoteData = ref(props.workingRemote);
@@ -292,6 +319,7 @@ let userListTitle = ref(null);
 let struggling = ref(props.struggling);
 let status = ref(props.status);
 let seletedUser = ref(props.seletedUser);
+let seletedProject = ref(props.seletedProject);
 
 window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
     getData();
@@ -309,6 +337,7 @@ const getData = () => {
                 struggling: struggling.value,
                 status: status.value,
                 seletedUser: seletedUser.value,
+                seletedProject: seletedProject.value,
             },
         })
         .then((response) => {
@@ -325,6 +354,7 @@ const reset = () => {
     struggling.value = false;
     status.value = "All";
     seletedUser.value = "All";
+    seletedProject.value = "All";
 
     getData();
 };

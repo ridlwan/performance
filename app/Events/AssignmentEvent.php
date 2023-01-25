@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StatusEvent implements ShouldBroadcast
+class AssignmentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -27,11 +27,11 @@ class StatusEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['status-channel'];
+        return ['assignment-channel'];
     }
 
     public function broadcastAs()
     {
-        return 'status-event';
+        return 'assignment-event';
     }
 }

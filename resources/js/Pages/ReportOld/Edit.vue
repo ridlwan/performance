@@ -14,15 +14,15 @@
         <div class="row" style="min-height: 670px">
             <div class="col-md-12">
                 <div class="card">
-                    <form @submit.prevent="form.post('/reports')">
+                    <form @submit.prevent="form.put(`/reports/${report.id}`)">
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Create Report</p></h6>
+                                    <h6 class="mb-0"><p class="text-uppercase text-sm">Edit Report</p></h6>
                                 </div>
                                 <div class="col-6 text-end">
                                     <Link href="/reports" class="btn bg-gradient-secondary">Back</Link>
-                                    <button type="submit" class="btn bg-gradient-success ms-3">Create</button>
+                                    <button type="submit" class="btn bg-gradient-info ms-3">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -51,6 +51,72 @@
                                 </div>
                             </div>
                             <hr class="horizontal dark" />
+                            <p class="text-uppercase text-sm">Progress</p>
+                            <div class="row mb-3">
+                                <div v-for="(progress, progressIndex) in form.reportProgress" :key="progressIndex" class="row mb-2">
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Project</label>
+                                            <select class="form-control" disabled>
+                                                <option v-for="project in projects" :key="project.id" :value="project.id" :selected="form.reportProgress[progressIndex]['project_id'] == project.id">
+                                                    {{ project.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Jira</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.jira`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['jira']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.jira`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.jira`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.jira`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Development</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.development`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['development']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.development`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.development`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.development`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Testing</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.testing`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['testing']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.testing`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.testing`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.testing`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Overall</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.overall`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['overall']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.overall`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.overall`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.overall`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">SLA</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['sla']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.sla`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.sla`] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="horizontal dark mt-4" />
                             <p class="text-uppercase text-sm">Support</p>
                             <div class="row mb-3">
                                 <div class="col-md-2">
@@ -165,7 +231,7 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <button v-for="(assignment, assignmentIndex) in responsibility.assignments" :key="assignmentIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button" @click="removeProject(responsibilityIndex, assignmentIndex)">
-                                                        <span class="btn-inner--text">{{ assignment.project.name }} </span>
+                                                        <span class="btn-inner--text">{{ assignment.project.name }}</span>
                                                         <i class="fa-solid fa-xmark ms-2"></i>
                                                     </button>
                                                     <button class="btn btn-sm bg-gradient-success mb-0 p-3 pt-2 pb-2 ms-2" type="button" data-bs-toggle="modal" data-bs-target="#projectModal" @click="openProjectModal(responsibilityIndex)">
@@ -220,28 +286,30 @@ import Layout from "../../Components/Layout.vue";
 import { ref, onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 const props = defineProps({
+    report: Object,
     projects: Array,
     allProjects: Array,
-    users: Array,
 });
 
 const form = useForm({
-    name: null,
-    start: null,
-    end: null,
-    waiting_for_support: null,
-    waiting_for_customer: null,
-    waiting_for_partner: null,
-    escalated: null,
-    pending: null,
-    in_progress: null,
-    resolved: null,
-    completed: null,
-    closed: null,
-    canceled: null,
-    sla: null,
+    name: props.report.name,
+    start: moment(props.report.start).format("Y-MM-DD"),
+    end: moment(props.report.end).format("Y-MM-DD"),
+    reportProgress: [],
+    waiting_for_support: props.report.support.waiting_for_support,
+    waiting_for_customer: props.report.support.waiting_for_customer,
+    waiting_for_partner: props.report.support.waiting_for_partner,
+    escalated: props.report.support.escalated,
+    pending: props.report.support.pending,
+    in_progress: props.report.support.in_progress,
+    resolved: props.report.support.resolved,
+    completed: props.report.support.completed,
+    closed: props.report.support.closed,
+    canceled: props.report.support.canceled,
+    sla: props.report.support.sla,
     responsibilities: [],
 });
 
@@ -249,10 +317,30 @@ let userResponsibilityIndex = ref(null);
 let responsibilityProjectId = ref(null);
 
 onMounted(() => {
-    props.users.forEach((user) => {
+    props.report.progresses.forEach((progress) => {
+        form.reportProgress.push({
+            id: progress.id,
+            project_id: progress.project_id,
+            jira: progress.jira,
+            development: progress.development,
+            testing: progress.testing,
+            overall: progress.overall,
+            sla: progress.sla,
+        });
+    });
+
+    props.report.responsibilities.forEach((responsibility) => {
+        let assignments = [];
+        responsibility.assignments.forEach((assignment) => {
+            assignments.push({
+                project: assignment.project,
+                project_id: assignment.project_id,
+            });
+        });
+
         form.responsibilities.push({
-            user: user,
-            assignments: [],
+            user: responsibility.user,
+            assignments: assignments,
         });
     });
 
@@ -268,8 +356,8 @@ const openProjectModal = (index) => {
 const addProject = () => {
     if (!form.responsibilities[userResponsibilityIndex.value].assignments.find((data) => data.project_id === responsibilityProjectId.value)) {
         form.responsibilities[userResponsibilityIndex.value].assignments.push({
-            project_id: responsibilityProjectId.value,
             project: props.allProjects.find((data) => data.id === responsibilityProjectId.value),
+            project_id: responsibilityProjectId.value,
         });
 
         document.getElementById("closeProjectModal").click();

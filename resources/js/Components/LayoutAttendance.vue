@@ -83,25 +83,25 @@ onMounted(() => {
 
 window.Echo.channel("status-channel").listen(".status-event", (e) => {
     if (username.value != e.user) {
-        if (e.message == "just checked in") {
+        if (e.type == "checkIn") {
             toast(e.user + " " + e.message, {
                 icon: "fa-solid fa-person-walking-arrow-right",
             });
         }
 
-        if (e.message == "just checked out") {
+        if (e.type == "checkOut") {
             toast.error(e.user + " " + e.message, {
                 icon: "fa-solid fa-person-walking-dashed-line-arrow-right",
             });
         }
 
-        if (e.message == "is marked out off office") {
+        if (e.type == "outOfOffice") {
             toast.error(e.user + " " + e.message, {
                 icon: "fas fa-person-walking-luggage ms-1",
             });
         }
 
-        if (e.message == "is marked out sick") {
+        if (e.type == "outSick") {
             toast.error(e.user + " " + e.message, {
                 icon: "fas fa-bed ms-1",
             });
@@ -113,21 +113,35 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
 
 window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
     if (username.value != e.user) {
-        if (e.message == "just added a new activity") {
+        if (e.type == "add") {
             toast.success(e.user + " " + e.message, {
                 icon: "fa-solid fa-pen-to-square",
             });
         }
-        if (e.message == "just updated the activity") {
+        if (e.type == "update") {
             toast.info(e.user + " " + e.message, {
                 icon: "fa-solid fa-eraser",
             });
         }
-        if (e.message == "is struggling in current activity") {
+        if (e.type == "struggling") {
             toast.warning(e.user + " " + e.message, {
                 icon: "fa-solid fa-user-ninja",
             });
         }
+    }
+});
+
+window.Echo.channel("assignment-channel").listen(".assignment-event", (e) => {
+    if (e.type == "assign") {
+        toast.info(e.user + " " + e.message, {
+            icon: "fa-solid fa-calendar-check",
+        });
+    }
+
+    if (e.type == "unassign") {
+        toast.warning(e.user + " " + e.message, {
+            icon: "fa-solid fa-calendar-xmark",
+        });
     }
 });
 

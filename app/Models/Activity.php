@@ -20,6 +20,7 @@ class Activity extends Model
     protected $fillable = [
         'attendance_id',
         'description',
+        'project_id',
         'start',
         'end',
         'duration',
@@ -47,5 +48,10 @@ class Activity extends Model
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);
+    }
+    
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

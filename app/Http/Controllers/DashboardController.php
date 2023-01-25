@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Project;
 use App\Models\Activity;
 use Carbon\CarbonPeriod;
 use App\Models\Attendance;
@@ -54,8 +55,14 @@ class DashboardController extends Controller
         } else {
             $seletedUser = 'All';
         }
+        
+        if ($request->get('seletedProject')) {
+            $seletedProject = $request->get('seletedProject');
+        } else {
+            $seletedProject = 'All';
+        }
 
-        $activities = Activity::with('attendance.user')
+        $activities = Activity::with('attendance.user', 'project')
             ->whereDate('created_at', Carbon::now())
             ->whereHas('attendance.user', function ($query) use ($seletedUser) {
                 $query->where('teammate', User::TEAMMATE_YES)
@@ -72,10 +79,18 @@ class DashboardController extends Controller
             ->when($struggling == 'true', function ($query) {
                 $query->where('struggle', Activity::STRUGGLE_YES);
             })
+            ->when($seletedProject == 'General', function ($query) {
+                $query->whereNull('project_id');
+            })
+            ->when($seletedProject != 'General' && $seletedProject != 'All', function ($query) use ($seletedProject) {
+                $query->where('project_id', $seletedProject);
+            })
             ->orderByDesc('id')->get();
 
         $teammate = User::where('teammate', User::TEAMMATE_YES)
             ->orderBy('order')->get();
+        
+        $projects = Project::where('status', Project::STATUS_OPEN)->get();
 
         if ($request->data) {
             return response()->json([
@@ -87,7 +102,9 @@ class DashboardController extends Controller
                 'activities' => $activities,
                 'struggling' => $struggling,
                 'status' => $status,
-                'seletedUser' => $seletedUser
+                'seletedUser' => $seletedUser,
+                'projects' => $projects,
+                'seletedProject' => $seletedProject
             ]);
         } else {
             return Inertia::render('Dashboard/Index', [
@@ -100,7 +117,9 @@ class DashboardController extends Controller
                 'struggling' => $struggling,
                 'status' => $status,
                 'seletedUser' => $seletedUser,
-                'teammate' => $teammate
+                'teammate' => $teammate,
+                'projects' => $projects,
+                'seletedProject' => $seletedProject
             ]);
         }
     }

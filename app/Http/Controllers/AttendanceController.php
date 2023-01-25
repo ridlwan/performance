@@ -10,6 +10,7 @@ use App\Models\Attendance;
 use App\Events\StatusEvent;
 use Illuminate\Http\Request;
 use App\Events\ActivityEvent;
+use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Auth;
@@ -23,16 +24,32 @@ class AttendanceController extends Controller
 
         $relogin = $this->isRelogin();
         $activities = [];
-
+        
         if (Auth::user()->attendances->count() > 0) {
-            $activities = Auth::user()->attendances->last()->activities;
+            $activities = Auth::user()->attendances->last()->activities->load('project');
         }
 
+        $projects = Project::where('status', Project::STATUS_OPEN)
+            ->whereHas('assignments', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->get();
+        
         return Inertia::render('Attendance/Index', [
             'quote' => $quote,
             'activities' => $activities,
-            'relogin' => $relogin
+            'relogin' => $relogin,
+            'projects' => $projects
         ]);
+    }
+    
+    public function assignment()
+    {
+        $projects = Project::where('status', Project::STATUS_OPEN)
+            ->whereHas('assignments', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->get();
+        
+        return $projects;
     }
     
     public function workingUser()
@@ -112,7 +129,7 @@ class AttendanceController extends Controller
         
         Auth::user()->save();
 
-        event(new StatusEvent(Auth::user()->name, 'just checked in'));
+        event(new StatusEvent(Auth::user()->name, 'just checked in', 'checkIn'));
 
         DB::commit();
 
@@ -138,7 +155,7 @@ class AttendanceController extends Controller
             $activity->struggle = Activity::STRUGGLE_YES;
             $activity->save();
 
-            event(new ActivityEvent(Auth::user()->name, 'is struggling in current activity'));
+            event(new ActivityEvent(Auth::user()->name, 'is struggling in current activity', 'struggling'));
         }
 
         return redirect()->back();
@@ -153,13 +170,15 @@ class AttendanceController extends Controller
     
             if (Auth::user()->attendances->last()->activities->count() < 1 || $relogin) {
                 $request->validate([
-                    'description' => 'required'
+                    'description' => 'required',
+                    'project_id' => 'nullable'
                 ]);
     
                 $firstActivity = true;
             } else {
                 $validator = Validator::make($request->all(), [
                     'description' => 'required',
+                    'project_id' => 'nullable',
                     'start' => 'required',
                 ]);
     
@@ -190,6 +209,12 @@ class AttendanceController extends Controller
     
             $data = $request->all();
             $data['attendance_id'] = Auth::user()->attendances->last()->id;
+
+            if ($request->project_id == 'null') {
+                $data['project_id'] = null;
+            } else {
+                $data['project_id'] = $request->project_id;
+            }
     
             if ($firstActivity) {
                 if ($relogin) {
@@ -224,7 +249,7 @@ class AttendanceController extends Controller
                 $lastAttendance->save();
             }
 
-            event(new ActivityEvent(Auth::user()->name, 'just added a new activity'));
+            event(new ActivityEvent(Auth::user()->name, 'just added a new activity', 'add'));
     
             DB::commit();
         }
@@ -236,13 +261,21 @@ class AttendanceController extends Controller
     {
         if ($activity = Activity::find($id)) {
             $request->validate([
-                'description_updated' => 'required'
+                'description_updated' => 'required',
+                'project_id_updated' => 'nullable',
             ]);
 
             $activity->description = $request->description_updated;
+
+            if ($request->project_id_updated == 'null') {
+                $activity->project_id = null;
+            } else {
+                $activity->project_id = $request->project_id_updated;
+            }
+
             $activity->save();
 
-            event(new ActivityEvent(Auth::user()->name, 'just updated the activity'));
+            event(new ActivityEvent(Auth::user()->name, 'just updated the activity', 'update'));
         }
 
         return redirect()->back();
@@ -294,7 +327,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_NOT_AVAILABLE;
         Auth::user()->save();
 
-        event(new StatusEvent(Auth::user()->name, 'just checked out'));
+        event(new StatusEvent(Auth::user()->name, 'just checked out', 'checkOut'));
 
         DB::commit();
 
@@ -311,7 +344,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
         Auth::user()->save();
 
-        event(new StatusEvent(Auth::user()->name, 'is marked out off office'));
+        event(new StatusEvent(Auth::user()->name, 'is marked out off office', 'outOfOffice'));
         
         return redirect()->back();
     }
@@ -326,7 +359,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_SICK;
         Auth::user()->save();
         
-        event(new StatusEvent(Auth::user()->name, 'is marked out sick'));
+        event(new StatusEvent(Auth::user()->name, 'is marked out sick', 'outSick'));
 
         return redirect()->back();
     }

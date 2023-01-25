@@ -18,6 +18,48 @@
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="jiraChart" :series="jiraSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="developmentChart" :series="developmentSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="testingChart" :series="testingSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="overallChart" :series="overallSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
                             <apexchart type="donut" height="400" :options="supportChart" :series="supportSeries"></apexchart>
                         </div>
                     </div>
@@ -72,6 +114,58 @@
                                     </tr>
                                     <tr v-if="responsibilities.length < 1">
                                         <td colspan="4" class="align-middle text-center text-secondary">Data not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body mt-3 px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3 pt-0 pb-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-xs text-dark">No</th>
+                                        <th class="text-uppercase text-xs text-dark">Project</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Jira Planning</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Development</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Testing</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">SLA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(progress, progressIndex) in report.progresses" :key="progressIndex">
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progressIndex + 1 }}</span>
+                                        </td>
+                                        <td class="align-middle px-4">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.project.name }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.jira }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.development }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.testing }}%</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ progress.sla }}%</span>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="report.progresses.length > 0">
+                                        <td class="text-center text-uppercase text-xs text-dark font-weight-bold" colspan="5">SLA ({{ report.progresses.length }} Project)</td>
+                                        <td class="text-center text-uppercase text-xs text-dark font-weight-bold">{{ slaAverage }}%</td>
+                                    </tr>
+                                    <tr v-if="report.progresses.length < 1">
+                                        <td colspan="6" class="align-middle text-center text-secondary">Data not found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -281,6 +375,11 @@ const props = defineProps({
     showChart: Boolean,
     dailySeries: Array,
     dates: Array,
+    projects: Array,
+    jiraSeries: Array,
+    developmentSeries: Array,
+    testingSeries: Array,
+    overallSeries: Array,
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
     supportSeries: Array,
@@ -289,6 +388,7 @@ const props = defineProps({
     responsibilities: Array,
     resourceSeries: Array,
     resourceData: Array,
+    slaAverage: Number,
 });
 
 let activities = ref([]);
@@ -298,6 +398,10 @@ let status = ref(null);
 let search = ref(props.filters.search);
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
+let jiraChart = ref({});
+let developmentChart = ref({});
+let testingChart = ref({});
+let overallChart = ref({});
 let supportChart = ref({});
 let resourceChart = ref({});
 let performanceHoursChart = ref({});
@@ -320,6 +424,198 @@ onBeforeUpdate(() => {
 });
 
 const renderReport = () => {
+    jiraChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Jira Planning",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "11px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: props.projects,
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    developmentChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Development",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "11px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: props.projects,
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    testingChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Testing",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "11px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: props.projects,
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
+    overallChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: "Overall",
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + "%";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "11px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: props.projects,
+        },
+        yaxis: {
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                },
+            },
+        },
+    };
     supportChart.value = {
         chart: {
             height: 400,

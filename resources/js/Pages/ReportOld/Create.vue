@@ -51,6 +51,72 @@
                                 </div>
                             </div>
                             <hr class="horizontal dark" />
+                            <p class="text-uppercase text-sm">Progress</p>
+                            <div class="row mb-3">
+                                <div v-for="(progress, progressIndex) in form.reportProgress" :key="progressIndex" class="row mb-2">
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Project</label>
+                                            <select class="form-control" disabled>
+                                                <option v-for="project in projects" :key="project.id" :value="project.id" :selected="form.reportProgress[progressIndex]['project_id'] == project.id">
+                                                    {{ project.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Jira</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.jira`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['jira']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.jira`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.jira`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.jira`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Development</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.development`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['development']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.development`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.development`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.development`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Testing</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.testing`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['testing']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.testing`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.testing`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.testing`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">Overall</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.overall`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['overall']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.overall`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.overall`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.overall`] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group mb-0">
+                                            <label v-if="progressIndex == 0" class="form-control-label">SLA</label>
+                                            <div class="input-group input-group-alternative mb-0" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }">
+                                                <input class="form-control" type="text" v-model="form.reportProgress[progressIndex]['sla']" :class="{ 'is-invalid': form.errors[`reportProgress.${progressIndex}.sla`] }" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <div v-if="form.errors[`reportProgress.${progressIndex}.sla`]" class="invalid-feedback">{{ form.errors[`reportProgress.${progressIndex}.sla`] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="horizontal dark mt-4" />
                             <p class="text-uppercase text-sm">Support</p>
                             <div class="row mb-3">
                                 <div class="col-md-2">
@@ -231,6 +297,7 @@ const form = useForm({
     name: null,
     start: null,
     end: null,
+    reportProgress: [],
     waiting_for_support: null,
     waiting_for_customer: null,
     waiting_for_partner: null,
@@ -249,6 +316,17 @@ let userResponsibilityIndex = ref(null);
 let responsibilityProjectId = ref(null);
 
 onMounted(() => {
+    props.projects.forEach((project) => {
+        form.reportProgress.push({
+            project_id: project.id,
+            jira: null,
+            development: null,
+            testing: null,
+            overall: null,
+            sla: null,
+        });
+    });
+
     props.users.forEach((user) => {
         form.responsibilities.push({
             user: user,

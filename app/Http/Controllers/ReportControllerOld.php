@@ -106,6 +106,12 @@ class ReportController extends Controller
             'name' => 'required|unique:reports,name',
             'start' => 'required',
             'end' => 'required',
+            'reportProgress.*.project_id' => 'required',
+            'reportProgress.*.jira' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.development' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
             'waiting_for_support' => 'required|numeric|min:0',
             'waiting_for_customer' => 'required|numeric|min:0',
             'waiting_for_partner' => 'required|numeric|min:0',
@@ -117,11 +123,38 @@ class ReportController extends Controller
             'closed' => 'required|numeric|min:0',
             'canceled' => 'required|numeric|min:0',
             'sla' => 'required|numeric|min:0|max:100',
+        ], [
+            'reportProgress.*.project_id.required' => 'The project field is required.',
+            'reportProgress.*.jira.required' => 'The jira percentage field is required.',
+            'reportProgress.*.jira.numeric' => 'The jira percentage field must be a number.',
+            'reportProgress.*.jira.min' => 'The jira percentage field must be at least 0.',
+            'reportProgress.*.jira.max' => 'The jira percentage field must not be greater than 100.',
+            'reportProgress.*.development.required' => 'The development percentage field is required.',
+            'reportProgress.*.development.numeric' => 'The development percentage field must be a number.',
+            'reportProgress.*.development.min' => 'The development percentage field must be at least 0.',
+            'reportProgress.*.development.max' => 'The development percentage field must not be greater than 100.',
+            'reportProgress.*.testing.required' => 'The testing percentage field is required.',
+            'reportProgress.*.testing.numeric' => 'The testing percentage field must be a number.',
+            'reportProgress.*.testing.min' => 'The testing percentage field must be at least 0.',
+            'reportProgress.*.testing.max' => 'The testing percentage field must not be greater than 100.',
+            'reportProgress.*.overall.required' => 'The overall percentage field is required.',
+            'reportProgress.*.overall.numeric' => 'The overall percentage field must be a number.',
+            'reportProgress.*.overall.min' => 'The overall percentage field must be at least 0.',
+            'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
+            'reportProgress.*.sla.required' => 'The sla percentage field is required.',
+            'reportProgress.*.sla.numeric' => 'The sla percentage field must be a number.',
+            'reportProgress.*.sla.min' => 'The sla percentage field must be at least 0.',
+            'reportProgress.*.sla.max' => 'The sla percentage field must not be greater than 100.',
         ]);
 
         DB::beginTransaction();
 
         $report = Report::create($request->only(['name', 'start', 'end']));
+
+        foreach ($request->reportProgress as $progress) {
+            $progress['report_id'] = $report->id;
+            Progress::create($progress);
+        }
 
         Support::create([
             'report_id' => $report->id,
@@ -261,6 +294,66 @@ class ReportController extends Controller
             }
         }
 
+        $projects = $report->progresses->pluck('project.name');
+        $reportId = $report->progresses->pluck('project_id');
+
+        $reports = Report::where('id', '<=', $report->id)
+            ->orderByDesc('id')->take(2)->get();
+
+        $reportsReverse = array_reverse($reports->toArray());
+        
+        $jiraSeries = [];
+        $developmentSeries = [];
+        $testingSeries = [];
+        $overallSeries = [];
+        foreach ($reportsReverse as $reportData) {
+            $jira = [];
+            $development = [];
+            $testing = [];
+            $overall = [];
+            foreach ($reportId as $id) {
+                if ($progress = Progress::where('report_id', $reportData['id'])->where('project_id', $id)->first()) {
+                    array_push($jira, $progress->jira);
+                    array_push($development, $progress->development);
+                    array_push($testing, $progress->testing);
+                    array_push($overall, $progress->overall);
+                } else {
+                    array_push($jira, 0);
+                    array_push($development, 0);
+                    array_push($testing, 0);
+                    array_push($overall, 0);
+                }
+            }
+
+            $jiraData = [
+                'name' => $reportData['name'],
+                'data' => $jira
+            ];
+
+            array_push($jiraSeries, $jiraData);
+
+            $developmentData = [
+                'name' => $reportData['name'],
+                'data' => $development
+            ];
+
+            array_push($developmentSeries, $developmentData);
+            
+            $testingData = [
+                'name' => $reportData['name'],
+                'data' => $testing
+            ];
+            
+            array_push($testingSeries, $testingData);
+
+            $overallData = [
+                'name' => $reportData['name'],
+                'data' => $overall
+            ];
+
+            array_push($overallSeries, $overallData);
+        }
+
         $reportedUsers = $users->pluck('name');
 
         $performanceHoursSeries = [];
@@ -273,11 +366,11 @@ class ReportController extends Controller
                 ->whereDate('created_at', '>=', $startDate)
                 ->whereDate('created_at', '<=', $endDate)->sum('duration');
 
-            $hours = floor($duration / 60);
-            $percentage = floor(($duration / (22 * 8 * 60)) * 100);
-            
-            array_push($performanceHours, $hours);
-            array_push($performancePercentage, $percentage);
+                $hours = floor($duration / 60);
+                $percentage = floor(($duration / (22 * 8 * 60)) * 100);
+                
+                array_push($performanceHours, $hours);
+                array_push($performancePercentage, $percentage);
         }
 
         $performanceHoursData = [
@@ -362,6 +455,12 @@ class ReportController extends Controller
             }
         }
 
+        $slaAverage = 0;
+        
+        if ($report->progresses->count() > 0 && $report->progresses->sum('sla') > 0) {
+            $slaAverage =  number_format((float) $report->progresses->sum('sla') / $report->progresses->count(), 2, '.', '');
+        }
+
         return Inertia::render('Report/Show', [
             'report' => $report,
             'attendances' => $attendances,
@@ -371,6 +470,11 @@ class ReportController extends Controller
             'showChart' => $showChart,
             'dailySeries' => $dailySeries,
             'dates' => $dates,
+            'projects' => $projects,
+            'jiraSeries' => $jiraSeries,
+            'developmentSeries' => $developmentSeries,
+            'testingSeries' => $testingSeries,
+            'overallSeries' => $overallSeries,
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
             'supportSeries' => $supportSeries,
@@ -379,6 +483,7 @@ class ReportController extends Controller
             'responsibilities' => $responsibilities,
             'resourceSeries' => $resourceSeries,
             'resourceData' => $resourceData,
+            'slaAverage' => $slaAverage,
         ]);
     }
 
@@ -419,6 +524,12 @@ class ReportController extends Controller
             'name' => 'required|unique:reports,name,' . $report->id . ',id',
             'start' => 'required',
             'end' => 'required',
+            'reportProgress.*.project_id' => 'required',
+            'reportProgress.*.jira' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.development' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.testing' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.overall' => 'required|numeric|min:0|max:100',
+            'reportProgress.*.sla' => 'required|numeric|min:0|max:100',
             'waiting_for_support' => 'required|numeric|min:0',
             'waiting_for_customer' => 'required|numeric|min:0',
             'waiting_for_partner' => 'required|numeric|min:0',
@@ -430,11 +541,39 @@ class ReportController extends Controller
             'closed' => 'required|numeric|min:0',
             'canceled' => 'required|numeric|min:0',
             'sla' => 'required|numeric|min:0|max:100',
+        ], [
+            'reportProgress.*.project_id.required' => 'The project field is required.',
+            'reportProgress.*.jira.required' => 'The jira percentage field is required.',
+            'reportProgress.*.jira.numeric' => 'The jira percentage field must be a number.',
+            'reportProgress.*.jira.min' => 'The jira percentage field must be at least 0.',
+            'reportProgress.*.jira.max' => 'The jira percentage field must not be greater than 100.',
+            'reportProgress.*.development.required' => 'The development percentage field is required.',
+            'reportProgress.*.development.numeric' => 'The development percentage field must be a number.',
+            'reportProgress.*.development.min' => 'The development percentage field must be at least 0.',
+            'reportProgress.*.development.max' => 'The development percentage field must not be greater than 100.',
+            'reportProgress.*.testing.required' => 'The testing percentage field is required.',
+            'reportProgress.*.testing.numeric' => 'The testing percentage field must be a number.',
+            'reportProgress.*.testing.min' => 'The testing percentage field must be at least 0.',
+            'reportProgress.*.testing.max' => 'The testing percentage field must not be greater than 100.',
+            'reportProgress.*.overall.required' => 'The overall percentage field is required.',
+            'reportProgress.*.overall.numeric' => 'The overall percentage field must be a number.',
+            'reportProgress.*.overall.min' => 'The overall percentage field must be at least 0.',
+            'reportProgress.*.overall.max' => 'The overall percentage field must not be greater than 100.',
+            'reportProgress.*.sla.required' => 'The sla percentage field is required.',
+            'reportProgress.*.sla.numeric' => 'The sla percentage field must be a number.',
+            'reportProgress.*.sla.min' => 'The sla percentage field must be at least 0.',
+            'reportProgress.*.sla.max' => 'The sla percentage field must not be greater than 100.',
         ]);
 
         DB::beginTransaction();
 
         $report->update($request->only(['name', 'start', 'end']));
+
+        foreach ($request->reportProgress as $progress) {
+            if ($progressData = Progress::find($progress['id'])) {
+                $progressData->update($progress);
+            }
+        }
 
         $support = $report->support;
 

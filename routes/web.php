@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
 
 /*
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/daily', [DashboardController::class, 'daily'])->middleware(['can:view-report']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['can:doing-attendance']);
     Route::get('/attendance/working-user', [AttendanceController::class, 'workingUser'])->middleware(['can:doing-attendance']);
+    Route::get('/attendance/assignment', [AttendanceController::class, 'assignment'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->middleware(['can:doing-attendance']);
     Route::post('/attendance', [AttendanceController::class, 'addActivity'])->middleware(['can:doing-attendance']);
     Route::post('/attendance/update/{id}', [AttendanceController::class, 'updateActivity'])->middleware(['can:doing-attendance']);
@@ -51,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{project}/open', [ProjectController::class, 'open'])->middleware(['can:manage-report']);
     Route::get('/projects/{project}/close', [ProjectController::class, 'close'])->middleware(['can:manage-report']);
     Route::resource('users', UserController::class)->middleware(['can:manage-account']);
+    Route::resource('assignments', AssignmentController::class)->middleware(['can:manage-attendance']);;
 
     Route::get('/pusher', [DashboardController::class, 'pusher']);
     Route::get('/correction', [DashboardController::class, 'correction']);

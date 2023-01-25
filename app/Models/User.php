@@ -122,8 +122,8 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
     
-    public function responsibilities()
+    public function assignments()
     {
-        return $this->hasMany(Responsibility::class);
+        return $this->hasMany(Assignment::class);
     }
 }

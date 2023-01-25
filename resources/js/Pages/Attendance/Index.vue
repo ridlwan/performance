@@ -25,11 +25,15 @@
                                                 >{{ activity.description }} <a href="javascript:;" @click="openEditActivityForm(activity)"><i class="fas fa-pencil-alt text-primary me-3" aria-hidden="true"></i></a
                                             ></small>
                                         </h6>
-                                        <button v-if="activityIndex == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0" data-bs-toggle="tooltip" title="I'm struggling here">
+
+                                        <span v-if="activity.project" class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> {{ activity.project.name }}</span>
+                                        <span v-else class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> General</span>
+
+                                        <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset"><i class="fa-solid fa-user-ninja"></i> I'm struggling here</span>
+
+                                        <button v-if="activityIndex == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0 ms-2" data-bs-toggle="tooltip" title="I'm struggling here">
                                             <span class="btn-inner--icon"><i class="fa-solid fa-user-ninja"></i></span>
                                         </button>
-
-                                        <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset"><i class="fa-solid fa-user-ninja"></i> I'm struggling here</span>
                                     </div>
                                 </div>
                                 <hr class="horizontal dark mb-4" />
@@ -37,9 +41,19 @@
                         </div>
                         <div class="row" v-if="addActivityForm">
                             <div v-if="activities.length < 1 || relogin" class="row" style="padding: 0; margin: 0">
-                                <div class="col-md-10">
+                                <div class="col-md-8">
                                     <div class="form-group">
                                         <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select class="form-control" v-model="form.project_id" :class="{ 'is-invalid': form.errors.project_id }">
+                                            <option value="null">General</option>
+                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                                {{ project.name }}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -47,9 +61,19 @@
                                 </div>
                             </div>
                             <div v-else class="row" style="padding: 0; margin: 0">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select class="form-control" v-model="form.project_id" :class="{ 'is-invalid': form.errors.project_id }">
+                                            <option value="null">General</option>
+                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                                {{ project.name }}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -69,9 +93,19 @@
                         </div>
                         <div class="row" v-else-if="editActivityForm">
                             <div class="row" style="padding: 0; margin: 0">
-                                <div class="col-md-10">
+                                <div class="col-md-8">
                                     <div class="form-group">
                                         <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description_updated" :class="{ 'is-invalid': form.errors.description_updated }" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select class="form-control" v-model="form.project_id_updated" :class="{ 'is-invalid': form.errors.project_id_updated }">
+                                            <option value="null">General</option>
+                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                                {{ project.name }}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -96,7 +130,7 @@
                 <div class="card move-on-hover">
                     <div class="card-body">
                         <div class="w-50 mx-auto mb-5">
-                            <img src="/assets/img/logo.png" alt="" class="img-fluid" />
+                            <img src="/assets/img/logo.png" class="img-fluid" />
                         </div>
                         <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
                         <div v-if="status == 'Out of Office' || status == 'Out Sick' || outsideWorkingTime" class="row text-center mt-6 mb-2">
@@ -166,7 +200,16 @@ import "axios";
 const form = useForm({
     description: null,
     description_updated: null,
+    project_id: null,
+    project_id_updated: null,
     start: null,
+});
+
+const props = defineProps({
+    quote: String,
+    activities: Array,
+    relogin: Boolean,
+    projects: Array,
 });
 
 let userStatus = ref(null);
@@ -175,12 +218,7 @@ let editActivityForm = ref(false);
 let editActivityID = ref(null);
 let startTime = ref(null);
 let outsideWorkingTime = ref(false);
-
-const props = defineProps({
-    quote: String,
-    activities: Array,
-    relogin: Boolean,
-});
+let projectAssignment = ref(props.projects);
 
 const status = computed(() => usePage().props.value.auth.user.status);
 const username = computed(() => usePage().props.value.auth.user.username);
@@ -202,6 +240,16 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
     if (username.value == e.user) {
         axios.get("/attendance/user-status").then((response) => {
             userStatus.value = response.data;
+        });
+    }
+});
+
+window.Echo.channel("assignment-channel").listen(".assignment-event", (e) => {
+    if (username.value == e.user) {
+        axios.get("/attendance/assignment").then((response) => {
+            form.project_id = null;
+            form.project_id_updated = null;
+            projectAssignment.value = response.data;
         });
     }
 });
@@ -316,6 +364,7 @@ const openEditActivityForm = (activity) => {
     addActivityForm.value = false;
     editActivityForm.value = true;
     form.description_updated = activity.description;
+    form.project_id_updated = activity.project_id;
     editActivityID.value = activity.id;
     form.errors = [];
 };
@@ -325,6 +374,7 @@ const updateActivity = () => {
         onSuccess: () => {
             editActivityForm.value = false;
             form.description_updated = null;
+            form.project_id_updated = null;
             editActivityID.value = null;
             scrollDown();
             Swal.fire({

@@ -16,11 +16,13 @@ class ActivityEvent implements ShouldBroadcast
 
     public $user;
     public $message;
+    public $type;
 
-    public function __construct($user, $message)
+    public function __construct($user, $message, $type)
     {
         $this->user = $user;
         $this->message = $message;
+        $this->type = $type;
     }
 
     public function broadcastOn()
