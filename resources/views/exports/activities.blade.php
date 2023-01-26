@@ -3,6 +3,7 @@
         <tr>
             <th><strong>Date</strong></th>
             <th><strong>Hour</strong></th>
+            <th><strong>Project</strong></th>
             <th><strong>Activity</strong></th>
             <th><strong>Time Spent</strong></th>
         </tr>
@@ -12,6 +13,13 @@
             <tr>
                 <td>{{ $activity->created_at->format('D, d M y') }}</td>
                 <td>{{ $activity->created_at->format('H:i') }}</td>
+                <td>
+                    @if ($activity->project)
+                    {{ $activity->project->name }}
+                    @else
+                    General
+                    @endif
+                </td>
                 <td>{{ $activity->description }}</td>
                 <td>
                     @if ($activity->duration)

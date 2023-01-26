@@ -126,7 +126,7 @@ class DashboardController extends Controller
     
     public function activity(Request $request)
     {
-        if ($attendance = Attendance::where('user_id', User::where('name', $request->user)->first()->id)->whereDate('created_at', Carbon::parse($request->date))->first()) {
+        if ($attendance = Attendance::with('activities.project')->where('user_id', User::where('name', $request->user)->first()->id)->whereDate('created_at', Carbon::parse($request->date))->first()) {
             if ($attendance->activities->count() > 0) {
                 return $attendance->activities;
             } else {
@@ -172,7 +172,7 @@ class DashboardController extends Controller
         $filters['user'] = $user;
         $filters['paginate'] = $paginate;
 
-        $attendances = Attendance::with('activities', 'user')
+        $attendances = Attendance::with('activities.project', 'user')
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('user', function ($subQuery) use ($search) {
                     $subQuery->where('name', 'LIKE', "%{$search}%")

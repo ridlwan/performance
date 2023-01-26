@@ -53,4 +53,9 @@ class Project extends Model
     {
         return $this->hasMany(Assignment::class);
     }
+    
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
 }

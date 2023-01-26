@@ -27,7 +27,7 @@
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
-                            <apexchart type="pie" height="400" :options="resourceChart" :series="resourceSeries"></apexchart>
+                            <apexchart type="pie" height="400" :options="inchargeChart" :series="inchargeSeries"></apexchart>
                         </div>
                     </div>
                 </div>
@@ -42,35 +42,31 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-center text-uppercase text-xs text-dark">No</th>
                                         <th class="text-uppercase text-xs text-dark">Personel</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Role</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(responsibility, responsibilityIndex) in responsibilities" :key="responsibilityIndex">
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibilityIndex + 1 }}</span>
-                                        </td>
+                                    <tr v-for="(user, userIndex) in users" :key="userIndex">
                                         <td class="align-middle">
                                             <div class="d-flex px-3">
                                                 <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{ responsibility.user.name }}</h6>
-                                                    <p class="text-xs text-secondary mb-0">{{ responsibility.user.email }}</p>
+                                                    <h6 class="mb-0 text-sm">{{ user.name }}</h6>
+                                                    <p class="text-xs text-secondary mb-0">{{ user.email }}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibility.user.position }}</span>
+                                            <span class="text-secondary text-xs font-weight-bold">{{ user.position }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <button v-for="(assignment, assignmentIndex) in responsibility.assignments" :key="assignmentIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button">
-                                                <span class="btn-inner--text">{{ assignment.project.name }}</span>
+                                            <button v-for="(responsibility, responsibilityIndex) in user.responsibilities" :key="responsibilityIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button">
+                                                <span class="btn-inner--text">{{ responsibility }}</span>
                                             </button>
                                         </td>
                                     </tr>
-                                    <tr v-if="responsibilities.length < 1">
+                                    <tr v-if="users.length < 1">
                                         <td colspan="4" class="align-middle text-center text-secondary">Data not found</td>
                                     </tr>
                                 </tbody>
@@ -219,8 +215,12 @@
                                     <span v-if="activity.end" class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-check"></i></span>
                                     <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
                                     <div class="d-flex flex-column">
-                                        <p class="mb-1 opacity-7" style="color: black !important">{{ activity.description }}</p>
-                                        <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                        <p class="mb-0 opacity-7" style="color: black !important">{{ activity.description }}</p>
+                                        <p class="mb-0">
+                                            <span v-if="activity.project" class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> {{ activity.project.name }}</span>
+                                            <span v-else class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> General</span>
+                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center text-sm font-weight-bold">
@@ -286,9 +286,8 @@ const props = defineProps({
     supportSeries: Array,
     supportData: Array,
     supportSla: Number,
-    responsibilities: Array,
-    resourceSeries: Array,
-    resourceData: Array,
+    inchargeSeries: Array,
+    inchargeData: Array,
 });
 
 let activities = ref([]);
@@ -299,7 +298,7 @@ let search = ref(props.filters.search);
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
 let supportChart = ref({});
-let resourceChart = ref({});
+let inchargeChart = ref({});
 let performanceHoursChart = ref({});
 let performancePercentageChart = ref({});
 
@@ -342,9 +341,9 @@ const renderReport = () => {
                 return opt.w.config.series[opt.seriesIndex];
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#f74a4a", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
-    resourceChart.value = {
+    inchargeChart.value = {
         chart: {
             height: 400,
             type: "pie",
@@ -356,11 +355,18 @@ const renderReport = () => {
             text: "Resource In Charge",
             align: "left",
         },
-        labels: props.resourceData,
+        labels: props.inchargeData,
         legend: {
             position: "bottom",
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#f74a4a", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + " hours";
+                },
+            },
+        },
     };
     performanceHoursChart.value = {
         chart: {
@@ -486,7 +492,7 @@ const renderDaily = () => {
                 text: "Hours",
             },
         },
-        colors: ["#008ffb", "#8e6cef", "#c759d0", "#ff0000", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
+        colors: ["#008ffb", "#8e6cef", "#c759d0", "#f74a4a", "#ff7300", "#ffec01", "#53d726", "#24d7ae", "#5fb7d4", "#97d9ff"],
     };
 };
 

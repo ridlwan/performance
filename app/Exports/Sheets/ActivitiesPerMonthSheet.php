@@ -22,7 +22,8 @@ class ActivitiesPerMonthSheet implements FromView, WithTitle
 
     public function view(): View
     {
-        $activities = Activity::whereHas('attendance', function ($query) {
+        $activities = Activity::with('project')
+            ->whereHas('attendance', function ($query) {
                 $query->where('user_id', $this->user->id);
             })
             ->whereDate('created_at', '>=', $this->start)

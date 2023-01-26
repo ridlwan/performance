@@ -67,7 +67,7 @@ class AttendanceController extends Controller
 
     public function history()
     {
-        $attendances = Attendance::with('activities')
+        $attendances = Attendance::with('activities.project')
             ->where('user_id', Auth::user()->id)
             ->orderByDesc('id')->paginate(10);
 

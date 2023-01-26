@@ -16,6 +16,7 @@ use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Models\Responsibility;
 use App\Exports\ActivitiesExport;
+use App\Models\Activity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -138,20 +139,6 @@ class ReportController extends Controller
             'sla' => $request->sla
         ]);
 
-        foreach ($request->responsibilities as $responsibility) {
-            $responsibilityData = Responsibility::create([
-                'report_id' => $report->id,
-                'user_id' => $responsibility['user']['id']
-            ]);
-
-            foreach ($responsibility['assignments'] as $assignment) {
-                Assignment::create([
-                    'responsibility_id' => $responsibilityData->id,
-                    'project_id' => $assignment['project_id']
-                ]);
-            }
-        }
-
         DB::commit();
 
         return redirect('/reports')->with('created', 'Report created successfully');;
@@ -189,7 +176,7 @@ class ReportController extends Controller
         $filters['user'] = $user;
         $filters['paginate'] = $paginate;
 
-        $attendances = Attendance::with('activities', 'user')
+        $attendances = Attendance::with('activities.project', 'user')
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('user', function ($subQuery) use ($search) {
                     $subQuery->where('name', 'LIKE', "%{$search}%")
@@ -348,20 +335,43 @@ class ReportController extends Controller
 
         $supportSla = $report->support->sla;
 
-        $responsibilities = Responsibility::with('user', 'assignments.project')
-            ->where('report_id', $report->id)->get();
-
-        $assignments = Assignment::whereIn('responsibility_id', $responsibilities->pluck('id'))->get();
-
-        $resourceSeries = [];
-        $resourceData = [];
-        foreach ($assignments as $assignment) {
-            if (!in_array($assignment->project->name, $resourceData)) {
-                array_push($resourceSeries, $assignments->where('project_id', $assignment->project_id)->count());
-                array_push($resourceData, $assignment->project->name);
+        $activities = Activity::with('project', 'attendance')
+            ->whereHas('project')
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)->get();
+            
+        $inchargeData = [];
+        foreach ($activities as $activity) {
+            if (!in_array($activity->project->name, $inchargeData)) {
+                array_push($inchargeData, $activity->project->name);
             }
         }
 
+        $inchargeSeries = [];
+        foreach ($inchargeData as $incharge) {
+            $projectDuration = 0;
+            foreach ($activities as $activity) {
+                if ($activity->project->name == $incharge) {
+                    $projectDuration += $activity->duration;
+                }
+            }
+
+            array_push($inchargeSeries, floor($projectDuration / 60));
+        }
+
+        foreach ($users as $user) {
+            $responsibilities = [];
+            foreach ($activities as $activity) {
+                if (!in_array($activity->project->name, $responsibilities)) {
+                    if ($activity->attendance->user_id == $user->id) {
+                        array_push($responsibilities, $activity->project->name);
+                    }
+                }
+            }
+
+            $user['responsibilities'] = $responsibilities;
+        }
+        
         return Inertia::render('Report/Show', [
             'report' => $report,
             'attendances' => $attendances,
@@ -376,9 +386,8 @@ class ReportController extends Controller
             'supportSeries' => $supportSeries,
             'supportData' => $supportData,
             'supportSla' => $supportSla,
-            'responsibilities' => $responsibilities,
-            'resourceSeries' => $resourceSeries,
-            'resourceData' => $resourceData,
+            'inchargeSeries' => $inchargeSeries,
+            'inchargeData' => $inchargeData,
         ]);
     }
 
@@ -390,19 +399,10 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        $report->load('progresses', 'support', 'responsibilities.user', 'responsibilities.assignments.project');
+        $report->load('progresses', 'support');
 
-        $projects = Project::whereIn('id', $report->progresses->pluck('project_id'))->get();
-
-        $allProjects = Project::whereHas('assignments', function ($query) use ($report) {
-            $query->whereIn('responsibility_id', $report->responsibilities->pluck('id'));
-        })
-        ->orWhere('status', Project::STATUS_OPEN)->get();
-        
         return Inertia::render('Report/Edit', [
             'report' => $report,
-            'projects' => $projects,
-            'allProjects' => $allProjects,
         ]);
     }
 
@@ -451,23 +451,6 @@ class ReportController extends Controller
             'canceled' => $request->canceled,
             'sla' => $request->sla
         ]);
-
-        $report->responsibilities()->delete();
-
-        foreach ($request->responsibilities as $responsibility) {
-
-            $responsibilityData = Responsibility::create([
-                'report_id' => $report->id,
-                'user_id' => $responsibility['user']['id']
-            ]);
-
-            foreach ($responsibility['assignments'] as $assignment) {
-                Assignment::create([
-                    'responsibility_id' => $responsibilityData->id,
-                    'project_id' => $assignment['project_id']
-                ]);
-            }
-        }
 
         DB::commit();
 

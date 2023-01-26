@@ -100,7 +100,7 @@ class AuthSeeder extends Seeder
 
         $supervisor = User::create([
             'name' => 'Supervisor',
-            'email' => 'supervisor@opencloud.com',
+            'email' => 'supervisor@opencloud.id',
             'password' => bcrypt('password'),
         ]);
 
@@ -135,7 +135,7 @@ class AuthSeeder extends Seeder
 
         $staff = User::create([
             'name' => 'Staff',
-            'email' => 'staff@opencloud.com',
+            'email' => 'staff@opencloud.id',
             'password' => bcrypt('password'),
         ]);
 
@@ -219,7 +219,7 @@ class AuthSeeder extends Seeder
 
         $executive = User::create([
             'name' => 'Executive',
-            'email' => 'executive@opencloud.com',
+            'email' => 'executive@opencloud.id',
             'password' => bcrypt('password'),
         ]);
 
