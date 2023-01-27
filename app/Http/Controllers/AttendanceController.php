@@ -95,7 +95,11 @@ class AttendanceController extends Controller
         }
 
         if ($report = Report::whereYear('start', $thisYear)->whereMonth('start', $thisMonth)->first()) {
-            $mandays = $report->mandays * 8;
+            if ($report->mandays > 0) {
+                $mandays = $report->mandays * 8;
+            } else {
+                $mandays = 22 * 8;
+            }
         } else {
             $mandays = 22 * 8;
         }
