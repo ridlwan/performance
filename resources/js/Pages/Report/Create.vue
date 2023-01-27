@@ -28,7 +28,7 @@
                         </div>
                         <div class="card-body pt-0">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
@@ -47,6 +47,13 @@
                                         <label class="form-control-label">End</label>
                                         <input class="form-control" type="date" v-model="form.end" :class="{ 'is-invalid': form.errors.end }" />
                                         <div v-if="form.errors.end" class="invalid-feedback">{{ form.errors.end }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Mandays</label>
+                                        <input class="form-control" type="text" v-model="form.mandays" :class="{ 'is-invalid': form.errors.mandays }" />
+                                        <div v-if="form.errors.mandays" class="invalid-feedback">{{ form.errors.mandays }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -157,6 +164,7 @@ const form = useForm({
     name: null,
     start: null,
     end: null,
+    mandays: null,
     waiting_for_support: null,
     waiting_for_customer: null,
     waiting_for_partner: null,

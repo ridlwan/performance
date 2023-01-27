@@ -17,7 +17,6 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-xs text-dark text-center">No</th>
                                             <th class="text-uppercase text-xs text-dark">Personel</th>
                                             <th class="text-center text-uppercase text-xs text-dark">Role</th>
                                             <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
@@ -25,9 +24,6 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(user, userIndex) in users" :key="userIndex">
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">{{ userIndex + 1 }}</span>
-                                            </td>
                                             <td class="align-middle">
                                                 <div class="d-flex px-3">
                                                     <div class="d-flex flex-column justify-content-center">

@@ -6,7 +6,7 @@
                     <Link href="/reports" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Monthly Report</h6></Link>
                 </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
-                    <h6 class="font-weight-bolder text-white mb-0">Create Report</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Edit Report</h6>
                 </li>
             </ol>
         </template>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="card-body pt-0">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Name</label>
                                         <input class="form-control" type="text" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
@@ -47,6 +47,13 @@
                                         <label class="form-control-label">End</label>
                                         <input class="form-control" type="date" v-model="form.end" :class="{ 'is-invalid': form.errors.end }" />
                                         <div v-if="form.errors.end" class="invalid-feedback">{{ form.errors.end }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Mandays</label>
+                                        <input class="form-control" type="text" v-model="form.mandays" :class="{ 'is-invalid': form.errors.mandays }" />
+                                        <div v-if="form.errors.mandays" class="invalid-feedback">{{ form.errors.mandays }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -159,6 +166,7 @@ const form = useForm({
     name: props.report.name,
     start: moment(props.report.start).format("Y-MM-DD"),
     end: moment(props.report.end).format("Y-MM-DD"),
+    mandays: props.report.mandays,
     waiting_for_support: props.report.support.waiting_for_support,
     waiting_for_customer: props.report.support.waiting_for_customer,
     waiting_for_partner: props.report.support.waiting_for_partner,

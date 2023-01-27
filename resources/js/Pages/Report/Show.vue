@@ -410,7 +410,7 @@ const renderReport = () => {
             height: 400,
         },
         title: {
-            text: "Personel Performance (Percentage)",
+            text: `Personel Performance (Percentage) from ${props.report.mandays} mandays (${props.report.mandays * 8} hours)`,
             align: "left",
         },
         plotOptions: {

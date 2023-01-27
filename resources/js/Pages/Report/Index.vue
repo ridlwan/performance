@@ -43,6 +43,7 @@
                                         <th class="text-uppercase text-xs text-dark p-2">Name</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Start</th>
                                         <th class="text-center text-uppercase text-xs text-dark">End</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Mandays</th>
                                         <th v-if="permissions.includes('manage-report')" class="text-center text-uppercase text-xs text-dark">Published</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Action</th>
                                     </tr>
@@ -57,6 +58,9 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">{{ $filters.formatDate(report.end) }}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ report.mandays }}</span>
                                         </td>
                                         <td v-if="permissions.includes('manage-report')" class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">{{ report.published_text }}</span>

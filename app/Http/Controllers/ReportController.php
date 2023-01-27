@@ -107,6 +107,7 @@ class ReportController extends Controller
             'name' => 'required|unique:reports,name',
             'start' => 'required',
             'end' => 'required',
+            'mandays' => 'required|numeric|min:1',
             'waiting_for_support' => 'required|numeric|min:0',
             'waiting_for_customer' => 'required|numeric|min:0',
             'waiting_for_partner' => 'required|numeric|min:0',
@@ -122,7 +123,7 @@ class ReportController extends Controller
 
         DB::beginTransaction();
 
-        $report = Report::create($request->only(['name', 'start', 'end']));
+        $report = Report::create($request->only(['name', 'start', 'end', 'mandays']));
 
         Support::create([
             'report_id' => $report->id,
@@ -261,7 +262,7 @@ class ReportController extends Controller
                 ->whereDate('created_at', '<=', $endDate)->sum('duration');
 
             $hours = floor($duration / 60);
-            $percentage = floor(($duration / (22 * 8 * 60)) * 100);
+            $percentage = floor(($duration / ($report->mandays * 8 * 60)) * 100);
             
             array_push($performanceHours, $hours);
             array_push($performancePercentage, $percentage);
@@ -419,6 +420,7 @@ class ReportController extends Controller
             'name' => 'required|unique:reports,name,' . $report->id . ',id',
             'start' => 'required',
             'end' => 'required',
+            'mandays' => 'required|numeric|min:1',
             'waiting_for_support' => 'required|numeric|min:0',
             'waiting_for_customer' => 'required|numeric|min:0',
             'waiting_for_partner' => 'required|numeric|min:0',
@@ -434,7 +436,7 @@ class ReportController extends Controller
 
         DB::beginTransaction();
 
-        $report->update($request->only(['name', 'start', 'end']));
+        $report->update($request->only(['name', 'start', 'end', 'mandays']));
 
         $support = $report->support;
 

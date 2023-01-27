@@ -6,6 +6,18 @@
 
         <div class="card">
             <div class="card-body pb-2">
+                <div class="progress-wrapper mb-3 p-2">
+                    <div class="progress-info text-center mb-2">
+                        <div class="progress-percentage">
+                            <span class="text-sm font-weight-bold text-dark"
+                                >Your current performance is <span class="text-primary">{{ progressPercentage }}% ({{ progressHours }} hours)</span> of this month's target of <span class="text-primary">{{ mandays }} hours</span></span
+                            >
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" :style="`width: ${progressPercentage}%`"></div>
+                    </div>
+                </div>
                 <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
             </div>
         </div>
@@ -25,6 +37,9 @@ import apexchart from "vue3-apexcharts";
 const props = defineProps({
     hours: Array,
     dates: Array,
+    mandays: Number,
+    progressHours: Number,
+    progressPercentage: Number,
 });
 
 let series = ref([]);
@@ -54,7 +69,7 @@ const renderChart = () => {
             curve: "smooth",
         },
         title: {
-            text: "Current Performance",
+            text: "Performance Graph",
             align: "left",
         },
         xaxis: {

@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Report;
+use App\Models\Project;
 use App\Models\Activity;
 use App\Models\Attendance;
 use App\Events\StatusEvent;
 use Illuminate\Http\Request;
 use App\Events\ActivityEvent;
-use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Auth;
@@ -93,9 +94,21 @@ class AttendanceController extends Controller
             array_push($dates, $attendance->created_at->format('D d M'));
         }
 
+        if ($report = Report::whereYear('start', $thisYear)->whereMonth('start', $thisMonth)->first()) {
+            $mandays = $report->mandays * 8;
+        } else {
+            $mandays = 22 * 8;
+        }
+
+        $progressHours =  floor($attendances->sum('duration') / 60);
+        $progressPercentage = floor((($attendances->sum('duration') / 60) / $mandays) * 100);
+
         return Inertia::render('Attendance/Performance', [
             'hours' => $hours,
-            'dates' => $dates
+            'dates' => $dates,
+            'mandays' => $mandays,
+            'progressHours' => $progressHours,
+            'progressPercentage' => $progressPercentage,
         ]);
     }
     

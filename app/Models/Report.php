@@ -21,6 +21,7 @@ class Report extends Model
         'name',
         'start',
         'end',
+        'mandays',
         'published'
     ];
 
