@@ -18,7 +18,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new ResetData())->dailyAt('16:00');
         $schedule->job(new ResetData())->dailyAt('23:00');
-        $schedule->job(new ResetData())->everyMinute();
     }
 
     /**
