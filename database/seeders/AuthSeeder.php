@@ -106,25 +106,25 @@ class AuthSeeder extends Seeder
 
         $supervisor->assignRole('supervisor');
 
-        $fatur = User::create([
-            'name' => 'Fatur Ridlwan',
-            'email' => 'fatur.ridlwan@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $fatur = User::create([
+        //     'name' => 'Fatur Ridlwan',
+        //     'email' => 'fatur.ridlwan@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $fatur->assignRole('supervisor');
+        // $fatur->assignRole('supervisor');
 
-        $erlinda = User::create([
-            'name' => 'Erlinda Safitri',
-            'email' => 'erlinda.safitri@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $erlinda = User::create([
+        //     'name' => 'Erlinda Safitri',
+        //     'email' => 'erlinda.safitri@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $erlinda->assignRole('supervisor');
+        // $erlinda->assignRole('supervisor');
 
 
 
@@ -141,74 +141,74 @@ class AuthSeeder extends Seeder
 
         $staff->assignRole('staff');
         
-        $galuh = User::create([
-            'name' => 'Galuh Danutirto',
-            'email' => 'galuh.danutirto@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $galuh = User::create([
+        //     'name' => 'Galuh Danutirto',
+        //     'email' => 'galuh.danutirto@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $galuh->assignRole('staff');
+        // $galuh->assignRole('staff');
 
-        $rizky = User::create([
-            'name' => 'Rizky Ibrahim',
-            'email' => 'rizky.ibrahim@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $rizky = User::create([
+        //     'name' => 'Rizky Ibrahim',
+        //     'email' => 'rizky.ibrahim@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $rizky->assignRole('staff');
+        // $rizky->assignRole('staff');
         
-        $okitora = User::create([
-            'name' => 'Okitora Winnetou',
-            'email' => 'okitora.winnetou@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $okitora = User::create([
+        //     'name' => 'Okitora Winnetou',
+        //     'email' => 'okitora.winnetou@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $okitora->assignRole('staff');
+        // $okitora->assignRole('staff');
         
-        $farhan = User::create([
-            'name' => 'Farhan Hadi',
-            'email' => 'farhan.hadi@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $farhan = User::create([
+        //     'name' => 'Farhan Hadi',
+        //     'email' => 'farhan.hadi@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $farhan->assignRole('staff');
+        // $farhan->assignRole('staff');
 
-        $surya = User::create([
-            'name' => 'Surya Permana',
-            'email' => 'surya.permana@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $surya = User::create([
+        //     'name' => 'Surya Permana',
+        //     'email' => 'surya.permana@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $surya->assignRole('staff');
+        // $surya->assignRole('staff');
         
-        $vanadia = User::create([
-            'name' => 'Vanadia Equila',
-            'email' => 'vanadia.equila@opencloud.id',
-            'password' => bcrypt('password'),
-            'reported' => User::REPORTED_YES,
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $vanadia = User::create([
+        //     'name' => 'Vanadia Equila',
+        //     'email' => 'vanadia.equila@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'reported' => User::REPORTED_YES,
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $vanadia->assignRole('staff');
+        // $vanadia->assignRole('staff');
         
-        $putu = User::create([
-            'name' => 'Putu Wijaya',
-            'email' => 'putu.wijaya@opencloud.id',
-            'password' => bcrypt('password'),
-            'teammate' => User::TEAMMATE_YES,
-        ]);
+        // $putu = User::create([
+        //     'name' => 'Putu Wijaya',
+        //     'email' => 'putu.wijaya@opencloud.id',
+        //     'password' => bcrypt('password'),
+        //     'teammate' => User::TEAMMATE_YES,
+        // ]);
 
-        $putu->assignRole('staff');
+        // $putu->assignRole('staff');
         
 
 
