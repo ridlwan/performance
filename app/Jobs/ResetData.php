@@ -41,7 +41,7 @@ class ResetData implements ShouldQueue
                 $user->status = User::STATUS_NOT_AVAILABLE;
                 $user->save();
     
-                event(new StatusEvent($user->name, 'just checked out'));
+                event(new StatusEvent($user->name, 'just checked out', 'checkOut'));
             }
         }
 
