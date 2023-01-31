@@ -728,7 +728,7 @@ const showInchargeData = (event, chartContext, config) => {
                     },
                 },
                 title: {
-                    text: "Responsibility Role",
+                    text: "Role In Charge",
                     align: "left",
                 },
                 labels: response.data.responsibilityInchargeData,
