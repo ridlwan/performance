@@ -81,15 +81,12 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|unique:users,name',
             'position' => 'required',
-            'responsibility_id' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'role' => 'required',
             'teammate' => 'required',
             'reported' => 'required',
             'order' => 'required|numeric|min:0',
-        ], [
-            'responsibility_id.required' => 'The responsibility field is required.',
         ]);
         
         DB::beginTransaction();
@@ -162,14 +159,11 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|unique:users,name,' . $user->id . ',id',
             'position' => 'required',
-            'responsibility_id' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id . ',id',
             'role' => 'required',
             'teammate' => 'required',
             'reported' => 'required',
             'order' => 'required|numeric|min:0',
-        ], [
-            'responsibility_id.required' => 'The responsibility field is required.',
         ]);
 
         DB::beginTransaction();
