@@ -10,22 +10,11 @@ class Responsibility extends Model
     use HasFactory;
 
     protected $fillable = [
-        'report_id',
-        'user_id'
+        'name'
     ];
 
-    public function report()
+    public function users()
     {
-        return $this->belongsTo(Report::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function assignments()
-    {
-        return $this->hasMany(Assignment::class);
+        return $this->hasMany(User::class);
     }
 }

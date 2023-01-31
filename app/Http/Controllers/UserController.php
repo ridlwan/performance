@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Responsibility;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -28,10 +29,11 @@ class UserController extends Controller
         $filters = $request->only(['search']);
         $filters['paginate'] = $paginate;
 
-        $users = User::with('roles', 'attendances')
+        $users = User::with('roles', 'attendances', 'responsibility')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('position', 'LIKE', "%{$search}%");
             })
             ->orderBy('order')->paginate($paginate);;
 
@@ -56,11 +58,13 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::get();
+        $responsibilities = Responsibility::get();
         $teammate = User::TEAMMATE_ARRAY;
         $reported = User::REPORTED_ARRAY;
 
         return Inertia::render('User/Create', [
             'roles' => $roles,
+            'responsibilities' => $responsibilities,
             'teammate' => $teammate,
             'reported' => $reported
         ]);
@@ -77,12 +81,15 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|unique:users,name',
             'position' => 'required',
+            'responsibility_id' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'role' => 'required',
             'teammate' => 'required',
             'reported' => 'required',
             'order' => 'required|numeric|min:0',
+        ], [
+            'responsibility_id.required' => 'The responsibility field is required.',
         ]);
         
         DB::beginTransaction();
@@ -90,6 +97,7 @@ class UserController extends Controller
         $data = $request->only([
             'name',
             'position',
+            'responsibility_id',
             'email',
             'teammate',
             'reported',
@@ -127,6 +135,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::get();
+        $responsibilities = Responsibility::get();
         $userRole = $user->getRoleNames()->first();
         $teammate = User::TEAMMATE_ARRAY;
         $reported = User::REPORTED_ARRAY;
@@ -134,6 +143,7 @@ class UserController extends Controller
         return Inertia::render('User/Edit', [
             'user' => $user,
             'roles' => $roles,
+            'responsibilities' => $responsibilities,
             'userRole' => $userRole,
             'teammate' => $teammate,
             'reported' => $reported
@@ -152,11 +162,14 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|unique:users,name,' . $user->id . ',id',
             'position' => 'required',
+            'responsibility_id' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id . ',id',
             'role' => 'required',
             'teammate' => 'required',
             'reported' => 'required',
             'order' => 'required|numeric|min:0',
+        ], [
+            'responsibility_id.required' => 'The responsibility field is required.',
         ]);
 
         DB::beginTransaction();
@@ -164,6 +177,7 @@ class UserController extends Controller
         $data = $request->only([
             'name',
             'position',
+            'responsibility_id',
             'email',
             'teammate',
             'reported',

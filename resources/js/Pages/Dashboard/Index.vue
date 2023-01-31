@@ -161,13 +161,13 @@
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-3">
-                                <h6 class="mb-2">Current Activity</h6>
+                            <div class="col-md-2">
+                                <h6 class="mt-2 mb-2" style="white-space: nowrap">Current Activity</h6>
                             </div>
                             <div class="col-md-2">
-                                <div class="form-check form-switch mt-2">
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="struggling" @change="getData" />
-                                    <label class="form-check-label" for="flexSwitchCheckDefault">Struggling</label>
+                                <div class="form-check form-switch mt-2" style="float: right !important">
+                                    <input class="form-check-input" type="checkbox" id="strugglingCheckbox" v-model="struggling" @change="getData" />
+                                    <label class="form-check-label" for="strugglingCheckbox">Struggling</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -186,8 +186,14 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-control" v-model="seletedUser" @change="getData">
-                                    <option value="All">All Personel</option>
+                                    <option value="All">All Personnel</option>
                                     <option v-for="user in teammate" :key="user.id" :value="user.id">{{ user.name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <select class="form-control" v-model="seletedResponsibility" @change="getData">
+                                    <option value="All">All</option>
+                                    <option v-for="responsibility in responsibilities" :key="responsibility.id" :value="responsibility.id">{{ responsibility.name }}</option>
                                 </select>
                             </div>
                             <div class="col-md-1">
@@ -306,6 +312,8 @@ const props = defineProps({
     seletedUser: Object,
     projects: Array,
     seletedProject: String,
+    responsibilities: Array,
+    seletedResponsibility: String,
 });
 
 let workingRemoteData = ref(props.workingRemote);
@@ -320,6 +328,7 @@ let struggling = ref(props.struggling);
 let status = ref(props.status);
 let seletedUser = ref(props.seletedUser);
 let seletedProject = ref(props.seletedProject);
+let seletedResponsibility = ref(props.seletedResponsibility);
 
 window.Echo.channel("activity-channel").listen(".activity-event", (e) => {
     getData();
@@ -338,6 +347,7 @@ const getData = () => {
                 status: status.value,
                 seletedUser: seletedUser.value,
                 seletedProject: seletedProject.value,
+                seletedResponsibility: seletedResponsibility.value,
             },
         })
         .then((response) => {
@@ -355,6 +365,7 @@ const reset = () => {
     status.value = "All";
     seletedUser.value = "All";
     seletedProject.value = "All";
+    seletedResponsibility.value = "All";
 
     getData();
 };

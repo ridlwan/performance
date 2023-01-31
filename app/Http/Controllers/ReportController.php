@@ -241,7 +241,7 @@ class ReportController extends Controller
 
                 foreach ($dailySeries as $key => $value) {
                     if ($attendance = Attendance::where('user_id', $userSeries[$key]->id)->whereDate('created_at', $period)->first()) {
-                        array_push($dailySeries[$key]['data'], number_format((float) ($attendance->duration / 60), 1));
+                        array_push($dailySeries[$key]['data'], (float) number_format(($attendance->duration / 60), 1));
                     } else {
                         array_push($dailySeries[$key]['data'], 0);
                     }
@@ -262,7 +262,14 @@ class ReportController extends Controller
                 ->whereDate('created_at', '<=', $endDate)->sum('duration');
 
             $hours = floor($duration / 60);
-            $percentage = floor(($duration / ($report->mandays * 8 * 60)) * 100);
+
+            if ($report->mandays > 0) {
+                $mandays = $report->mandays * 8;
+            } else {
+                $mandays = 22 * 8;
+            }
+
+            $percentage = floor(($duration / ($mandays * 60)) * 100);
             
             array_push($performanceHours, $hours);
             array_push($performancePercentage, $percentage);
@@ -357,7 +364,7 @@ class ReportController extends Controller
                 }
             }
 
-            array_push($inchargeSeries, floor($projectDuration / 60));
+            array_push($inchargeSeries, (float) number_format(($projectDuration / 60), 1));
         }
 
         foreach ($users as $user) {
@@ -478,6 +485,102 @@ class ReportController extends Controller
     public function export(Report $report) 
     {
         return (new ActivitiesExport($report->start, $report->end))->download($report->name . '.xlsx');
+    }
+    
+    public function project(Report $report, Request $request) 
+    {
+        if ($request->user && $request->project) {
+            if ($request->project == 'General') {
+                $activities = Activity::whereHas('attendance', function ($query) use ($request) {
+                    $query->whereHas('user', function ($query) use ($request) {
+                        $query->where('id', $request->user);
+                    });
+                })
+                ->whereDoesntHave('project')
+                ->whereDate('created_at', '>=', $report->start)
+                ->whereDate('created_at', '<=', $report->end)->get();
+            } else {
+                $activities = Activity::whereHas('attendance', function ($query) use ($request) {
+                        $query->whereHas('user', function ($query) use ($request) {
+                            $query->where('id', $request->user);
+                        });
+                    })
+                    ->whereHas('project', function ($query) use ($request) {
+                        $query->where('name', $request->project);
+                    })
+                    ->whereDate('created_at', '>=', $report->start)
+                    ->whereDate('created_at', '<=', $report->end)->get();
+            }
+
+            return $activities;
+        } else {
+            $personnels = User::whereHas('attendances', function ($query) use ($report, $request) {
+                    $query->whereHas('activities', function ($query) use ($report, $request) {
+                        $query->whereHas('project', function ($query) use ($request) {
+                                $query->where('name', $request->project);
+                            })
+                            ->whereDate('created_at', '>=', $report->start)
+                            ->whereDate('created_at', '<=', $report->end);
+                    });
+                })->get();
+            
+            $personnelInchargeSeries = [];
+            foreach ($personnels as $personnel) {
+                $activities = Activity::whereHas('attendance', function ($query) use ($personnel) {
+                        $query->whereHas('user', function ($query) use ($personnel) {
+                            $query->where('id', $personnel->id);
+                        });
+                    })
+                    ->whereHas('project', function ($query) use ($request) {
+                        $query->where('name', $request->project);
+                    })
+                    ->whereDate('created_at', '>=', $report->start)
+                    ->whereDate('created_at', '<=', $report->end)->get();
+    
+                $personnel['duration'] = $activities->sum('duration');
+    
+                array_push($personnelInchargeSeries, (float) number_format(($activities->sum('duration') / 60), 1));
+            }
+    
+            $responsibilities = Responsibility::whereHas('users', function ($query) use ($report, $request) {
+                $query->whereHas('attendances', function ($query) use ($report, $request) {
+                    $query->whereHas('activities', function ($query) use ($report, $request) {
+                        $query->whereHas('project', function ($query) use ($request) {
+                                $query->where('name', $request->project);
+                            })
+                            ->whereDate('created_at', '>=', $report->start)
+                            ->whereDate('created_at', '<=', $report->end);
+                    });
+                });
+            })->get();
+    
+            $responsibilityInchargeSeries = [];
+            foreach ($responsibilities as $responsibility) {
+                $activities = Activity::whereHas('attendance', function ($query) use ($responsibility) {
+                        $query->whereHas('user', function ($query) use ($responsibility) {
+                            $query->whereHas('responsibility', function ($query) use ($responsibility) {
+                                $query->where('id', $responsibility->id);
+                            });
+                        });
+                    })
+                    ->whereHas('project', function ($query) use ($request) {
+                        $query->where('name', $request->project);
+                    })
+                    ->whereDate('created_at', '>=', $report->start)
+                    ->whereDate('created_at', '<=', $report->end)->get();
+                
+                array_push($responsibilityInchargeSeries, (float) number_format(($activities->sum('duration') / 60), 1));
+            }
+    
+            return response()->json([
+                'personnels' => $personnels,
+                'personnelInchargeData' => $personnels->pluck('name'),
+                'personnelInchargeSeries' => $personnelInchargeSeries,
+                'responsibilityInchargeData' => $responsibilities->pluck('name'),
+                'responsibilityInchargeSeries' => $responsibilityInchargeSeries
+            ]);
+        }
+
     }
 
     /**

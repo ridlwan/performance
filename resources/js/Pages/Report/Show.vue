@@ -27,7 +27,7 @@
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
-                            <apexchart type="pie" height="400" :options="inchargeChart" :series="inchargeSeries"></apexchart>
+                            <apexchart type="pie" height="400" :options="inchargeChart" :series="inchargeSeries" @dataPointSelection="showInchargeData"></apexchart>
                         </div>
                     </div>
                 </div>
@@ -42,9 +42,9 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-xs text-dark">Personel</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Role</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
+                                        <th class="text-uppercase text-xs text-dark">Personnel</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Position</th>
+                                        <th class="text-center text-uppercase text-xs text-dark">Assignment</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,8 +61,11 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ user.position }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <button v-for="(responsibility, responsibilityIndex) in user.responsibilities" :key="responsibilityIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button">
+                                            <button v-for="(responsibility, responsibilityIndex) in user.responsibilities" :key="responsibilityIndex" class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button" @click="showUserInchargeData(user, responsibility)">
                                                 <span class="btn-inner--text">{{ responsibility }}</span>
+                                            </button>
+                                            <button class="btn btn-sm bg-gradient-primary mb-0 p-2 ms-2" type="button" @click="showUserInchargeData(user, 'General')">
+                                                <span class="btn-inner--text">General</span>
                                             </button>
                                         </td>
                                     </tr>
@@ -111,7 +114,7 @@
                             </div>
                             <div class="col-md-3">
                                 <select class="form-control" v-model="user" @change="filter">
-                                    <option value="All" selected>All Personel</option>
+                                    <option value="All" selected>All Personnel</option>
                                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                 </select>
                             </div>
@@ -133,13 +136,13 @@
                     </div>
                     <div class="card-body mt-3 px-0 pt-0 pb-2" style="min-height: 480px">
                         <div v-if="showChart" class="p-3 pt-0">
-                            <apexchart type="line" height="600" :options="dailyChart" :series="dailySeries" @dataPointSelection="showDetail"></apexchart>
+                            <apexchart type="line" height="600" :options="dailyChart" :series="dailySeries" @dataPointSelection="showActivitiesData"></apexchart>
                         </div>
                         <div class="table-responsive p-3 pt-0 pb-0">
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-xs text-dark">Personel</th>
+                                        <th class="text-uppercase text-xs text-dark">Personnel</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Date</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Start</th>
                                         <th class="text-center text-uppercase text-xs text-dark">End</th>
@@ -191,7 +194,6 @@
                             </table>
                         </div>
                         <Pagination :links="attendances.links" />
-                        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
                     </div>
                 </div>
             </div>
@@ -250,6 +252,132 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="projectModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title opacity-7" style="color: black !important">{{ project }}</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <apexchart type="pie" height="400" :options="personnelInchargeChart" :series="personnelInchargeSeries"></apexchart>
+                            </div>
+                            <div class="col-md-6">
+                                <apexchart type="pie" height="400" :options="responsibilityInchargeChart" :series="responsibilityInchargeSeries"></apexchart>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive p-3 pt-0 pb-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-xs text-dark">Personnel</th>
+                                            <th class="text-center text-uppercase text-xs text-dark">Position</th>
+                                            <th class="text-center text-uppercase text-xs text-dark">Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(personnel, personnelIndex) in personnels" :key="personnelIndex">
+                                            <td class="align-middle">
+                                                <div class="d-flex px-3">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{ personnel.name }}</h6>
+                                                        <p class="text-xs text-secondary mb-0">{{ personnel.email }}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <span class="text-secondary text-xs font-weight-bold">{{ personnel.position }}</span>
+                                            </td>
+                                            <td v-if="personnel.duration" class="align-middle text-center">
+                                                <button type="button" class="btn btn-sm btn-outline-default mb-0" @click="showUserInchargeData(personnel, project)">
+                                                    <span v-if="personnel.duration > 60" class="text-sm text-secondary"
+                                                        >{{ Math.floor(personnel.duration / 60) }} hours
+                                                        <span v-if="personnel.duration - Math.floor(personnel.duration / 60) * 60 > 0"> {{ personnel.duration - Math.floor(personnel.duration / 60) * 60 }} minutes </span>
+                                                    </span>
+                                                    <span v-else class="text-sm text-secondary">{{ personnel.duration }} minutes</span>
+                                                </button>
+                                            </td>
+                                            <td v-else class="align-middle text-center">
+                                                <span>-</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="personnels.length < 1">
+                                            <td colspan="4" class="align-middle text-center text-secondary">Data not found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="userProjectModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title opacity-7" style="color: black !important">
+                            {{ username }} <span class="opacity-6">on {{ project }} assignment</span>
+                        </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul v-if="activities.length > 0" class="list-group">
+                            <li v-for="activity in activities" :key="activity.id" class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                <div class="d-flex align-items-center">
+                                    <span v-if="activity.end" class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-check"></i></span>
+                                    <span v-else class="btn btn-icon-only btn-rounded btn-outline-warning mb-0 me-3 d-flex align-items-center justify-content-center"><i class="fa-solid fa-spinner"></i></span>
+                                    <div class="d-flex flex-column">
+                                        <p class="mb-0 opacity-7" style="color: black !important">{{ activity.description }}</p>
+                                        <p class="mb-0">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ $filters.formatDate(activity.created_at) }}</span>
+                                            <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset; width: 100px"><i class="fa-solid fa-user-ninja"></i> Struggling</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center text-sm font-weight-bold">
+                                    <div class="d-flex flex-column">
+                                        <p class="mb-1 text-dark opacity-8" style="color: black !important">{{ $filters.formatTime(activity.start) }}</p>
+                                        <span v-if="activity.duration">
+                                            <span v-if="activity.duration > 60" class="text-xs text-secondary" style="white-space: nowrap"
+                                                >{{ Math.floor(activity.duration / 60) }} hours
+                                                <span v-if="activity.duration - Math.floor(activity.duration / 60) * 60 > 0">
+                                                    <br />
+                                                    {{ activity.duration - Math.floor(activity.duration / 60) * 60 }} minutes
+                                                </span>
+                                            </span>
+
+                                            <span v-else class="text-xs text-secondary" style="white-space: nowrap">{{ activity.duration }} minutes</span>
+                                        </span>
+                                        <span v-else class="text-xs text-warning" style="white-space: nowrap">In Progress</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <h6 v-else class="text-center opacity-5" style="color: black !important">{{ status }}</h6>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
+        <a href="javascript:;" id="openProjectModal" data-bs-toggle="modal" data-bs-target="#projectModal" hidden></a>
+        <a href="javascript:;" id="openUserProjectModal" data-bs-toggle="modal" data-bs-target="#userProjectModal" hidden></a>
     </Layout>
 </template>
 
@@ -301,8 +429,14 @@ let supportChart = ref({});
 let inchargeChart = ref({});
 let performanceHoursChart = ref({});
 let performancePercentageChart = ref({});
-
 let dailyChart = ref({});
+
+let project = ref(null);
+let personnels = ref([]);
+let personnelInchargeSeries = ref([]);
+let personnelInchargeChart = ref({});
+let responsibilityInchargeSeries = ref([]);
+let responsibilityInchargeChart = ref({});
 
 onBeforeMount(() => {
     if (props.showChart) {
@@ -374,7 +508,7 @@ const renderReport = () => {
             height: 400,
         },
         title: {
-            text: "Personel Performance (Hours)",
+            text: "Personnel Performance (Hours)",
             align: "left",
         },
         plotOptions: {
@@ -410,7 +544,7 @@ const renderReport = () => {
             height: 400,
         },
         title: {
-            text: `Personel Performance (Percentage) from ${props.report.mandays} mandays (${props.report.mandays * 8} hours)`,
+            text: `Personnel Performance (Percentage) from ${props.report.mandays} mandays (${props.report.mandays * 8} hours)`,
             align: "left",
         },
         plotOptions: {
@@ -514,7 +648,7 @@ const reset = () => {
     filter();
 };
 
-const showDetail = (event, chartContext, config) => {
+const showActivitiesData = (event, chartContext, config) => {
     resetActivity();
 
     axios
@@ -545,6 +679,89 @@ const resetActivity = () => {
     username.value = null;
     at.value = null;
     status.value = null;
+};
+
+const showInchargeData = (event, chartContext, config) => {
+    axios
+        .get(`/reports/${props.report.id}/project`, {
+            params: {
+                project: props.inchargeData[config.dataPointIndex],
+            },
+        })
+        .then((response) => {
+            project.value = props.inchargeData[config.dataPointIndex];
+            personnels.value = response.data.personnels;
+            personnelInchargeSeries.value = response.data.personnelInchargeSeries;
+            responsibilityInchargeSeries.value = response.data.responsibilityInchargeSeries;
+
+            personnelInchargeChart.value = {
+                chart: {
+                    height: 400,
+                    type: "pie",
+                    toolbar: {
+                        show: true,
+                    },
+                },
+                title: {
+                    text: "Personnel In Charge",
+                    align: "left",
+                },
+                labels: response.data.personnelInchargeData,
+                legend: {
+                    position: "bottom",
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " hours";
+                        },
+                    },
+                },
+            };
+
+            responsibilityInchargeChart.value = {
+                chart: {
+                    height: 400,
+                    type: "pie",
+                    toolbar: {
+                        show: true,
+                    },
+                },
+                title: {
+                    text: "Responsibility Role",
+                    align: "left",
+                },
+                labels: response.data.responsibilityInchargeData,
+                legend: {
+                    position: "bottom",
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " hours";
+                        },
+                    },
+                },
+            };
+
+            document.getElementById("openProjectModal").click();
+        });
+};
+
+const showUserInchargeData = (user, projectName) => {
+    axios
+        .get(`/reports/${props.report.id}/project`, {
+            params: {
+                user: user.id,
+                project: projectName,
+            },
+        })
+        .then((response) => {
+            username.value = user.name;
+            project.value = projectName;
+            activities.value = response.data;
+            document.getElementById("openUserProjectModal").click();
+        });
 };
 
 const filter = () => {

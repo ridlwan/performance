@@ -3,7 +3,7 @@
         <template #heading>
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                 <li class="breadcrumb-item text-white active" style="width: 300px">
-                    <h6 class="font-weight-bolder text-white mb-0">Account</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Responsibility</h6>
                 </li>
             </ol>
         </template>
@@ -31,7 +31,7 @@
                                 <button type="button" class="btn bg-gradient-secondary" @click="reset">Reset</button>
                             </div>
                             <div class="col-md-1">
-                                <Link href="/users/create" class="btn bg-gradient-primary">New</Link>
+                                <Link href="/responsibilities/create" class="btn bg-gradient-primary">New</Link>
                             </div>
                         </div>
                     </div>
@@ -41,59 +41,27 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-xs text-dark p-2">Name</th>
-                                        <th class="text-uppercase text-xs text-dark p-2">Email</th>
-                                        <th class="text-uppercase text-xs text-dark p-2">Position</th>
-                                        <th class="text-uppercase text-xs text-dark p-2">Responsibility</th>
-                                        <th class="text-uppercase text-xs text-dark p-2">Role</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Teammate</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Reported</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Status</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Order</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in users.data" :key="user.id">
+                                    <tr v-for="responsibility in responsibilities.data" :key="responsibility.id">
                                         <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.name }}</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.email }}</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.position }}</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span v-if="user.responsibility" class="text-secondary text-xs font-weight-bold">{{ user.responsibility.name }}</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.roles[0].name }}</span>
+                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibility.name }}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.teammate_text }}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.reported_text }}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.status_text }}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ user.order }}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <Link :href="`/users/${user.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a v-if="user.attendances.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(user.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <Link :href="`/responsibilities/${responsibility.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
+                                            <a v-if="responsibility.users.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(responsibility.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     </tr>
-                                    <tr v-if="users.data.length < 1">
+                                    <tr v-if="responsibilities.data.length < 1">
                                         <td colspan="3" class="align-middle text-center text-secondary">Data not found</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <Pagination :links="users.links" />
+                        <Pagination :links="responsibilities.links" />
                     </div>
                 </div>
             </div>
@@ -110,7 +78,7 @@ import Pagination from "../../Components/Pagination.vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
-    users: Object,
+    responsibilities: Object,
     filters: Object,
 });
 
@@ -127,7 +95,7 @@ const reset = () => {
 
 const filter = () => {
     Inertia.get(
-        "/users",
+        "/responsibilities",
         {
             search: search.value,
             paginate: paginate.value,
@@ -152,7 +120,7 @@ const destroy = (id) => {
         cancelButtonText: "No",
     }).then((result) => {
         if (result.isConfirmed) {
-            Inertia.delete(`/users/${id}`);
+            Inertia.delete(`/responsibilities/${id}`);
         }
     });
 };

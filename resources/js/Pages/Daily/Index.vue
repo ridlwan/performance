@@ -31,7 +31,7 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-control" v-model="user" @change="filter">
-                                    <option value="All" selected>All Personel</option>
+                                    <option value="All" selected>All Personnel</option>
                                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                 </select>
                             </div>
@@ -56,7 +56,7 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-xs text-dark">Personel</th>
+                                        <th class="text-uppercase text-xs text-dark">Personnel</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Date</th>
                                         <th class="text-center text-uppercase text-xs text-dark">Start</th>
                                         <th class="text-center text-uppercase text-xs text-dark">End</th>

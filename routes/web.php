@@ -9,6 +9,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ResponsibilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->middleware(['can:manage-profile']);
     Route::post('/profile/background', [ProfileController::class, 'updateBackground'])->middleware(['can:manage-profile']);
     Route::post('/profile/darkmode', [ProfileController::class, 'updateDarkMode'])->middleware(['can:manage-profile']);
+    Route::get('/reports/{report}/project', [ReportController::class, 'project'])->middleware(['can:view-report']);
     Route::get('/reports/{report}/export', [ReportController::class, 'export'])->middleware(['can:view-report']);
     Route::get('/reports/{report}/publish', [ReportController::class, 'publish'])->middleware(['can:manage-report']);
     Route::get('/reports/{report}/unpublish', [ReportController::class, 'unpublish'])->middleware(['can:manage-report']);
@@ -53,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{project}/open', [ProjectController::class, 'open'])->middleware(['can:manage-report']);
     Route::get('/projects/{project}/close', [ProjectController::class, 'close'])->middleware(['can:manage-report']);
     Route::resource('users', UserController::class)->middleware(['can:manage-account']);
+    Route::resource('responsibilities', ResponsibilityController::class)->middleware(['can:manage-account']);
     Route::resource('assignments', AssignmentController::class)->middleware(['can:manage-attendance']);;
 
     Route::get('/pusher', [DashboardController::class, 'pusher']);

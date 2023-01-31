@@ -208,7 +208,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-uppercase text-xs text-dark text-center">No</th>
-                                                <th class="text-uppercase text-xs text-dark">Personel</th>
+                                                <th class="text-uppercase text-xs text-dark">Personnel</th>
                                                 <th class="text-center text-uppercase text-xs text-dark">Role</th>
                                                 <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
                                             </tr>

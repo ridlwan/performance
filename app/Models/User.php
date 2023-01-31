@@ -60,6 +60,7 @@ class User extends Authenticatable
         'name',
         'email',
         'position',
+        'responsibility_id',
         'password',
         'avatar',
         'background',
@@ -115,6 +116,11 @@ class User extends Authenticatable
     
     public function getDarkModeTextAttribute() {
         return self::DARKMODE_ARRAY[$this->dark_mode];
+    }
+    
+    public function responsibility()
+    {
+        return $this->belongsTo(Responsibility::class);
     }
 
     public function attendances()

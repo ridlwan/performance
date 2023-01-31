@@ -3,7 +3,7 @@
         <template #heading>
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                 <li class="breadcrumb-item text-white">
-                    <Link href="/users" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Master Account</h6></Link>
+                    <Link href="/users" class="opacity-5 text-white"><h6 class="font-weight-bolder text-white mb-0">Account</h6></Link>
                 </li>
                 <li class="breadcrumb-item text-white active" style="width: 300px">
                     <h6 class="font-weight-bolder text-white mb-0">Edit Account</h6>
@@ -73,13 +73,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label">Teammate</label>
-                                        <select class="form-control" v-model="form.teammate" :class="{ 'is-invalid': form.errors.teammate }">
-                                            <option v-for="(team, index) in teammate" :key="team" :value="index">
-                                                {{ team }}
+                                        <label class="form-control-label">Responsibility</label>
+                                        <select class="form-control" v-model="form.responsibility_id" :class="{ 'is-invalid': form.errors.responsibility_id }">
+                                            <option v-for="responsibility in responsibilities" :key="responsibility.id" :value="responsibility.id">
+                                                {{ responsibility.name }}
                                             </option>
                                         </select>
-                                        <div v-if="form.errors.teammate" class="invalid-feedback">{{ form.errors.teammate }}</div>
+                                        <div v-if="form.errors.responsibility_id" class="invalid-feedback">{{ form.errors.responsibility_id }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -95,6 +95,19 @@
                                         <div v-if="form.errors.reported" class="invalid-feedback">{{ form.errors.reported }}</div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Teammate</label>
+                                        <select class="form-control" v-model="form.teammate" :class="{ 'is-invalid': form.errors.teammate }">
+                                            <option v-for="(team, index) in teammate" :key="team" :value="index">
+                                                {{ team }}
+                                            </option>
+                                        </select>
+                                        <div v-if="form.errors.teammate" class="invalid-feedback">{{ form.errors.teammate }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Order</label>
@@ -118,6 +131,7 @@ import { useForm, Link } from "@inertiajs/inertia-vue3";
 const props = defineProps({
     user: Object,
     roles: Array,
+    responsibilities: Array,
     userRole: String,
     teammate: Array,
     reported: Array,
@@ -127,6 +141,7 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     position: props.user.position,
+    responsibility_id: props.user.responsibility_id,
     password: null,
     role: props.userRole,
     teammate: props.user.teammate,

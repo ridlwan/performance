@@ -12,6 +12,7 @@ use App\Models\Attendance;
 use App\Events\StatusEvent;
 use Illuminate\Http\Request;
 use App\Events\ActivityEvent;
+use App\Models\Responsibility;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,13 +62,22 @@ class DashboardController extends Controller
         } else {
             $seletedProject = 'All';
         }
+        
+        if ($request->get('seletedResponsibility')) {
+            $seletedResponsibility = $request->get('seletedResponsibility');
+        } else {
+            $seletedResponsibility = 'All';
+        }
 
         $activities = Activity::with('attendance.user', 'project')
             ->whereDate('created_at', Carbon::now())
-            ->whereHas('attendance.user', function ($query) use ($seletedUser) {
+            ->whereHas('attendance.user', function ($query) use ($seletedUser, $seletedResponsibility) {
                 $query->where('teammate', User::TEAMMATE_YES)
                 ->when($seletedUser != 'All', function ($query) use ($seletedUser) {
                     $query->where('id', $seletedUser);
+                })
+                ->when($seletedResponsibility != 'All', function ($query) use ($seletedResponsibility) {
+                    $query->where('responsibility_id', $seletedResponsibility);
                 });
             })
             ->when($status == 'Completed', function ($query) {
@@ -91,6 +101,8 @@ class DashboardController extends Controller
             ->orderBy('order')->get();
         
         $projects = Project::where('status', Project::STATUS_OPEN)->get();
+        
+        $responsibilities = Responsibility::get();
 
         if ($request->data) {
             return response()->json([
@@ -104,7 +116,9 @@ class DashboardController extends Controller
                 'status' => $status,
                 'seletedUser' => $seletedUser,
                 'projects' => $projects,
-                'seletedProject' => $seletedProject
+                'seletedProject' => $seletedProject,
+                'responsibilities' => $responsibilities,
+                'seletedResponsibility' => $seletedResponsibility
             ]);
         } else {
             return Inertia::render('Dashboard/Index', [
@@ -119,7 +133,9 @@ class DashboardController extends Controller
                 'seletedUser' => $seletedUser,
                 'teammate' => $teammate,
                 'projects' => $projects,
-                'seletedProject' => $seletedProject
+                'seletedProject' => $seletedProject,
+                'responsibilities' => $responsibilities,
+                'seletedResponsibility' => $seletedResponsibility
             ]);
         }
     }

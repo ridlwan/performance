@@ -17,9 +17,9 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-xs text-dark">Personel</th>
-                                            <th class="text-center text-uppercase text-xs text-dark">Role</th>
-                                            <th class="text-center text-uppercase text-xs text-dark">Project Assignment</th>
+                                            <th class="text-uppercase text-xs text-dark">Personnel</th>
+                                            <th class="text-center text-uppercase text-xs text-dark">Position</th>
+                                            <th class="text-center text-uppercase text-xs text-dark">Project</th>
                                         </tr>
                                     </thead>
                                     <tbody>
