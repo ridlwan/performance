@@ -3,7 +3,7 @@
         <tr>
             <th><strong>Date</strong></th>
             <th><strong>Hour</strong></th>
-            <th><strong>Project</strong></th>
+            <th><strong>Assignment</strong></th>
             <th><strong>Activity</strong></th>
             <th><strong>Time Spent</strong></th>
         </tr>
