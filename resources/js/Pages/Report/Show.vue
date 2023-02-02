@@ -375,9 +375,9 @@
             </div>
         </div>
 
-        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
-        <a href="javascript:;" id="openProjectModal" data-bs-toggle="modal" data-bs-target="#projectModal" hidden></a>
-        <a href="javascript:;" id="openUserProjectModal" data-bs-toggle="modal" data-bs-target="#userProjectModal" hidden></a>
+        <a href="javascript:;" ref="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
+        <a href="javascript:;" ref="openProjectModal" data-bs-toggle="modal" data-bs-target="#projectModal" hidden></a>
+        <a href="javascript:;" ref="openUserProjectModal" data-bs-toggle="modal" data-bs-target="#userProjectModal" hidden></a>
     </Layout>
 </template>
 
@@ -437,6 +437,10 @@ let personnelInchargeSeries = ref([]);
 let personnelInchargeChart = ref({});
 let responsibilityInchargeSeries = ref([]);
 let responsibilityInchargeChart = ref({});
+
+const openActivityModal = ref(null);
+const openProjectModal = ref(null);
+const openUserProjectModal = ref(null);
 
 onBeforeMount(() => {
     if (props.showChart) {
@@ -670,7 +674,7 @@ const showActivitiesData = (event, chartContext, config) => {
             }
             username.value = props.dailySeries[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
-            document.getElementById("openActivityModal").click();
+            openActivityModal.value.click();
         });
 };
 
@@ -744,7 +748,7 @@ const showInchargeData = (event, chartContext, config) => {
                 },
             };
 
-            document.getElementById("openProjectModal").click();
+            openProjectModal.value.click();
         });
 };
 
@@ -760,7 +764,7 @@ const showUserInchargeData = (user, projectName) => {
             username.value = user.name;
             project.value = projectName;
             activities.value = response.data;
-            document.getElementById("openUserProjectModal").click();
+            openUserProjectModal.value.click();
         });
 };
 

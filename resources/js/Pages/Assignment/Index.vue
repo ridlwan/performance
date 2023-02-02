@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal" id="closeProjectModal">Close</button>
+                            <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal" ref="closeProjectModal">Close</button>
                             <button type="button" class="mt-0 mb-0 btn bg-gradient-primary" @click="addProject">Assign</button>
                         </div>
                     </form>
@@ -112,12 +112,14 @@ const openProjectModal = (id, index) => {
     userIndex.value = index;
 };
 
+const closeProjectModal = ref(null);
+
 const addProject = () => {
     if (!props.users[userIndex.value].assignments.find((data) => data.project_id === form.project_id)) {
         form.post("/assignments", {
             preserveScroll: true,
             onSuccess: () => {
-                document.getElementById("closeProjectModal").click();
+                closeProjectModal.value.click();
                 reset();
             },
         });

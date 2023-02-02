@@ -272,7 +272,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal" id="closeProjectModal">Close</button>
+                        <button type="button" class="mt-0 mb-0 btn bg-gradient-default" data-bs-dismiss="modal" ref="closeProjectModal">Close</button>
                         <button type="button" class="mt-0 mb-0 btn bg-gradient-success" @click="addProject">Add</button>
                     </div>
                 </div>
@@ -314,6 +314,7 @@ const form = useForm({
 
 let userResponsibilityIndex = ref(null);
 let responsibilityProjectId = ref(null);
+const closeProjectModal = ref(null);
 
 onMounted(() => {
     props.projects.forEach((project) => {
@@ -350,7 +351,7 @@ const addProject = () => {
             project: props.allProjects.find((data) => data.id === responsibilityProjectId.value),
         });
 
-        document.getElementById("closeProjectModal").click();
+        closeProjectModal.value.click();
     } else {
         Swal.fire({
             icon: "error",

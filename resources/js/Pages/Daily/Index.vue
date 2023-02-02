@@ -111,7 +111,7 @@
                             </table>
                         </div>
                         <Pagination :links="attendances.links" />
-                        <a href="javascript:;" id="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
+                        <a href="javascript:;" ref="openActivityModal" data-bs-toggle="modal" data-bs-target="#activityModal" hidden></a>
                     </div>
                 </div>
             </div>
@@ -222,6 +222,7 @@ let endDate = ref(moment(String(props.filters.endDate)).format("YYYY-MM-DD"));
 let user = ref(props.filters.user);
 let paginate = ref(props.filters.paginate);
 let chartOptions = ref({});
+const openActivityModal = ref(null);
 
 onBeforeMount(() => {
     if (props.showChart) {
@@ -315,7 +316,7 @@ const showDetail = (event, chartContext, config) => {
             }
             username.value = props.series[config.seriesIndex].name;
             at.value = props.dates[config.dataPointIndex];
-            document.getElementById("openActivityModal").click();
+            openActivityModal.value.click();
         });
 };
 

@@ -11,8 +11,8 @@
     <tbody>
         @foreach ($activities as $activity)
             <tr>
-                <td>{{ $activity->created_at->format('D, d M y') }}</td>
-                <td>{{ $activity->created_at->format('H:i') }}</td>
+                <td>{{ $activity->start->format('D, d M y') }}</td>
+                <td>{{ $activity->start->format('H:i') }}</td>
                 <td>
                     @if ($activity->project)
                     {{ $activity->project->name }}
