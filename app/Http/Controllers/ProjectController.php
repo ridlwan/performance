@@ -39,7 +39,7 @@ class ProjectController extends Controller
         $filters['status'] = $status;
         $filters['paginate'] = $paginate;
 
-        $projects = Project::with('progresses')
+        $projects = Project::with('assignments')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })

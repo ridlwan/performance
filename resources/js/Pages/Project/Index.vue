@@ -69,7 +69,7 @@
                                             <a v-else href="javascript:;" class="text-warning font-weight-bold" v-tooltip="'Close'" @click="close(project.id)"><i class="fa-solid fa-folder-closed"></i></a>
 
                                             <Link :href="`/projects/${project.id}/edit`" class="text-primary font-weight-bold ms-2" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a v-if="project.progresses.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(project.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <a v-if="project.assignments.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(project.id)"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="projects.data.length < 1">
