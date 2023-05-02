@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
+                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="submitAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
                                 </div>
                             </div>
                             <div v-else class="row" style="padding: 0; margin: 0">
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="javascript:;" class="btn btn-primary d-lg-block" @click="addActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</a>
+                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="submitAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -109,7 +109,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="javascript:;" class="btn btn-warning d-lg-block" @click="updateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</a>
+                                    <button type="button" class="btn btn-warning d-lg-block" @click="updateActivity" :disabled="submitUpdateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</button>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -219,6 +219,8 @@ let editActivityID = ref(null);
 let startTime = ref(null);
 let outsideWorkingTime = ref(false);
 let projectAssignment = ref(props.projects);
+let submitAddActivity = ref(false);
+let submitUpdateActivity = ref(false);
 
 const status = computed(() => usePage().props.value.auth.user.status);
 const username = computed(() => usePage().props.value.auth.user.username);
@@ -342,10 +344,12 @@ const openAddActivityForm = () => {
 };
 
 const addActivity = () => {
+    submitAddActivity.value = true;
     form.start = startTime.value.hours + ":" + startTime.value.minutes;
     form.post("/attendance", {
         onSuccess: () => {
             addActivityForm.value = false;
+            submitAddActivity.value = false;
             form.description = null;
             form.start = null;
             scrollDown();
@@ -370,9 +374,11 @@ const openEditActivityForm = (activity) => {
 };
 
 const updateActivity = () => {
+    submitUpdateActivity.value = true;
     form.post("/attendance/update/" + editActivityID.value, {
         onSuccess: () => {
             editActivityForm.value = false;
+            submitUpdateActivity.value = false;
             form.description_updated = null;
             form.project_id_updated = null;
             editActivityID.value = null;
@@ -391,6 +397,8 @@ const updateActivity = () => {
 const closeActivityForm = () => {
     addActivityForm.value = false;
     editActivityForm.value = false;
+    submitAddActivity.value = false;
+    submitUpdateActivity.value = false;
 };
 
 const checkOut = () => {
