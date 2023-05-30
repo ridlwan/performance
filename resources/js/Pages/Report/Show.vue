@@ -100,6 +100,26 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="outOfOfficeChart" :series="outOfOfficeSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body mt-4 px-0 pt-0 pb-2">
+                        <div class="p-3 pt-0 pb-0">
+                            <apexchart type="bar" height="400" :options="outSickChart" :series="outSickSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-12">
@@ -257,7 +277,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title opacity-7" style="color: black !important">{{ project }}</h6>
+                        <h6 class="modal-title opacity-7" style="color: black !important">{{ project }} ({{ parseFloat((currentInchargeSeries / totalInchargeSeries) * 100).toFixed(1) }}%)</h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black; font-size: 20px; padding-top: 0px">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -394,7 +414,6 @@ import { usePage, Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import Layout from "../../Components/Layout.vue";
 import Pagination from "../../Components/Pagination.vue";
-import moment from "moment";
 import apexchart from "vue3-apexcharts";
 import "axios";
 
@@ -411,11 +430,14 @@ const props = defineProps({
     dates: Array,
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
+    outOfOfficeSeries: Array,
+    outSickSeries: Array,
     supportSeries: Array,
     supportData: Array,
     supportSla: Number,
     inchargeSeries: Array,
     inchargeData: Array,
+    totalInchargeSeries: Number,
 });
 
 let activities = ref([]);
@@ -429,20 +451,29 @@ let supportChart = ref({});
 let inchargeChart = ref({});
 let performanceHoursChart = ref({});
 let performancePercentageChart = ref({});
+let outOfOfficeChart = ref({});
+let outSickChart = ref({});
 let dailyChart = ref({});
 
 let project = ref(null);
 let personnels = ref([]);
+let userAliases = ref([]);
 let personnelInchargeSeries = ref([]);
 let personnelInchargeChart = ref({});
 let responsibilityInchargeSeries = ref([]);
 let responsibilityInchargeChart = ref({});
+let currentInchargeSeries = ref(null);
 
 const openActivityModal = ref(null);
 const openProjectModal = ref(null);
 const openUserProjectModal = ref(null);
 
 onBeforeMount(() => {
+    props.reportedUsers.forEach((reportedUser) => {
+        let alias = reportedUser.split(" ").slice(0, 1).join(" ");
+        userAliases.value.push(alias);
+    });
+
     if (props.showChart) {
         renderDaily();
     }
@@ -531,7 +562,7 @@ const renderReport = () => {
             },
         },
         xaxis: {
-            categories: props.reportedUsers,
+            categories: userAliases.value,
         },
         yaxis: {
             title: {
@@ -570,7 +601,7 @@ const renderReport = () => {
             },
         },
         xaxis: {
-            categories: props.reportedUsers,
+            categories: userAliases.value,
         },
         yaxis: {
             title: {
@@ -590,6 +621,114 @@ const renderReport = () => {
             y: {
                 formatter: function (val) {
                     return val + "%";
+                },
+            },
+        },
+    };
+    outOfOfficeChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: `Personnel Out of Office`,
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "50%",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + " days";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: userAliases.value,
+        },
+        yaxis: {
+            show: false,
+            labels: {
+                show: false,
+            },
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+        },
+        colors: ["#ff7300"],
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + " days";
+                },
+            },
+        },
+    };
+    outSickChart.value = {
+        chart: {
+            type: "bar",
+            height: 400,
+        },
+        title: {
+            text: `Personnel Out Sick`,
+            align: "left",
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "50%",
+                dataLabels: {
+                    position: "top",
+                },
+            },
+        },
+        dataLabels: {
+            formatter: function (val) {
+                return val + " days";
+            },
+            offsetY: -20,
+            style: {
+                fontSize: "12px",
+                colors: ["#304758"],
+            },
+        },
+        xaxis: {
+            categories: userAliases.value,
+        },
+        yaxis: {
+            show: false,
+            labels: {
+                show: false,
+            },
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+        },
+        colors: ["#f74a4a"],
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + " days";
                 },
             },
         },
@@ -686,6 +825,9 @@ const resetActivity = () => {
 };
 
 const showInchargeData = (event, chartContext, config) => {
+    currentInchargeSeries.value = props.inchargeSeries[config.dataPointIndex];
+    // alert(config.dataPointIndex);
+    // console.log(chartContext, config);
     axios
         .get(`/reports/${props.report.id}/project`, {
             params: {

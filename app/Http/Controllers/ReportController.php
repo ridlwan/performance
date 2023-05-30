@@ -39,7 +39,7 @@ class ReportController extends Controller
         } else {
             $publihed = false;
         }
-        
+
         $search = $request->get('search');
 
         if ($request->get('paginate')) {
@@ -52,8 +52,8 @@ class ReportController extends Controller
         $filters['paginate'] = $paginate;
 
         $reports = Report::when($search, function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%");
-            })
+            $query->where('name', 'LIKE', "%{$search}%");
+        })
             ->when($publihed, function ($query) {
                 $query->where('published', Report::PUBLISHED_YES);
             })
@@ -208,7 +208,7 @@ class ReportController extends Controller
         $users = User::where('reported', User::REPORTED_YES)
             ->where('teammate', User::TEAMMATE_YES)
             ->orderBy('order')->get();
-        
+
         $userSeries = User::where('reported', User::REPORTED_YES)
             ->where('teammate', User::TEAMMATE_YES)
             ->when($user != 'All', function ($query) use ($user) {
@@ -253,9 +253,14 @@ class ReportController extends Controller
 
         $performanceHoursSeries = [];
         $performancePercentageSeries = [];
-        
+        $outOfOfficeSeries = [];
+        $outSickSeries = [];
+
         $performanceHours = [];
         $performancePercentage = [];
+        $outOfOffice = [];
+        $outSick = [];
+
         foreach ($users as $user) {
             $duration = Attendance::where('user_id', $user->id)
                 ->whereDate('created_at', '>=', $startDate)
@@ -270,9 +275,21 @@ class ReportController extends Controller
             }
 
             $percentage = floor(($duration / ($mandays * 60)) * 100);
+
+            $outOfOfficeItem = Attendance::where('user_id', $user->id)
+                ->where('status', '=', Attendance::STATUS_OUT_OF_OFFICE)
+                ->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)->count();
             
+            $outSickItem = Attendance::where('user_id', $user->id)
+                ->where('status', '=', Attendance::STATUS_OUT_SICK)
+                ->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)->count();
+
             array_push($performanceHours, $hours);
             array_push($performancePercentage, $percentage);
+            array_push($outOfOffice, $outOfOfficeItem);
+            array_push($outSick, $outSickItem);
         }
 
         $performanceHoursData = [
@@ -284,9 +301,21 @@ class ReportController extends Controller
             'name' => 'Percentage',
             'data' => $performancePercentage
         ];
+        
+        $outOfOfficeData = [
+            'name' => 'Out of Office',
+            'data' => $outOfOffice
+        ];
+        
+        $outSickData = [
+            'name' => 'Out Sick',
+            'data' => $outSick
+        ];
 
         array_push($performanceHoursSeries, $performanceHoursData);
         array_push($performancePercentageSeries, $performancePercentageData);
+        array_push($outOfOfficeSeries, $outOfOfficeData);
+        array_push($outSickSeries, $outSickData);
 
         $supportSeries = [];
         $supportData = [];
@@ -347,7 +376,7 @@ class ReportController extends Controller
             ->whereHas('project')
             ->whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate)->get();
-            
+
         $inchargeData = [];
         foreach ($activities as $activity) {
             if (!in_array($activity->project->name, $inchargeData)) {
@@ -356,6 +385,7 @@ class ReportController extends Controller
         }
 
         $inchargeSeries = [];
+        $totalInchargeSeries = 0;
         foreach ($inchargeData as $incharge) {
             $projectDuration = 0;
             foreach ($activities as $activity) {
@@ -365,6 +395,7 @@ class ReportController extends Controller
             }
 
             array_push($inchargeSeries, (float) number_format(($projectDuration / 60), 1));
+            $totalInchargeSeries += (float) number_format(($projectDuration / 60), 1);
         }
 
         foreach ($users as $user) {
@@ -379,7 +410,7 @@ class ReportController extends Controller
 
             $user['responsibilities'] = $responsibilities;
         }
-        
+
         return Inertia::render('Report/Show', [
             'report' => $report,
             'attendances' => $attendances,
@@ -391,11 +422,14 @@ class ReportController extends Controller
             'dates' => $dates,
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
+            'outOfOfficeSeries' => $outOfOfficeSeries,
+            'outSickSeries' => $outSickSeries,
             'supportSeries' => $supportSeries,
             'supportData' => $supportData,
             'supportSla' => $supportSla,
             'inchargeSeries' => $inchargeSeries,
             'inchargeData' => $inchargeData,
+            'totalInchargeSeries' => $totalInchargeSeries,
         ]);
     }
 
@@ -465,7 +499,7 @@ class ReportController extends Controller
 
         return redirect('/reports')->with('updated', 'Report updated successfully');
     }
-    
+
     public function publish(Report $report)
     {
         $report->published = Report::PUBLISHED_YES;
@@ -473,7 +507,7 @@ class ReportController extends Controller
 
         return redirect('/reports')->with('created', 'Report published successfully');
     }
-    
+
     public function unpublish(Report $report)
     {
         $report->published = Report::PUBLISHED_NO;
@@ -482,12 +516,12 @@ class ReportController extends Controller
         return redirect('/reports')->with('updated', 'Report unpublished successfully');
     }
 
-    public function export(Report $report) 
+    public function export(Report $report)
     {
         return (new ActivitiesExport($report->start, $report->end))->download($report->name . '.xlsx');
     }
-    
-    public function project(Report $report, Request $request) 
+
+    public function project(Report $report, Request $request)
     {
         if ($request->user && $request->project) {
             if ($request->project == 'General') {
@@ -496,15 +530,15 @@ class ReportController extends Controller
                         $query->where('id', $request->user);
                     });
                 })
-                ->whereDoesntHave('project')
-                ->whereDate('created_at', '>=', $report->start)
-                ->whereDate('created_at', '<=', $report->end)->get();
+                    ->whereDoesntHave('project')
+                    ->whereDate('created_at', '>=', $report->start)
+                    ->whereDate('created_at', '<=', $report->end)->get();
             } else {
                 $activities = Activity::whereHas('attendance', function ($query) use ($request) {
-                        $query->whereHas('user', function ($query) use ($request) {
-                            $query->where('id', $request->user);
-                        });
-                    })
+                    $query->whereHas('user', function ($query) use ($request) {
+                        $query->where('id', $request->user);
+                    });
+                })
                     ->whereHas('project', function ($query) use ($request) {
                         $query->where('name', $request->project);
                     })
@@ -515,63 +549,63 @@ class ReportController extends Controller
             return $activities;
         } else {
             $personnels = User::whereHas('attendances', function ($query) use ($report, $request) {
-                    $query->whereHas('activities', function ($query) use ($report, $request) {
-                        $query->whereHas('project', function ($query) use ($request) {
-                                $query->where('name', $request->project);
-                            })
-                            ->whereDate('created_at', '>=', $report->start)
-                            ->whereDate('created_at', '<=', $report->end);
-                    });
-                })->get();
-            
+                $query->whereHas('activities', function ($query) use ($report, $request) {
+                    $query->whereHas('project', function ($query) use ($request) {
+                        $query->where('name', $request->project);
+                    })
+                        ->whereDate('created_at', '>=', $report->start)
+                        ->whereDate('created_at', '<=', $report->end);
+                });
+            })->get();
+
             $personnelInchargeSeries = [];
             foreach ($personnels as $personnel) {
                 $activities = Activity::whereHas('attendance', function ($query) use ($personnel) {
-                        $query->whereHas('user', function ($query) use ($personnel) {
-                            $query->where('id', $personnel->id);
-                        });
-                    })
+                    $query->whereHas('user', function ($query) use ($personnel) {
+                        $query->where('id', $personnel->id);
+                    });
+                })
                     ->whereHas('project', function ($query) use ($request) {
                         $query->where('name', $request->project);
                     })
                     ->whereDate('created_at', '>=', $report->start)
                     ->whereDate('created_at', '<=', $report->end)->get();
-    
+
                 $personnel['duration'] = $activities->sum('duration');
-    
+
                 array_push($personnelInchargeSeries, (float) number_format(($activities->sum('duration') / 60), 1));
             }
-    
+
             $responsibilities = Responsibility::whereHas('users', function ($query) use ($report, $request) {
                 $query->whereHas('attendances', function ($query) use ($report, $request) {
                     $query->whereHas('activities', function ($query) use ($report, $request) {
                         $query->whereHas('project', function ($query) use ($request) {
-                                $query->where('name', $request->project);
-                            })
+                            $query->where('name', $request->project);
+                        })
                             ->whereDate('created_at', '>=', $report->start)
                             ->whereDate('created_at', '<=', $report->end);
                     });
                 });
             })->get();
-    
+
             $responsibilityInchargeSeries = [];
             foreach ($responsibilities as $responsibility) {
                 $activities = Activity::whereHas('attendance', function ($query) use ($responsibility) {
-                        $query->whereHas('user', function ($query) use ($responsibility) {
-                            $query->whereHas('responsibility', function ($query) use ($responsibility) {
-                                $query->where('id', $responsibility->id);
-                            });
+                    $query->whereHas('user', function ($query) use ($responsibility) {
+                        $query->whereHas('responsibility', function ($query) use ($responsibility) {
+                            $query->where('id', $responsibility->id);
                         });
-                    })
+                    });
+                })
                     ->whereHas('project', function ($query) use ($request) {
                         $query->where('name', $request->project);
                     })
                     ->whereDate('created_at', '>=', $report->start)
                     ->whereDate('created_at', '<=', $report->end)->get();
-                
+
                 array_push($responsibilityInchargeSeries, (float) number_format(($activities->sum('duration') / 60), 1));
             }
-    
+
             return response()->json([
                 'personnels' => $personnels,
                 'personnelInchargeData' => $personnels->pluck('name'),
@@ -580,7 +614,6 @@ class ReportController extends Controller
                 'responsibilityInchargeSeries' => $responsibilityInchargeSeries
             ]);
         }
-
     }
 
     /**
