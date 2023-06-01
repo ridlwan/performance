@@ -204,6 +204,10 @@ class ReportController extends Controller
             ->orderBy('order')->get();
 
         $userSeries = User::where('reported', User::REPORTED_YES)
+            ->whereHas('attendances', function ($query) use ($startDate, $endDate) {
+                $query->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate);
+            })
             ->when($user != 'All', function ($query) use ($user) {
                 $query->where('id', $user);
             })
