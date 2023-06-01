@@ -61,7 +61,7 @@ window.Echo.channel("status-channel").listen(".status-event", (e) => {
             });
         }
 
-        if (e.type == "outOfOffice") {
+        if (e.type == "outOffice") {
             toast.error(e.user + " " + e.message, {
                 icon: "fas fa-person-walking-luggage ms-1",
             });

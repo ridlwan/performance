@@ -105,7 +105,7 @@
                 <div class="card mb-4">
                     <div class="card-body mt-4 px-0 pt-0 pb-2">
                         <div class="p-3 pt-0 pb-0">
-                            <apexchart type="bar" height="400" :options="outOfOfficeChart" :series="outOfOfficeSeries"></apexchart>
+                            <apexchart type="bar" height="400" :options="outOfficeChart" :series="outOfficeSeries"></apexchart>
                         </div>
                     </div>
                 </div>
@@ -430,7 +430,7 @@ const props = defineProps({
     dates: Array,
     performanceHoursSeries: Array,
     performancePercentageSeries: Array,
-    outOfOfficeSeries: Array,
+    outOfficeSeries: Array,
     outSickSeries: Array,
     supportSeries: Array,
     supportData: Array,
@@ -451,7 +451,7 @@ let supportChart = ref({});
 let inchargeChart = ref({});
 let performanceHoursChart = ref({});
 let performancePercentageChart = ref({});
-let outOfOfficeChart = ref({});
+let outOfficeChart = ref({});
 let outSickChart = ref({});
 let dailyChart = ref({});
 
@@ -625,7 +625,7 @@ const renderReport = () => {
             },
         },
     };
-    outOfOfficeChart.value = {
+    outOfficeChart.value = {
         chart: {
             type: "bar",
             height: 400,

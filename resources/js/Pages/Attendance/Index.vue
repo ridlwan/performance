@@ -148,7 +148,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
+                                        <a href="javascript:;" @click="outOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
                                             Out Office
                                             <i class="fas fa-person-walking-luggage ms-1"></i>
                                         </a>
@@ -476,7 +476,7 @@ const struggling = (id) => {
     });
 };
 
-const outOfOffice = () => {
+const outOffice = () => {
     Swal.fire({
         title: "Hey, Yo... <br> <i class='fa-solid fa-person-walking-luggage'></i>",
         text: "Are you unable to work today?",
@@ -498,7 +498,7 @@ const outOfOffice = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     disableCheckIn.value = true;
-                    Inertia.post("/attendance/out-of-office");
+                    Inertia.post("/attendance/out-office");
                     Swal.fire({
                         title: "Okay <br> <i class='fa-solid fa-person-walking-luggage'></i>",
                         text: "Whatever your business, we hope everything is fine and see ya tomorrow",

@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $workingOnsite = User::where('status', User::STATUS_WORKING_ONSITE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
-        $outOfOffice = User::where('status', User::STATUS_OUT_OFFICE)
+        $outOffice = User::where('status', User::STATUS_OUT_OFFICE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
         $outSick = User::where('status', User::STATUS_OUT_SICK)
@@ -108,7 +108,7 @@ class DashboardController extends Controller
             return response()->json([
                 'workingRemote' => $workingRemote,
                 'workingOnsite' => $workingOnsite,
-                'outOfOffice' => $outOfOffice,
+                'outOffice' => $outOffice,
                 'outSick' => $outSick,
                 'notAvailable' => $notAvailable,
                 'activities' => $activities,
@@ -124,7 +124,7 @@ class DashboardController extends Controller
             return Inertia::render('Dashboard/Index', [
                 'workingRemote' => $workingRemote,
                 'workingOnsite' => $workingOnsite,
-                'outOfOffice' => $outOfOffice,
+                'outOffice' => $outOffice,
                 'outSick' => $outSick,
                 'notAvailable' => $notAvailable,
                 'activities' => $activities,

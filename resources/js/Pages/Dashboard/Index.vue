@@ -74,14 +74,14 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Out Office</p>
-                                    <a v-if="outOfOfficeData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('outOfOffice')">
-                                        <h5 class="font-weight-bolder text-warning">{{ outOfOfficeData.length }}</h5></a
+                                    <a v-if="outOfficeData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" @click="showUser('outOffice')">
+                                        <h5 class="font-weight-bolder text-warning">{{ outOfficeData.length }}</h5></a
                                     >
-                                    <h5 v-else class="font-weight-bolder text-warning">{{ outOfOfficeData.length }}</h5>
+                                    <h5 v-else class="font-weight-bolder text-warning">{{ outOfficeData.length }}</h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
-                                <a v-if="outOfOfficeData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" class="icon icon-shape bg-gradient-primary text-center rounded-circle" @click="showUser('outOfOffice')">
+                                <a v-if="outOfficeData.length > 0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#userModal" class="icon icon-shape bg-gradient-primary text-center rounded-circle" @click="showUser('outOffice')">
                                     <h3>
                                         <i class="fa-solid fa-person-walking-luggage mt-2 text-white"></i>
                                     </h3>
@@ -302,7 +302,7 @@ import "axios";
 const props = defineProps({
     workingRemote: Array,
     workingOnsite: Array,
-    outOfOffice: Array,
+    outOffice: Array,
     outSick: Array,
     notAvailable: Array,
     activities: Array,
@@ -318,7 +318,7 @@ const props = defineProps({
 
 let workingRemoteData = ref(props.workingRemote);
 let workingOnsiteData = ref(props.workingOnsite);
-let outOfOfficeData = ref(props.outOfOffice);
+let outOfficeData = ref(props.outOffice);
 let outSickData = ref(props.outSick);
 let notAvailableData = ref(props.notAvailable);
 let activitiesData = ref(props.activities);
@@ -353,7 +353,7 @@ const getData = () => {
         .then((response) => {
             workingRemoteData.value = response.data.workingRemote;
             workingOnsiteData.value = response.data.workingOnsite;
-            outOfOfficeData.value = response.data.outOfOffice;
+            outOfficeData.value = response.data.outOffice;
             outSickData.value = response.data.outSick;
             notAvailableData.value = response.data.notAvailable;
             activitiesData.value = response.data.activities;
@@ -381,8 +381,8 @@ const showUser = (status) => {
         userListTitle.value = "Working Onsite";
     }
 
-    if (status == "outOfOffice") {
-        users.value = outOfOfficeData.value;
+    if (status == "outOffice") {
+        users.value = outOfficeData.value;
         userListTitle.value = "Out Office";
     }
 

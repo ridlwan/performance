@@ -351,7 +351,7 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function outOfOffice()
+    public function outOffice()
     {
         Attendance::create([
             'user_id' => Auth::user()->id,
@@ -361,7 +361,7 @@ class AttendanceController extends Controller
         Auth::user()->status = User::STATUS_OUT_OFFICE;
         Auth::user()->save();
 
-        event(new StatusEvent(Auth::user()->name, 'is marked out off office', 'outOfOffice'));
+        event(new StatusEvent(Auth::user()->name, 'is marked out off office', 'outOffice'));
         
         return redirect()->back();
     }

@@ -206,7 +206,10 @@ class ReportController extends Controller
         $attendances->appends($queryString);
 
         $users = User::where('reported', User::REPORTED_YES)
-            ->where('teammate', User::TEAMMATE_YES)
+            ->whereHas('attendances', function ($query) use ($startDate, $endDate) {
+                $query->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate);
+            })
             ->orderBy('order')->get();
 
         $userSeries = User::where('reported', User::REPORTED_YES)
@@ -253,12 +256,12 @@ class ReportController extends Controller
 
         $performanceHoursSeries = [];
         $performancePercentageSeries = [];
-        $outOfOfficeSeries = [];
+        $outOfficeSeries = [];
         $outSickSeries = [];
 
         $performanceHours = [];
         $performancePercentage = [];
-        $outOfOffice = [];
+        $outOffice = [];
         $outSick = [];
 
         foreach ($users as $user) {
@@ -276,11 +279,11 @@ class ReportController extends Controller
 
             $percentage = floor(($duration / ($mandays * 60)) * 100);
 
-            $outOfOfficeItem = Attendance::where('user_id', $user->id)
+            $outOfficeItem = Attendance::where('user_id', $user->id)
                 ->where('status', '=', Attendance::STATUS_OUT_OFFICE)
                 ->whereDate('created_at', '>=', $startDate)
                 ->whereDate('created_at', '<=', $endDate)->count();
-            
+
             $outSickItem = Attendance::where('user_id', $user->id)
                 ->where('status', '=', Attendance::STATUS_OUT_SICK)
                 ->whereDate('created_at', '>=', $startDate)
@@ -288,7 +291,7 @@ class ReportController extends Controller
 
             array_push($performanceHours, $hours);
             array_push($performancePercentage, $percentage);
-            array_push($outOfOffice, $outOfOfficeItem);
+            array_push($outOffice, $outOfficeItem);
             array_push($outSick, $outSickItem);
         }
 
@@ -301,12 +304,12 @@ class ReportController extends Controller
             'name' => 'Percentage',
             'data' => $performancePercentage
         ];
-        
-        $outOfOfficeData = [
+
+        $outOfficeData = [
             'name' => 'Out Office',
-            'data' => $outOfOffice
+            'data' => $outOffice
         ];
-        
+
         $outSickData = [
             'name' => 'Out Sick',
             'data' => $outSick
@@ -314,7 +317,7 @@ class ReportController extends Controller
 
         array_push($performanceHoursSeries, $performanceHoursData);
         array_push($performancePercentageSeries, $performancePercentageData);
-        array_push($outOfOfficeSeries, $outOfOfficeData);
+        array_push($outOfficeSeries, $outOfficeData);
         array_push($outSickSeries, $outSickData);
 
         $supportSeries = [];
@@ -422,7 +425,7 @@ class ReportController extends Controller
             'dates' => $dates,
             'performanceHoursSeries' => $performanceHoursSeries,
             'performancePercentageSeries' => $performancePercentageSeries,
-            'outOfOfficeSeries' => $outOfOfficeSeries,
+            'outOfficeSeries' => $outOfficeSeries,
             'outSickSeries' => $outSickSeries,
             'supportSeries' => $supportSeries,
             'supportData' => $supportData,
