@@ -155,11 +155,6 @@ import { ref, onMounted } from "vue";
 import { useForm, Link } from "@inertiajs/inertia-vue3";
 import Swal from "sweetalert2";
 
-const props = defineProps({
-    projects: Array,
-    users: Array,
-});
-
 const form = useForm({
     name: null,
     start: null,

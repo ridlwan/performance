@@ -84,15 +84,7 @@ class ReportController extends Controller
 
         $allProjects = Project::where('status', Project::STATUS_OPEN)->get();
 
-        $users = User::where('reported', User::REPORTED_YES)
-            ->where('teammate', User::TEAMMATE_YES)
-            ->orderBy('order')->get();
-
-        return Inertia::render('Report/Create', [
-            'projects' => $projects,
-            'allProjects' => $allProjects,
-            'users' => $users
-        ]);
+        return Inertia::render('Report/Create');
     }
 
     /**
@@ -188,7 +180,6 @@ class ReportController extends Controller
             ->whereDate('created_at', '<=', $endDate)
             ->whereHas('user', function ($query) use ($user) {
                 $query->where('reported', User::REPORTED_YES)
-                    ->where('teammate', User::TEAMMATE_YES)
                     ->when($user != 'All', function ($query) use ($user) {
                         $query->where('id', $user);
                     });
@@ -213,7 +204,6 @@ class ReportController extends Controller
             ->orderBy('order')->get();
 
         $userSeries = User::where('reported', User::REPORTED_YES)
-            ->where('teammate', User::TEAMMATE_YES)
             ->when($user != 'All', function ($query) use ($user) {
                 $query->where('id', $user);
             })
