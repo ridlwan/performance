@@ -631,7 +631,7 @@ const renderReport = () => {
             height: 400,
         },
         title: {
-            text: `Personnel Out of Office`,
+            text: `Personnel Out Office`,
             align: "left",
         },
         plotOptions: {
@@ -802,7 +802,7 @@ const showActivitiesData = (event, chartContext, config) => {
             },
         })
         .then((response) => {
-            if (response.data == "Out of Office" || response.data == "Out Sick" || response.data == "Not Available") {
+            if (response.data == "Out Office" || response.data == "Out Sick" || response.data == "Not Available") {
                 status.value = response.data;
             } else {
                 if (response.data == "Working") {

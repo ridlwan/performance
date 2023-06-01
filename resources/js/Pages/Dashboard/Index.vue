@@ -383,7 +383,7 @@ const showUser = (status) => {
 
     if (status == "outOfOffice") {
         users.value = outOfOfficeData.value;
-        userListTitle.value = "Ouf of Office";
+        userListTitle.value = "Out Office";
     }
 
     if (status == "outSick") {

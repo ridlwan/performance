@@ -16,14 +16,14 @@ class User extends Authenticatable
     const STATUS_NOT_AVAILABLE = 0;
     const STATUS_WORKING_REMOTE = 1;
     const STATUS_WORKING_ONSITE = 2;
-    const STATUS_OUT_OF_OFFICE = 3;
+    const STATUS_OUT_OFFICE = 3;
     const STATUS_OUT_SICK = 4;
 
     const STATUS_ARRAY = [
         self::STATUS_NOT_AVAILABLE => 'Not Available',
         self::STATUS_WORKING_REMOTE => 'Working Remote',
         self::STATUS_WORKING_ONSITE => 'Working Onsite',
-        self::STATUS_OUT_OF_OFFICE => 'Out of Office',
+        self::STATUS_OUT_OFFICE => 'Out Office',
         self::STATUS_OUT_SICK => 'Out Sick',
     ];
     

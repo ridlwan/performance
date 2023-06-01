@@ -10,12 +10,12 @@ class Attendance extends Model
     use HasFactory;
 
     const STATUS_WORKING = 0;
-    const STATUS_OUT_OF_OFFICE = 1;
+    const STATUS_OUT_OFFICE = 1;
     const STATUS_OUT_SICK = 2;
 
     const STATUS_ARRAY = [
         self::STATUS_WORKING => 'Working',
-        self::STATUS_OUT_OF_OFFICE => 'Out of Office',
+        self::STATUS_OUT_OFFICE => 'Out Office',
         self::STATUS_OUT_SICK => 'Out Sick',
     ];
 

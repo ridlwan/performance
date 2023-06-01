@@ -277,7 +277,7 @@ class ReportController extends Controller
             $percentage = floor(($duration / ($mandays * 60)) * 100);
 
             $outOfOfficeItem = Attendance::where('user_id', $user->id)
-                ->where('status', '=', Attendance::STATUS_OUT_OF_OFFICE)
+                ->where('status', '=', Attendance::STATUS_OUT_OFFICE)
                 ->whereDate('created_at', '>=', $startDate)
                 ->whereDate('created_at', '<=', $endDate)->count();
             
@@ -303,7 +303,7 @@ class ReportController extends Controller
         ];
         
         $outOfOfficeData = [
-            'name' => 'Out of Office',
+            'name' => 'Out Office',
             'data' => $outOfOffice
         ];
         

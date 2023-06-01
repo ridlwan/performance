@@ -305,7 +305,7 @@ const showDetail = (event, chartContext, config) => {
             },
         })
         .then((response) => {
-            if (response.data == "Out of Office" || response.data == "Out Sick" || response.data == "Not Available") {
+            if (response.data == "Out Office" || response.data == "Out Sick" || response.data == "Not Available") {
                 status.value = response.data;
             } else {
                 if (response.data == "Working") {

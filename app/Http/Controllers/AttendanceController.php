@@ -355,10 +355,10 @@ class AttendanceController extends Controller
     {
         Attendance::create([
             'user_id' => Auth::user()->id,
-            'status' => Attendance::STATUS_OUT_OF_OFFICE
+            'status' => Attendance::STATUS_OUT_OFFICE
         ]);
 
-        Auth::user()->status = User::STATUS_OUT_OF_OFFICE;
+        Auth::user()->status = User::STATUS_OUT_OFFICE;
         Auth::user()->save();
 
         event(new StatusEvent(Auth::user()->name, 'is marked out off office', 'outOfOffice'));

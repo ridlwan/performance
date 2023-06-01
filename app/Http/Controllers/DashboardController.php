@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $workingOnsite = User::where('status', User::STATUS_WORKING_ONSITE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
-        $outOfOffice = User::where('status', User::STATUS_OUT_OF_OFFICE)
+        $outOfOffice = User::where('status', User::STATUS_OUT_OFFICE)
             ->where('teammate', User::TEAMMATE_YES)->get();
 
         $outSick = User::where('status', User::STATUS_OUT_SICK)

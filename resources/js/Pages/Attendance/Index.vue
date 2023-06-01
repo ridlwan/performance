@@ -10,7 +10,7 @@
                     <div class="card-header pb-0">
                         <div class="d-flex align-items-center">
                             <p class="text-uppercase text-sm text-dark">Your activity</p>
-                            <button class="btn bg-gradient-danger ms-auto" @click="checkOut">Check Out <i class="fas fa-briefcase ms-1"></i></button>
+                            <button class="btn bg-gradient-danger ms-auto" @click="checkOut" :disabled="disableCheckOut">Check Out <i class="fas fa-briefcase ms-1"></i></button>
                         </div>
                     </div>
                     <div class="card-body pt-0">
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="submitAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
+                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="disableAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
                                 </div>
                             </div>
                             <div v-else class="row" style="padding: 0; margin: 0">
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="submitAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
+                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="disableAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -109,7 +109,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-warning d-lg-block" @click="updateActivity" :disabled="submitUpdateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</button>
+                                    <button type="button" class="btn btn-warning d-lg-block" @click="updateActivity" :disabled="disableUpdateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</button>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -133,12 +133,12 @@
                             <img src="/assets/img/logo.png" class="img-fluid" />
                         </div>
                         <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
-                        <div v-if="status == 'Out of Office' || status == 'Out Sick' || outsideWorkingTime" class="row text-center mt-6 mb-2">
+                        <div v-if="status == 'Out Office' || status == 'Out Sick' || outsideWorkingTime" class="row text-center mt-6 mb-2">
                             <span class="card-description opacity-7">Wish you all the best</span>
                         </div>
                         <div v-else>
                             <div class="row text-center">
-                                <button @click="checkIn" class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3">
+                                <button @click="checkIn" class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3" :disabled="disableCheckIn">
                                     Check In
                                     <i class="fas fa-laptop-code ms-1"></i>
                                 </button>
@@ -148,13 +148,13 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0">
-                                            Out of Office
+                                        <a href="javascript:;" @click="outOfOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
+                                            Out Office
                                             <i class="fas fa-person-walking-luggage ms-1"></i>
                                         </a>
                                     </div>
                                     <div class="col-md-6 text-end">
-                                        <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0">
+                                        <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
                                             Out Sick
                                             <i class="fas fa-bed ms-1"></i>
                                         </a>
@@ -219,8 +219,10 @@ let editActivityID = ref(null);
 let startTime = ref(null);
 let outsideWorkingTime = ref(false);
 let projectAssignment = ref(props.projects);
-let submitAddActivity = ref(false);
-let submitUpdateActivity = ref(false);
+let disableCheckIn = ref(false);
+let disableCheckOut = ref(false);
+let disableAddActivity = ref(false);
+let disableUpdateActivity = ref(false);
 
 const status = computed(() => usePage().props.value.auth.user.status);
 const username = computed(() => usePage().props.value.auth.user.username);
@@ -292,6 +294,7 @@ const definePosition = () => {
         allowOutsideClick: false,
     }).then((result) => {
         if (result.isConfirmed) {
+            disableCheckIn.value = true;
             Inertia.post("/attendance/check-in", {
                 position: "onsite",
             });
@@ -302,6 +305,7 @@ const definePosition = () => {
                 alertLogin();
             }
         } else if (result.isDenied) {
+            disableCheckIn.value = true;
             Inertia.post("/attendance/check-in", {
                 position: "remote",
             });
@@ -335,6 +339,7 @@ const alertRelogin = () => {
 
 const openAddActivityForm = () => {
     addActivityForm.value = true;
+    disableCheckOut.value = true;
     form.errors = [];
     startTime.value = {
         hours: new Date().getHours(),
@@ -344,12 +349,13 @@ const openAddActivityForm = () => {
 };
 
 const addActivity = () => {
-    submitAddActivity.value = true;
+    disableAddActivity.value = true;
     form.start = startTime.value.hours + ":" + startTime.value.minutes;
     form.post("/attendance", {
         onSuccess: () => {
             addActivityForm.value = false;
-            submitAddActivity.value = false;
+            disableAddActivity.value = false;
+            disableCheckOut.value = false;
             form.description = null;
             form.start = null;
             scrollDown();
@@ -367,6 +373,7 @@ const addActivity = () => {
 const openEditActivityForm = (activity) => {
     addActivityForm.value = false;
     editActivityForm.value = true;
+    disableCheckOut.value = true;
     form.description_updated = activity.description;
     form.project_id_updated = activity.project_id;
     editActivityID.value = activity.id;
@@ -374,11 +381,12 @@ const openEditActivityForm = (activity) => {
 };
 
 const updateActivity = () => {
-    submitUpdateActivity.value = true;
+    disableUpdateActivity.value = true;
     form.post("/attendance/update/" + editActivityID.value, {
         onSuccess: () => {
             editActivityForm.value = false;
-            submitUpdateActivity.value = false;
+            disableUpdateActivity.value = false;
+            disableCheckOut.value = false;
             form.description_updated = null;
             form.project_id_updated = null;
             editActivityID.value = null;
@@ -397,8 +405,9 @@ const updateActivity = () => {
 const closeActivityForm = () => {
     addActivityForm.value = false;
     editActivityForm.value = false;
-    submitAddActivity.value = false;
-    submitUpdateActivity.value = false;
+    disableAddActivity.value = false;
+    disableUpdateActivity.value = false;
+    disableCheckOut.value = false;
 };
 
 const checkOut = () => {
@@ -420,6 +429,7 @@ const checkOut = () => {
             cancelButtonText: "Not yet <i class='fa-solid fa-person-digging'></i>",
         }).then((result) => {
             if (result.isConfirmed) {
+                disableCheckOut.value = true;
                 Inertia.post("/attendance/check-out");
                 Swal.fire({
                     title: "You're out! <br> <i class='fa-solid fa-child-reaching'></i>",
@@ -487,6 +497,7 @@ const outOfOffice = () => {
                 cancelButtonText: "Not yet",
             }).then((result) => {
                 if (result.isConfirmed) {
+                    disableCheckIn.value = true;
                     Inertia.post("/attendance/out-of-office");
                     Swal.fire({
                         title: "Okay <br> <i class='fa-solid fa-person-walking-luggage'></i>",
@@ -521,6 +532,7 @@ const outSick = () => {
                 cancelButtonText: "Not yet",
             }).then((result) => {
                 if (result.isConfirmed) {
+                    disableCheckIn.value = true;
                     Inertia.post("/attendance/out-sick");
                     Swal.fire({
                         title: "Okay <br> <i class='fa-solid fa-bed'></i>",
