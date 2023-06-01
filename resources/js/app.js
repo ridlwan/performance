@@ -15,6 +15,7 @@ import moment from "moment";
 import FloatingVue from 'floating-vue'
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { InertiaProgress } from '@inertiajs/progress';
 
 const options = {
     position: "top-right",
@@ -65,3 +66,10 @@ createInertiaApp({
             app.mount(el)
     },
 })
+
+InertiaProgress.init({
+    // delay: 250,
+    color: '#f5365b',
+    // includeCSS: true,
+    showSpinner: true
+});
