@@ -1,9 +1,16 @@
 <template>
     <Layout>
         <template #heading>
-            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-white active" style="width: 300px">
-                    <h6 class="font-weight-bolder text-white mb-0">Responsibility</h6>
+            <ol
+                class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5"
+            >
+                <li
+                    class="breadcrumb-item text-white active"
+                    style="width: 300px"
+                >
+                    <h6 class="font-weight-bolder text-white mb-0">
+                        Responsibility
+                    </h6>
                 </li>
             </ol>
         </template>
@@ -13,14 +20,28 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-8 mb-2">
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <input type="text" class="form-control" placeholder="Search" v-model="search" @change="filter" />
+                                    <span class="input-group-text"
+                                        ><i
+                                            class="fa-solid fa-magnifying-glass"
+                                        ></i
+                                    ></span>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Search"
+                                        v-model="search"
+                                        @change="filter"
+                                    />
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <select class="form-control" v-model="paginate" @change="filter">
+                            <div class="col-md-2 mb-2">
+                                <select
+                                    class="form-control"
+                                    v-model="paginate"
+                                    @change="filter"
+                                >
                                     <option value="10">Show 10 data</option>
                                     <option value="25">Show 25 data</option>
                                     <option value="50">Show 50 data</option>
@@ -28,34 +49,87 @@
                                 </select>
                             </div>
                             <div class="col-md-1">
-                                <button type="button" class="btn bg-gradient-secondary" @click="reset">Reset</button>
+                                <button
+                                    type="button"
+                                    class="btn bg-gradient-secondary"
+                                    @click="reset"
+                                >
+                                    Reset
+                                </button>
                             </div>
                             <div class="col-md-1">
-                                <Link href="/responsibilities/create" class="btn bg-gradient-primary">New</Link>
+                                <Link
+                                    href="/responsibilities/create"
+                                    class="btn bg-gradient-primary"
+                                    >New</Link
+                                >
                             </div>
                         </div>
                     </div>
-                    <div class="card-body mt-3 px-0 pt-0 pb-2" style="min-height: 480px">
+                    <div
+                        class="card-body mt-3 px-0 pt-0 pb-2"
+                        style="min-height: 480px"
+                    >
                         <div class="table-responsive p-3 pt-0 pb-0">
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-xs text-dark p-2">Name</th>
-                                        <th class="text-center text-uppercase text-xs text-dark">Action</th>
+                                        <th
+                                            class="text-uppercase text-xs text-dark p-2"
+                                        >
+                                            Name
+                                        </th>
+                                        <th
+                                            class="text-center text-uppercase text-xs text-dark"
+                                        >
+                                            Action
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="responsibility in responsibilities.data" :key="responsibility.id">
+                                    <tr
+                                        v-for="responsibility in responsibilities.data"
+                                        :key="responsibility.id"
+                                    >
                                         <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">{{ responsibility.name }}</span>
+                                            <span
+                                                class="text-secondary text-xs font-weight-bold"
+                                                >{{ responsibility.name }}</span
+                                            >
                                         </td>
                                         <td class="align-middle text-center">
-                                            <Link :href="`/responsibilities/${responsibility.id}/edit`" class="text-primary font-weight-bold" v-tooltip="'Edit'"><i class="fa-solid fa-pen-to-square"></i></Link>
-                                            <a v-if="responsibility.users.length < 1" href="javascript:;" class="text-danger font-weight-bold ms-2" v-tooltip="'Delete'" @click="destroy(responsibility.id)"><i class="fa-solid fa-trash-can"></i></a>
+                                            <Link
+                                                :href="`/responsibilities/${responsibility.id}/edit`"
+                                                class="text-primary font-weight-bold"
+                                                v-tooltip="'Edit'"
+                                                ><i
+                                                    class="fa-solid fa-pen-to-square"
+                                                ></i
+                                            ></Link>
+                                            <a
+                                                v-if="
+                                                    responsibility.users
+                                                        .length < 1
+                                                "
+                                                href="javascript:;"
+                                                class="text-danger font-weight-bold ms-2"
+                                                v-tooltip="'Delete'"
+                                                @click="
+                                                    destroy(responsibility.id)
+                                                "
+                                                ><i
+                                                    class="fa-solid fa-trash-can"
+                                                ></i
+                                            ></a>
                                         </td>
                                     </tr>
                                     <tr v-if="responsibilities.data.length < 1">
-                                        <td colspan="3" class="align-middle text-center text-secondary">Data not found</td>
+                                        <td
+                                            colspan="3"
+                                            class="align-middle text-center text-secondary"
+                                        >
+                                            Data not found
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

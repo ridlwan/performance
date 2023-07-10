@@ -4,35 +4,112 @@
             <h6 class="font-weight-bolder text-white mb-0">Attendance</h6>
         </template>
 
-        <div class="row" v-if="userStatus == 'Working Remote' || userStatus == 'Working Onsite'">
+        <div
+            class="row"
+            v-if="
+                userStatus == 'Working Remote' || userStatus == 'Working Onsite'
+            "
+        >
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-flex align-items-center">
-                            <p class="text-uppercase text-sm text-dark">Your activity</p>
-                            <button class="btn bg-gradient-danger ms-auto" @click="checkOut" :disabled="disableCheckOut">Check Out <i class="fas fa-briefcase ms-1"></i></button>
+                            <p class="text-uppercase text-sm text-dark">
+                                Your activity
+                            </p>
+                            <button
+                                class="btn bg-gradient-danger ms-auto"
+                                @click="checkOut"
+                                :disabled="disableCheckOut"
+                            >
+                                Check Out <i class="fas fa-briefcase ms-1"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="card-body pt-0">
                         <hr class="horizontal dark" />
-                        <div id="activities" style="overflow: auto; height: 300px">
-                            <div v-for="(activity, activityIndex) in activities" :key="activity.id">
+                        <div
+                            id="activities"
+                            style="overflow: auto; height: 300px"
+                        >
+                            <div
+                                v-for="(activity, activityIndex) in activities"
+                                :key="activity.id"
+                            >
                                 <div class="d-flex">
-                                    <span class="mb-0 me-3 font-weight-bolder opacity-7" style="white-space: nowrap">{{ activity.start_time }}</span>
+                                    <span
+                                        class="mb-0 me-3 font-weight-bolder opacity-7"
+                                        style="white-space: nowrap"
+                                        >{{ activity.start_time }}</span
+                                    >
                                     <div>
                                         <h6 class="mb-0">
                                             <small class="font-weight-normal"
-                                                >{{ activity.description }} <a href="javascript:;" @click="openEditActivityForm(activity)"><i class="fas fa-pencil-alt text-primary me-3" aria-hidden="true"></i></a
+                                                >{{ activity.description }}
+                                                <a
+                                                    href="javascript:;"
+                                                    @click="
+                                                        openEditActivityForm(
+                                                            activity
+                                                        )
+                                                    "
+                                                    ><i
+                                                        class="fas fa-pencil-alt text-primary me-3"
+                                                        aria-hidden="true"
+                                                    ></i></a
                                             ></small>
                                         </h6>
 
-                                        <span v-if="activity.project" class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> {{ activity.project.name }}</span>
-                                        <span v-else class="badge bg-gradient-primary" style="text-transform: unset"><i class="fa-solid fa-check-to-slot"></i> General</span>
+                                        <span
+                                            v-if="activity.project"
+                                            class="badge bg-gradient-primary"
+                                            style="text-transform: unset"
+                                            ><i
+                                                class="fa-solid fa-check-to-slot"
+                                            ></i>
+                                            {{ activity.project.name }}</span
+                                        >
+                                        <span
+                                            v-else
+                                            class="badge bg-gradient-primary"
+                                            style="text-transform: unset"
+                                            ><i
+                                                class="fa-solid fa-check-to-slot"
+                                            ></i>
+                                            General</span
+                                        >
 
-                                        <span v-if="activity.struggle_text == 'Yes'" class="badge bg-gradient-danger ms-2" style="text-transform: unset"><i class="fa-solid fa-user-ninja"></i> I'm struggling here</span>
+                                        <span
+                                            v-if="
+                                                activity.struggle_text == 'Yes'
+                                            "
+                                            class="badge bg-gradient-danger ms-2"
+                                            style="text-transform: unset"
+                                            ><i
+                                                class="fa-solid fa-user-ninja"
+                                            ></i>
+                                            I'm struggling here</span
+                                        >
 
-                                        <button v-if="activityIndex == activities.length - 1 && activity.struggle_text == 'No' && !activity.end" type="button" @click="struggling(activity.id)" class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0 ms-2" data-bs-toggle="tooltip" title="I'm struggling here">
-                                            <span class="btn-inner--icon"><i class="fa-solid fa-user-ninja"></i></span>
+                                        <button
+                                            v-if="
+                                                activityIndex ==
+                                                    activities.length - 1 &&
+                                                activity.struggle_text ==
+                                                    'No' &&
+                                                !activity.end
+                                            "
+                                            type="button"
+                                            @click="struggling(activity.id)"
+                                            class="btn btn-sm btn-reddit btn-icon-only rounded-circle mb-0 ms-2"
+                                            data-bs-toggle="tooltip"
+                                            title="I'm struggling here"
+                                        >
+                                            <span class="btn-inner--icon"
+                                                ><i
+                                                    class="fa-solid fa-user-ninja"
+                                                ></i
+                                            ></span>
                                         </button>
                                     </div>
                                 </div>
@@ -40,37 +117,97 @@
                             </div>
                         </div>
                         <div class="row" v-if="addActivityForm">
-                            <div v-if="activities.length < 1 || relogin" class="row" style="padding: 0; margin: 0">
+                            <div
+                                v-if="activities.length < 1 || relogin"
+                                class="row"
+                                style="padding: 0; margin: 0"
+                            >
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="Write your activity"
+                                            v-model="form.description"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.description,
+                                            }"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <select class="form-control" v-model="form.project_id" :class="{ 'is-invalid': form.errors.project_id }">
-                                            <option value="null">General</option>
-                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                        <select
+                                            class="form-control"
+                                            v-model="form.project_id"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.project_id,
+                                            }"
+                                        >
+                                            <option value="null">
+                                                General
+                                            </option>
+                                            <option
+                                                v-for="project in projectAssignment"
+                                                :key="project.id"
+                                                :value="project.id"
+                                            >
                                                 {{ project.name }}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="disableAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary d-lg-block"
+                                        @click="addActivity"
+                                        :disabled="disableAddActivity"
+                                    >
+                                        <i class="fa-solid fa-play"></i>&nbsp;
+                                        Start Activity
+                                    </button>
                                 </div>
                             </div>
-                            <div v-else class="row" style="padding: 0; margin: 0">
+                            <div
+                                v-else
+                                class="row"
+                                style="padding: 0; margin: 0"
+                            >
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="Write your activity"
+                                            v-model="form.description"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.description,
+                                            }"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <select class="form-control" v-model="form.project_id" :class="{ 'is-invalid': form.errors.project_id }">
-                                            <option value="null">General</option>
-                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                        <select
+                                            class="form-control"
+                                            v-model="form.project_id"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.project_id,
+                                            }"
+                                        >
+                                            <option value="null">
+                                                General
+                                            </option>
+                                            <option
+                                                v-for="project in projectAssignment"
+                                                :key="project.id"
+                                                :value="project.id"
+                                            >
                                                 {{ project.name }}
                                             </option>
                                         </select>
@@ -78,16 +215,39 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <Datepicker time-picker class="form-control" type="time" id="timepicker" v-model="startTime" :class="{ 'is-invalid': form.errors.start }" />
+                                        <Datepicker
+                                            time-picker
+                                            class="form-control"
+                                            type="time"
+                                            id="timepicker"
+                                            v-model="startTime"
+                                            :class="{
+                                                'is-invalid': form.errors.start,
+                                            }"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary d-lg-block" @click="addActivity" :disabled="disableAddActivity"><i class="fa-solid fa-play"></i>&nbsp; Start Activity</button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary d-lg-block"
+                                        @click="addActivity"
+                                        :disabled="disableAddActivity"
+                                    >
+                                        <i class="fa-solid fa-play"></i>&nbsp;
+                                        Start Activity
+                                    </button>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <a href="javascript:;" @click="closeActivityForm"
-                                    ><span class="text-secondary">Hold on a second <i class="fa-solid fa-person-digging ms-1"></i></span
+                                <a
+                                    href="javascript:;"
+                                    @click="closeActivityForm"
+                                    ><span class="text-secondary"
+                                        >Hold on a second
+                                        <i
+                                            class="fa-solid fa-person-digging ms-1"
+                                        ></i></span
                                 ></a>
                             </div>
                         </div>
@@ -95,31 +255,76 @@
                             <div class="row" style="padding: 0; margin: 0">
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description_updated" :class="{ 'is-invalid': form.errors.description_updated }" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="Write your activity"
+                                            v-model="form.description_updated"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors
+                                                        .description_updated,
+                                            }"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <select class="form-control" v-model="form.project_id_updated" :class="{ 'is-invalid': form.errors.project_id_updated }">
-                                            <option value="null">General</option>
-                                            <option v-for="project in projectAssignment" :key="project.id" :value="project.id">
+                                        <select
+                                            class="form-control"
+                                            v-model="form.project_id_updated"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors
+                                                        .project_id_updated,
+                                            }"
+                                        >
+                                            <option value="null">
+                                                General
+                                            </option>
+                                            <option
+                                                v-for="project in projectAssignment"
+                                                :key="project.id"
+                                                :value="project.id"
+                                            >
                                                 {{ project.name }}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-warning d-lg-block" @click="updateActivity" :disabled="disableUpdateActivity"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update</button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-warning d-lg-block"
+                                        @click="updateActivity"
+                                        :disabled="disableUpdateActivity"
+                                    >
+                                        <i class="fa-solid fa-pen-to-square"></i
+                                        >&nbsp; Update
+                                    </button>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <a href="javascript:;" @click="closeActivityForm"
-                                    ><span class="text-secondary">Hold on a second <i class="fa-solid fa-person-digging ms-1"></i></span
+                                <a
+                                    href="javascript:;"
+                                    @click="closeActivityForm"
+                                    ><span class="text-secondary"
+                                        >Hold on a second
+                                        <i
+                                            class="fa-solid fa-person-digging ms-1"
+                                        ></i></span
                                 ></a>
                             </div>
                         </div>
                         <div v-else class="text-center">
-                            <button type="submit" class="btn btn-success" @click="openAddActivityForm"><i class="fa-solid fa-plus"></i>&nbsp; Add Activity</button>
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                                @click="openAddActivityForm"
+                            >
+                                <i class="fa-solid fa-plus"></i>&nbsp; Add
+                                Activity
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -127,38 +332,58 @@
         </div>
         <div class="row" v-else>
             <div class="col-lg-5 col-md-5 mt-4 mt-sm-0">
-                <div class="card move-on-hover">
+                <div class="card move-on-hover mb-6">
                     <div class="card-body">
-                        <div class="w-50 mx-auto mb-5">
+                        <div class="w-50 mx-auto mb-4">
                             <img src="/assets/img/logo.png" class="img-fluid" />
                         </div>
-                        <h6 class="text-center text-uppercase text-xs text-dark" v-html="quote"></h6>
-                        <div v-if="status == 'Out Office' || status == 'Out Sick' || outsideWorkingTime" class="row text-center mt-6 mb-2">
-                            <span class="card-description opacity-7">Wish you all the best</span>
+                        <h6
+                            class="text-center text-uppercase text-xs text-dark"
+                            v-html="quote"
+                        ></h6>
+                        <div
+                            v-if="
+                                status == 'Out Office' ||
+                                status == 'Out Sick' ||
+                                outsideWorkingTime
+                            "
+                            class="row text-center mt-6 mb-2"
+                        >
+                            <span class="card-description opacity-7"
+                                >Wish you all the best</span
+                            >
                         </div>
                         <div v-else>
                             <div class="row text-center">
-                                <button @click="checkIn" class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3" :disabled="disableCheckIn">
+                                <button
+                                    @click="checkIn"
+                                    class="btn btn-icon bg-gradient-primary d-lg-block mt-5 mb-3"
+                                    :disabled="disableCheckIn"
+                                >
                                     Check In
                                     <i class="fas fa-laptop-code ms-1"></i>
                                 </button>
                             </div>
                             <div v-if="!relogin">
-                                <hr class="horizontal dark" />
-
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="javascript:;" @click="outOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
-                                            Out Office
-                                            <i class="fas fa-person-walking-luggage ms-1"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
-                                            Out Sick
-                                            <i class="fas fa-bed ms-1"></i>
-                                        </a>
-                                    </div>
+                                    <button
+                                        @click="outOffice"
+                                        class="btn btn-icon bg-gradient-warning d-lg-block mb-0"
+                                        :disabled="disableCheckIn"
+                                    >
+                                        Out Office
+                                        <i
+                                            class="fas fa-person-walking-luggage ms-1"
+                                        ></i>
+                                    </button>
+                                    <button
+                                        @click="outSick"
+                                        class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0"
+                                        :disabled="disableCheckIn"
+                                    >
+                                        Out Sick
+                                        <i class="fas fa-bed ms-1"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -230,7 +455,10 @@ const username = computed(() => usePage().props.value.auth.user.username);
 onMounted(() => {
     userStatus.value = status.value;
 
-    if ((status == "Working Remote" || status == "Working Onsite") && props.activities.length > 0) {
+    if (
+        (status == "Working Remote" || status == "Working Onsite") &&
+        props.activities.length > 0
+    ) {
         scrollDown();
     }
 
@@ -266,8 +494,10 @@ const checkIn = () => {
             icon: "warning",
             showCancelButton: true,
             cancelButtonColor: "orange",
-            confirmButtonText: "Let's Go! <i class='fa-solid fa-person-skating'></i>",
-            cancelButtonText: "Nope, Just kidding <i class='fa-solid fa-bed'></i>",
+            confirmButtonText:
+                "Let's Go! <i class='fa-solid fa-person-skating'></i>",
+            cancelButtonText:
+                "Nope, Just kidding <i class='fa-solid fa-bed'></i>",
             allowOutsideClick: false,
         }).then((result) => {
             if (result.isConfirmed) {
@@ -289,7 +519,8 @@ const definePosition = () => {
         denyButtonColor: "#2ebd59",
         cancelButtonColor: "orange",
         confirmButtonText: "Onsite <i class='fa-solid fa-person-shelter'></i>",
-        denyButtonText: "Remote <i class='fa-solid fa-person-snowboarding'></i>",
+        denyButtonText:
+            "Remote <i class='fa-solid fa-person-snowboarding'></i>",
         cancelButtonText: "Wait <i class='fa-regular fa-clock'></i>",
         allowOutsideClick: false,
     }).then((result) => {
@@ -416,7 +647,8 @@ const checkOut = () => {
             title: "What are you doing? <br> <i class='fa-solid fa-person-through-window'></i>",
             text: "Please write down your activity before checking out",
             icon: "error",
-            confirmButtonText: "Got it <i class='fa-solid fa-pen-to-square'></i>",
+            confirmButtonText:
+                "Got it <i class='fa-solid fa-pen-to-square'></i>",
         });
     } else {
         Swal.fire({
@@ -425,8 +657,10 @@ const checkOut = () => {
             icon: "warning",
             showCancelButton: true,
             cancelButtonColor: "orange",
-            confirmButtonText: "Yes, please! <i class='fa-solid fa-person-walking-dashed-line-arrow-right'></i>",
-            cancelButtonText: "Not yet <i class='fa-solid fa-person-digging'></i>",
+            confirmButtonText:
+                "Yes, please! <i class='fa-solid fa-person-walking-dashed-line-arrow-right'></i>",
+            cancelButtonText:
+                "Not yet <i class='fa-solid fa-person-digging'></i>",
         }).then((result) => {
             if (result.isConfirmed) {
                 disableCheckOut.value = true;
@@ -435,7 +669,8 @@ const checkOut = () => {
                     title: "You're out! <br> <i class='fa-solid fa-child-reaching'></i>",
                     text: "Thanks for your great work today",
                     icon: "success",
-                    confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
+                    confirmButtonText:
+                        "See ya <i class='fa-solid fa-hand'></i>",
                 });
             }
         });
@@ -462,7 +697,8 @@ const struggling = (id) => {
         confirmButtonColor: "red",
         cancelButtonColor: "orange",
         confirmButtonText: "Definitely! <i class='fa-solid fa-face-dizzy'></i>",
-        cancelButtonText: "Nope, it just needs more time <i class='fa-solid fa-person-digging'></i>",
+        cancelButtonText:
+            "Nope, it just needs more time <i class='fa-solid fa-person-digging'></i>",
     }).then((result) => {
         if (result.isConfirmed) {
             Inertia.post("/attendance/struggle/" + id);
@@ -503,7 +739,8 @@ const outOffice = () => {
                         title: "Okay <br> <i class='fa-solid fa-person-walking-luggage'></i>",
                         text: "Whatever your business, we hope everything is fine and see ya tomorrow",
                         icon: "success",
-                        confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
+                        confirmButtonText:
+                            "See ya <i class='fa-solid fa-hand'></i>",
                     });
                 }
             });
@@ -538,7 +775,8 @@ const outSick = () => {
                         title: "Okay <br> <i class='fa-solid fa-bed'></i>",
                         text: "Get well soon and see ya tomorrow",
                         icon: "success",
-                        confirmButtonText: "See ya <i class='fa-solid fa-hand'></i>",
+                        confirmButtonText:
+                            "See ya <i class='fa-solid fa-hand'></i>",
                     });
                 }
             });

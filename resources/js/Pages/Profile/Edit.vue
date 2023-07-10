@@ -5,90 +5,279 @@
         </template>
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 mt-4 mt-sm-0">
+            <div class="col-lg-6 col-md-6 mt-4 mt-sm-0 mb-3">
                 <div class="card">
                     <div class="card-header pb-0"></div>
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Name</label>
+                                    <label class="form-control-label"
+                                        >Name</label
+                                    >
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" v-model="form.name" :class="{ 'is-invalid': form.errors.name }" />
-                                        <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateName">Update</button>
-                                        <span v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name }}</span>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model="form.name"
+                                            :class="{
+                                                'is-invalid': form.errors.name,
+                                            }"
+                                        />
+                                        <button
+                                            class="btn btn-outline-primary mb-0 keep-radius"
+                                            type="button"
+                                            :disabled="form.processing"
+                                            @click="updateName"
+                                        >
+                                            Update
+                                        </button>
+                                        <span
+                                            v-if="form.errors.name"
+                                            class="invalid-feedback"
+                                            >{{ form.errors.name }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Email Address</label>
-                                    <input class="form-control" type="email" v-model="user.email" disabled />
+                                    <label class="form-control-label"
+                                        >Email Address</label
+                                    >
+                                    <input
+                                        class="form-control"
+                                        type="email"
+                                        v-model="user.email"
+                                        disabled
+                                    />
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Password</label>
+                                    <label class="form-control-label"
+                                        >Password</label
+                                    >
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" v-model="form.password" :class="{ 'is-invalid': form.errors.password }" />
-                                        <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updatePassword">Update</button>
-                                        <span v-if="form.errors.password" class="invalid-feedback">{{ form.errors.password }}</span>
+                                        <input
+                                            type="password"
+                                            class="form-control"
+                                            v-model="form.password"
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.password,
+                                            }"
+                                        />
+                                        <button
+                                            class="btn btn-outline-primary mb-0 keep-radius"
+                                            type="button"
+                                            :disabled="form.processing"
+                                            @click="updatePassword"
+                                        >
+                                            Update
+                                        </button>
+                                        <span
+                                            v-if="form.errors.password"
+                                            class="invalid-feedback"
+                                            >{{ form.errors.password }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Avatar</label>
+                                    <label class="form-control-label"
+                                        >Avatar</label
+                                    >
                                     <div class="input-group mb-3">
-                                        <div class="avatar avatar-l position-relative" style="border: 1px solid #d2d6da">
-                                            <img v-if="form.avatar" ref="avatarView" :src="'/storage/' + user.avatar" class="h-100 border-radius-lg image-inside-form" />
-                                            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg image-inside-form" />
+                                        <div
+                                            class="avatar avatar-l position-relative"
+                                            style="border: 1px solid #d2d6da"
+                                        >
+                                            <img
+                                                v-if="form.avatar"
+                                                ref="avatarView"
+                                                :src="'/storage/' + user.avatar"
+                                                class="h-100 border-radius-lg image-inside-form"
+                                            />
+                                            <img
+                                                v-else
+                                                src="/assets/img/logo-sq.png"
+                                                class="h-100 border-radius-lg image-inside-form"
+                                            />
                                         </div>
-                                        <input type="file" class="form-control" @change="attachAvatar" ref="avatarForm" style="padding-top: 12px; padding-left: 12px" :class="{ 'is-invalid': form.errors.avatar }" />
-                                        <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateAvatar">Update</button>
-                                        <span v-if="form.errors.avatar" class="invalid-feedback">{{ form.errors.avatar }}</span>
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            @change="attachAvatar"
+                                            ref="avatarForm"
+                                            style="
+                                                padding-top: 12px;
+                                                padding-left: 12px;
+                                            "
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.avatar,
+                                            }"
+                                        />
+                                        <button
+                                            class="btn btn-outline-primary mb-0 keep-radius"
+                                            type="button"
+                                            :disabled="form.processing"
+                                            @click="updateAvatar"
+                                        >
+                                            Update
+                                        </button>
+                                        <span
+                                            v-if="form.errors.avatar"
+                                            class="invalid-feedback"
+                                            >{{ form.errors.avatar }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Background</label>
+                                    <label class="form-control-label"
+                                        >Background</label
+                                    >
                                     <div class="input-group mb-3">
-                                        <div class="avatar avatar-l position-relative" style="border: 1px solid #d2d6da">
-                                            <img v-if="form.background" ref="backgroundView" :src="'/storage/' + user.background" class="h-100 border-radius-lg image-inside-form" />
-                                            <img v-else src="/assets/img/logo-sq.png" class="h-100 border-radius-lg image-inside-form" />
+                                        <div
+                                            class="avatar avatar-l position-relative"
+                                            style="border: 1px solid #d2d6da"
+                                        >
+                                            <img
+                                                v-if="form.background"
+                                                ref="backgroundView"
+                                                :src="
+                                                    '/storage/' +
+                                                    user.background
+                                                "
+                                                class="h-100 border-radius-lg image-inside-form"
+                                            />
+                                            <img
+                                                v-else
+                                                src="/assets/img/logo-sq.png"
+                                                class="h-100 border-radius-lg image-inside-form"
+                                            />
                                         </div>
-                                        <input type="file" class="form-control" @change="attachBackground" ref="backgroundForm" style="padding-top: 12px; padding-left: 12px" :class="{ 'is-invalid': form.errors.background }" />
-                                        <button class="btn btn-outline-primary mb-0 keep-radius" type="button" :disabled="form.processing" @click="updateBackground">Update</button>
-                                        <span v-if="form.errors.background" class="invalid-feedback">{{ form.errors.background }}</span>
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            @change="attachBackground"
+                                            ref="backgroundForm"
+                                            style="
+                                                padding-top: 12px;
+                                                padding-left: 12px;
+                                            "
+                                            :class="{
+                                                'is-invalid':
+                                                    form.errors.background,
+                                            }"
+                                        />
+                                        <button
+                                            class="btn btn-outline-primary mb-0 keep-radius"
+                                            type="button"
+                                            :disabled="form.processing"
+                                            @click="updateBackground"
+                                        >
+                                            Update
+                                        </button>
+                                        <span
+                                            v-if="form.errors.background"
+                                            class="invalid-feedback"
+                                            >{{ form.errors.background }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12 mt-3">
-                                <div class="my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
-                                    <div class="nav-wrapper position-relative center justify-content-center">
+                                <div
+                                    class="my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3"
+                                >
+                                    <div
+                                        class="nav-wrapper position-relative center justify-content-center"
+                                    >
                                         <ul class="nav nav-pills nav-fill p-1">
                                             <li class="nav-item">
-                                                <a v-if="form.darkmode == 'Yes'" class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" href="javascript:;" @click="updateDarkMode('No')">
-                                                    <i class="fa-solid fa-sun"></i>
-                                                    <span class="ms-2">Light Mode</span>
+                                                <a
+                                                    v-if="
+                                                        form.darkmode == 'Yes'
+                                                    "
+                                                    class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center"
+                                                    href="javascript:;"
+                                                    @click="
+                                                        updateDarkMode('No')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-sun"
+                                                    ></i>
+                                                    <span class="ms-2"
+                                                        >Light Mode</span
+                                                    >
                                                 </a>
-                                                <a v-else class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" href="javascript:;">
-                                                    <i class="fa-solid fa-sun"></i>
-                                                    <span class="ms-2">Light Mode</span>
+                                                <a
+                                                    v-else
+                                                    class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center"
+                                                    href="javascript:;"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-sun"
+                                                    ></i>
+                                                    <span class="ms-2"
+                                                        >Light Mode</span
+                                                    >
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a v-if="form.darkmode == 'No'" class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;" @click="updateDarkMode('Yes')">
-                                                    <i class="fa-solid fa-moon"></i>
-                                                    <span class="ms-2">Dark Mode</span>
+                                                <a
+                                                    v-if="form.darkmode == 'No'"
+                                                    class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active"
+                                                    href="javascript:;"
+                                                    @click="
+                                                        updateDarkMode('Yes')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-moon"
+                                                    ></i>
+                                                    <span class="ms-2"
+                                                        >Dark Mode</span
+                                                    >
                                                 </a>
-                                                <a v-else class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;">
-                                                    <i class="fa-solid fa-moon"></i>
-                                                    <span class="ms-2">Dark Mode</span>
+                                                <a
+                                                    v-else
+                                                    class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active"
+                                                    href="javascript:;"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-moon"
+                                                    ></i>
+                                                    <span class="ms-2"
+                                                        >Dark Mode</span
+                                                    >
                                                 </a>
                                             </li>
-                                            <div class="moving-tab position-absolute nav-link" style="padding: 0px; transition: all 0.5s ease 0s; width: 49%" :style="form.darkmode == 'Yes' ? 'transform: translate3d(100%, 0px, 0px)' : 'transform: unset'"><a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" href="javascript:;">&nbsp;</a></div>
+                                            <div
+                                                class="moving-tab position-absolute nav-link"
+                                                style="
+                                                    padding: 0px;
+                                                    transition: all 0.5s ease 0s;
+                                                    width: 49%;
+                                                "
+                                                :style="
+                                                    form.darkmode == 'Yes'
+                                                        ? 'transform: translate3d(100%, 0px, 0px)'
+                                                        : 'transform: unset'
+                                                "
+                                            >
+                                                <a
+                                                    class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active"
+                                                    href="javascript:;"
+                                                    >&nbsp;</a
+                                                >
+                                            </div>
                                         </ul>
                                     </div>
                                 </div>

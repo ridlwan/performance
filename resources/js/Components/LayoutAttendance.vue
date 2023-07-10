@@ -6,7 +6,14 @@
             </template>
         </Header>
 
-        <div class="border-radius-xl mt-4 mx-4 position-relative" :style="'background-image: url(' + backgroundImage + '); background-size: cover'">
+        <div
+            class="border-radius-xl mt-4 mx-4 mb-3 position-relative"
+            :style="
+                'background-image: url(' +
+                backgroundImage +
+                '); background-size: cover'
+            "
+        >
             <main class="main-content mt-1 border-radius-lg">
                 <div class="section min-vh-85 position-relative">
                     <div class="container">
@@ -14,14 +21,47 @@
                             <div class="col-lg-12 col-md-12">
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <a v-for="user in workingUsers" :key="user.id" href="javascript:;" class="ms-2" :title="user.name" v-tooltip="user.name + ' (' + user.status_text + ')'">
-                                            <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3" style="width: 60px; height: 60px; border-color: #5e72e4 !important" :style="darkmode == 'Yes' ? 'background-color: #5e72e4;' : 'background-color: white;'" />
+                                        <a
+                                            v-for="user in workingUsers"
+                                            :key="user.id"
+                                            href="javascript:;"
+                                            class="ms-2"
+                                            :title="user.name"
+                                            v-tooltip="
+                                                user.name +
+                                                ' (' +
+                                                user.status_text +
+                                                ')'
+                                            "
+                                        >
+                                            <img
+                                                :src="
+                                                    user.avatar
+                                                        ? '/storage/' +
+                                                          user.avatar
+                                                        : '/assets/img/logo-sq.png'
+                                                "
+                                                class="rounded-circle img-fluid border border-3"
+                                                style="
+                                                    width: 60px;
+                                                    height: 60px;
+                                                    border-color: #5e72e4 !important;
+                                                "
+                                                :style="
+                                                    darkmode == 'Yes'
+                                                        ? 'background-color: #5e72e4;'
+                                                        : 'background-color: white;'
+                                                "
+                                            />
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row" :class="workingUsers.length > 0 ? 'pt-2' : 'pt-6'">
+                        <div
+                            class="row"
+                            :class="workingUsers.length > 0 ? 'pt-2' : 'pt-6'"
+                        >
                             <Sidenav />
 
                             <div class="col-lg-10 col-md-10">
