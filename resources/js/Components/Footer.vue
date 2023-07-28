@@ -3,9 +3,16 @@
         <div class="container-fluid">
             <div class="row align-items-center justify-content-lg-between">
                 <div class="col-lg-6 mb-lg-0 mb-4">
-                    <div class="copyright text-center text-sm text-muted text-lg-start">
-                        © Copyright Opencloud 2023, made with <i class="fa fa-heart"></i> by
-                        <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a>
+                    <div
+                        class="copyright text-center text-sm text-muted text-lg-start"
+                    >
+                        © Copyright Opencloud 2023, made with
+                        <i class="fa fa-heart"></i> by
+                        <a
+                            href="https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html"
+                            target="_blank"
+                            >Creative Tim</a
+                        >
                     </div>
                 </div>
                 <!-- <div class="col-lg-6">
