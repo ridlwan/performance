@@ -1,13 +1,13 @@
 <template>
-    <div class="text-center btn-toolbar">
+    <div class="col-lg-1 col-md-1 pt-5 pt-lg-0 ms-lg-5 text-center">
         <Link
             href="/profile"
-            class="avatar avatar-md border-0 mb-3"
+            class="avatar avatar-md border-0"
             v-tooltip="'Profile'"
         >
             <img
                 :src="avatar ? '/storage/' + avatar : '/assets/img/logo-sq.png'"
-                class="h-100 border-radius-lg shadow-lg"
+                class="h-100 border-radius-lg shadow-lg pb-2"
             />
         </Link>
         <Link
@@ -17,7 +17,7 @@
                     ? 'btn-primary'
                     : 'btn-white'
             "
-            class="btn border-radius-lg p-2 mx-3"
+            class="btn border-radius-lg p-2 mt-0 mt-md-2 mx-2 mx-md-0"
             v-tooltip="'Home'"
         >
             <i class="fas fa-home p-2"></i>
@@ -41,7 +41,7 @@
                     ? 'btn-primary'
                     : 'btn-white'
             "
-            class="btn border-radius-lg p-2 ms-3"
+            class="btn border-radius-lg p-2 mx-2"
             v-tooltip="'Performance'"
         >
             <i class="fas fa-chart-line p-2"></i>

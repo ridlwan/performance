@@ -60,11 +60,11 @@
                         </div>
                         <div
                             class="row"
-                            :class="workingUsers.length > 0 ? 'pt-2' : 'pt-2'"
+                            :class="workingUsers.length > 0 ? 'pt-2' : 'pt-6'"
                         >
                             <Sidenav />
 
-                            <div class="col-lg-12 col-md-12 mb-5">
+                            <div class="col-lg-10 col-md-10 mb-5">
                                 <slot />
                             </div>
                         </div>
