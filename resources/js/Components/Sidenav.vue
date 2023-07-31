@@ -7,7 +7,8 @@
         >
             <img
                 :src="avatar ? '/storage/' + avatar : '/assets/img/logo-sq.png'"
-                class="h-100 border-radius-lg shadow-lg pb-2"
+                class="h-100 border-radius-lg shadow-lg"
+                style="padding-bottom: 11px"
             />
         </Link>
         <Link
