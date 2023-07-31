@@ -20,8 +20,8 @@
         </div>
         <div class="offcanvas-body">
             <!-- Canvas Content -->
-            <div id="sidenav-collapse-main">
-                <ul class="navbar-nav">
+            <div class="d-flex flex-column flex-shrink-0">
+                <ul class="nav nav-pills flex-column">
                     <li
                         v-if="permissions.includes('view-dashboard')"
                         class="nav-item"
@@ -35,11 +35,9 @@
                                     : 'btn-white'
                             "
                         >
-                            <div class="justify-content-center">
-                                <i
-                                    class="ni ni-tv-2 text-primary text-sm opacity-10"
-                                ></i>
-                            </div>
+                            <div
+                                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
+                            ></div>
                             <span class="nav-link-text ms-1">Dashboard</span>
                         </Link>
                     </li>
@@ -48,13 +46,15 @@
                         class="nav-item mt-3"
                     >
                         <h6
-                            class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"
+                            style="margin-bottom: -13px"
+                            class="ms-3 text-uppercase text-md font-weight-bolder"
                         >
                             Report
                         </h6>
                     </li>
                     <li
                         v-if="permissions.includes('view-report')"
+                        style="margin-bottom: -30px"
                         class="nav-item"
                     >
                         <Link
@@ -68,12 +68,8 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
-                                ></i>
-                            </div>
-                            <span class="nav-link-text ms-1">Daily</span>
+                            ></div>
+                            <span class="nav-link-text ms-1"> Daily</span>
                         </Link>
                     </li>
                     <li
@@ -94,12 +90,8 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-album-2 text-success text-sm opacity-10"
-                                ></i>
-                            </div>
-                            <span class="nav-link-text ms-1">Monthly</span>
+                            ></div>
+                            <span class="nav-link-text ms-1"> Monthly</span>
                         </Link>
                     </li>
                     <li
@@ -110,13 +102,15 @@
                         class="nav-item mt-3"
                     >
                         <h6
-                            class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"
+                            style="margin-bottom: -13px"
+                            class="ms-3 text-uppercase text-md font-weight-bolder"
                         >
                             Master
                         </h6>
                     </li>
                     <li
                         v-if="permissions.includes('manage-report')"
+                        style="margin-bottom: -30px"
                         class="nav-item"
                     >
                         <Link
@@ -132,16 +126,13 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-collection text-info text-sm opacity-10"
-                                ></i>
-                            </div>
+                            ></div>
                             <span class="nav-link-text ms-1">Project</span>
                         </Link>
                     </li>
                     <li
                         v-if="permissions.includes('manage-attendance')"
+                        style="margin-bottom: -30px"
                         class="nav-item"
                     >
                         <Link
@@ -157,16 +148,13 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-badge text-success text-sm opacity-10"
-                                ></i>
-                            </div>
+                            ></div>
                             <span class="nav-link-text ms-1">Assignment</span>
                         </Link>
                     </li>
                     <li
                         v-if="permissions.includes('manage-account')"
+                        style="margin-bottom: -30px"
                         class="nav-item"
                     >
                         <Link
@@ -182,11 +170,7 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-paper-diploma text-primary text-sm opacity-10"
-                                ></i>
-                            </div>
+                            ></div>
                             <span class="nav-link-text ms-1"
                                 >Responsibility</span
                             >
@@ -209,16 +193,13 @@
                         >
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-single-02 text-warning text-sm opacity-10"
-                                ></i>
-                            </div>
+                            ></div>
                             <span class="nav-link-text ms-1">Account</span>
                         </Link>
                     </li>
                     <hr
                         v-if="permissions.includes('doing-attendance')"
+                        style="margin-bottom: -20px"
                         class="horizontal dark"
                     />
                     <li
@@ -228,11 +209,7 @@
                         <Link class="nav-link" href="/attendance">
                             <div
                                 class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i
-                                    class="ni ni-watch-time text-danger text-sm opacity-10"
-                                ></i>
-                            </div>
+                            ></div>
                             <span class="nav-link-text ms-1">Attendance</span>
                         </Link>
                     </li>
