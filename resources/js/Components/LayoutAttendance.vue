@@ -16,7 +16,7 @@
         >
             <main class="main-content mt-1 border-radius-lg">
                 <div class="section min-vh-85 position-relative">
-                    <div class="container">
+                    <div class="container mb-3">
                         <div class="row pt-4 pb-3">
                             <div class="col-lg-12 col-md-12">
                                 <div class="row">
