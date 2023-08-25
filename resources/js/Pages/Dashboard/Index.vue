@@ -288,7 +288,7 @@
 <style>
 .col-20 {
     flex: 0 0 auto;
-    width: 14rem;
+    width: 14.95rem;
 }
 </style>
 

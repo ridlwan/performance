@@ -8,8 +8,30 @@
             </ol>
         </template>
 
-        <div class="row" style="min-height: 670px">
-            <div class="col-md-12">
+        <div class="row">
+            <div v-for="(user, userIndex) in users" :key="userIndex" class="col-xl-3 col-sm-6 mb-xl-0 pb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <p class="text-sm mb-0 font-weight-bold">{{ user.name }}</p>
+                                <span class="text-secondary text-xs font-weight-bold">{{ user.position }}</span>
+                            </div>
+                            <div class="col-4 text-end">
+                                <img :src="user.avatar ? '/storage/' + user.avatar : '/assets/img/logo-sq.png'" class="rounded-circle img-fluid border border-3" style="width: 60px; height: 60px; border-color: #5e72e4 !important" :style="darkmode == 'Yes' ? 'background-color: #5e72e4;' : 'background-color: white;'" />
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button v-for="(assignment, assignmentIndex) in user.assignments" :key="assignmentIndex" class="btn btn-sm bg-gradient-primary mb-1 p-2 me-2" type="button" @click="destroy(assignment.id)">
+                                    <span class="btn-inner--text">{{ assignment.project.name }}</span>
+                                    <i class="fa-solid fa-xmark ms-2"></i>
+                                </button>
+                                <button class="btn btn-xs btn-outline-success mb-0 w-100 mt-1" type="button" data-bs-toggle="modal" data-bs-target="#projectModal" @click="openProjectModal(user.id, userIndex)">New Assignment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-md-12">
                 <div class="card">
                     <div class="card-body pt-0">
                         <div class="row mt-4 mb-2">
@@ -54,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="modal fade" id="projectModal" role="dialog" aria-hidden="true">

@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-1 col-md-1 pt-5 pt-lg-0 ms-lg-5 text-center">
         <Link href="/profile" class="avatar avatar-md btn border-radius-lg p-0 mt-0 mt-md-2 mx-1 mx-md-0" v-tooltip="'Profile'">
-            <img :src="avatar ? '/storage/' + avatar : '/assets/img/logo-sq.png'" class="h-100" />
+            <img :src="avatar ? '/storage/' + avatar : '/assets/img/logo-sq.png'" class="h-100 border-radius-lg" />
         </Link>
         <Link href="/attendance" :class="$page.component === 'Attendance/Index' ? 'btn-primary' : 'btn-white'" class="btn border-radius-lg p-2 mt-0 mt-md-2 mx-1 mx-md-0" v-tooltip="'Home'">
             <i class="fas fa-home p-2"></i>
