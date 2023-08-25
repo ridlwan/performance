@@ -144,21 +144,29 @@
                                 </button>
                             </div>
                             <div v-if="!relogin">
-                                <hr class="horizontal dark" />
+                                <hr class="horizontal dark d-none d-md-block" />
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 d-none d-md-block">
                                         <a href="javascript:;" @click="outOffice" class="btn btn-icon bg-gradient-warning d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
                                             Out Office
                                             <i class="fas fa-person-walking-luggage ms-1"></i>
                                         </a>
                                     </div>
-                                    <div class="col-md-6 text-end">
+                                    <div class="col-md-6 text-end d-none d-md-block">
                                         <a href="javascript:;" @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0" :disabled="disableCheckIn">
                                             Out Sick
                                             <i class="fas fa-bed ms-1"></i>
                                         </a>
                                     </div>
+                                    <button @click="outOffice" class="btn btn-icon bg-gradient-warning d-lg-block mb-0 d-md-none" :disabled="disableCheckIn">
+                                        Out Office
+                                        <i class="fas fa-person-walking-luggage ms-1"></i>
+                                    </button>
+                                    <button @click="outSick" class="btn btn-icon bg-gradient-danger d-lg-block mt-3 mb-0 d-md-none" :disabled="disableCheckIn">
+                                        Out Sick
+                                        <i class="fas fa-bed ms-1"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
