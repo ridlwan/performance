@@ -51,14 +51,14 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        if ($old_path = $user->avatar) {
-            if (Storage::exists($old_path)){
-                Storage::delete($old_path);
+        if ($user->avatar) {
+            if (Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
             }
         }
 
-        $path = $request->file('avatar')->store('avatar', 'public');
-        $user->avatar = $path;
+        $newAvatar = $request->file('avatar')->store('avatar', 'public');
+        $user->avatar = $newAvatar;
         $user->save();
 
         return redirect()->back();
@@ -72,14 +72,14 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        if ($old_path = $user->background) {
-            if (Storage::exists($old_path)){
-                Storage::delete($old_path);
+        if ($user->background) {
+            if (Storage::disk('public')->exists($user->background)) {
+                Storage::disk('public')->delete($user->background);
             }
         }
 
-        $path = $request->file('background')->store('background', 'public');
-        $user->background = $path;
+        $newBackground = $request->file('background')->store('background', 'public');
+        $user->background = $newBackground;
         $user->save();
 
         return redirect()->back();

@@ -43,7 +43,25 @@
                             <div v-if="activities.length < 1 || relogin" class="row" style="padding: 0; margin: 0">
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                        <multiselect
+                                            v-model="form.description"
+                                            :options="hints"
+                                            :optionsHeight="30"
+                                            openDirection="top" 
+                                            placeholder="Write your activity or select from previous ones"
+                                            tagPlaceholder="Use this new activity"
+                                            :multiple="false"
+                                            :searchable="true"
+                                            :taggable="true"
+                                            :closeOnSelect="true"
+                                            :clearOnSelect="true"
+                                            :preserveSearch="false"
+                                            :preselectFirst="false"
+                                            :showLabels="false"
+                                            @tag="useNewActivity"
+                                            :height="120"
+                                            :class="{ 'is-invalid': form.errors.description }"
+                                        ></multiselect>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -63,7 +81,25 @@
                             <div v-else class="row" style="padding: 0; margin: 0">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description" :class="{ 'is-invalid': form.errors.description }" />
+                                        <multiselect
+                                            v-model="form.description"
+                                            :options="hints"
+                                            :optionsHeight="30"
+                                            openDirection="top" 
+                                            placeholder="Write your activity or select from previous ones"
+                                            tagPlaceholder="Use this new activity"
+                                            :multiple="false"
+                                            :searchable="true"
+                                            :taggable="true"
+                                            :closeOnSelect="true"
+                                            :clearOnSelect="true"
+                                            :preserveSearch="false"
+                                            :preselectFirst="false"
+                                            :showLabels="false"
+                                            @tag="useNewActivity"
+                                            :height="120"
+                                            :class="{ 'is-invalid': form.errors.description }"
+                                        ></multiselect>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -95,7 +131,25 @@
                             <div class="row" style="padding: 0; margin: 0">
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" placeholder="Write your activity" v-model="form.description_updated" :class="{ 'is-invalid': form.errors.description_updated }" />
+                                        <multiselect
+                                            v-model="form.description_updated"
+                                            :options="hints"
+                                            :optionsHeight="30"
+                                            openDirection="top" 
+                                            placeholder="Write your activity or select from previous ones"
+                                            tagPlaceholder="Use this new activity"
+                                            :multiple="false"
+                                            :searchable="true"
+                                            :taggable="true"
+                                            :closeOnSelect="true"
+                                            :clearOnSelect="true"
+                                            :preserveSearch="false"
+                                            :preselectFirst="false"
+                                            :showLabels="false"
+                                            @tag="useNewActivityUpdate"
+                                            :height="120"
+                                            :class="{ 'is-invalid': form.errors.description_updated }"
+                                        ></multiselect>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -177,6 +231,7 @@
     </Layout>
 </template>
 
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style>
 .dp__main {
     padding: 0px !important;
@@ -204,6 +259,7 @@ import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import Echo from "laravel-echo";
 import "axios";
+import Multiselect from 'vue-multiselect'
 
 const form = useForm({
     description: null,
@@ -214,6 +270,7 @@ const form = useForm({
 });
 
 const props = defineProps({
+    hints: Array,
     quote: String,
     activities: Array,
     relogin: Boolean,
@@ -265,6 +322,14 @@ window.Echo.channel("assignment-channel").listen(".assignment-event", (e) => {
         });
     }
 });
+
+const useNewActivity = (newActivity) => {
+    form.description = newActivity;
+}
+
+const useNewActivityUpdate = (newActivity) => {
+    form.description_updated = newActivity;
+}
 
 const checkIn = () => {
     if (props.relogin) {
@@ -411,6 +476,8 @@ const updateActivity = () => {
 };
 
 const closeActivityForm = () => {
+    form.description = null;
+
     addActivityForm.value = false;
     editActivityForm.value = false;
     disableAddActivity.value = false;
