@@ -21,6 +21,11 @@ class AttendanceController extends Controller
 {
     public function index()
     {
+        $hints = Activity::whereRelation('attendance', 'user_id', Auth::user()->id)
+                            ->distinct()
+                            ->orderBy('created_at', 'DESC')
+                            ->pluck('description');
+
         $quote = Inspiring::quote();
 
         $relogin = $this->isRelogin();
@@ -36,6 +41,7 @@ class AttendanceController extends Controller
             })->get();
         
         return Inertia::render('Attendance/Index', [
+            'hints' => $hints,
             'quote' => $quote,
             'activities' => $activities,
             'relogin' => $relogin,
